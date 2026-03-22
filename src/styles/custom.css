@@ -1,22 +1,41 @@
-/* inSCADA Docs — Light Only */
+/* inSCADA Docs — Force Light Theme */
 
-:root {
-	color-scheme: light;
+/* Override both light AND dark states with identical light colors */
+:root,
+:root[data-theme='light'],
+:root[data-theme='dark'] {
+	color-scheme: light !important;
 
 	/* Accent — inSCADA mavi */
-	--sl-color-accent-low: #dbeafe;
-	--sl-color-accent: #0066cc;
-	--sl-color-accent-high: #1e3a5f;
+	--sl-color-accent-low: #dbeafe !important;
+	--sl-color-accent: #0066cc !important;
+	--sl-color-accent-high: #1e3a5f !important;
 
-	/* Gri skalası */
-	--sl-color-white: #ffffff;
-	--sl-color-gray-1: #f8fafc;
-	--sl-color-gray-2: #e2e8f0;
-	--sl-color-gray-3: #94a3b8;
-	--sl-color-gray-4: #475569;
-	--sl-color-gray-5: #1e293b;
-	--sl-color-gray-6: #0f172a;
-	--sl-color-black: #0a0e17;
+	/* Backgrounds */
+	--sl-color-bg: #ffffff !important;
+	--sl-color-bg-nav: #f8fafc !important;
+	--sl-color-bg-sidebar: #f8fafc !important;
+	--sl-color-bg-inline-code: #f1f5f9 !important;
+
+	/* Borders */
+	--sl-color-hairline: #e2e8f0 !important;
+	--sl-color-hairline-light: #f1f5f9 !important;
+	--sl-color-hairline-shade: #cbd5e1 !important;
+
+	/* Gray scale — light */
+	--sl-color-white: #ffffff !important;
+	--sl-color-gray-1: #f8fafc !important;
+	--sl-color-gray-2: #e2e8f0 !important;
+	--sl-color-gray-3: #94a3b8 !important;
+	--sl-color-gray-4: #475569 !important;
+	--sl-color-gray-5: #1e293b !important;
+	--sl-color-gray-6: #0f172a !important;
+	--sl-color-gray-7: #020617 !important;
+	--sl-color-black: #0a0e17 !important;
+
+	/* Text */
+	--sl-color-text: #334155 !important;
+	--sl-color-text-accent: #0066cc !important;
 }
 
 /* Dark mode toggle gizle */
