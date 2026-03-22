@@ -21,6 +21,9 @@ export default defineConfig({
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/inscada-app' },
 			],
 			customCss: ['./src/styles/custom.css'],
+			components: {
+				ThemeProvider: './src/components/ThemeProvider.astro',
+			},
 			sidebar: [
 				{
 					label: 'Başlangıç',
