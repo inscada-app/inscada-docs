@@ -1,6 +1,7 @@
 ---
-// Override: Force light theme always
+// Override: Force light theme — clear any stored dark preference
 ---
 <script is:inline>
+	localStorage.setItem('starlight-theme', 'light');
 	document.documentElement.dataset.theme = 'light';
 </script>
