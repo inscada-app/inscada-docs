@@ -76,17 +76,17 @@ No graphical interface is required on Linux. inSCADA runs as a service (systemd)
 
 ## Software Dependencies
 
-inSCADA works with the following components. These are either included in the installation package or installed separately:
+inSCADA works with the following components. All components are **automatically installed** by the setup application. If preferred, these components can also be installed on separate servers to suit your existing infrastructure.
 
-| Component | Purpose | Included? |
-|-----------|---------|-----------|
-| **Java Runtime (JDK)** | Platform runtime | Included |
-| **Relational Database (RDB)** | Configuration and metadata | Separate install |
-| **Time Series Database (TSDB)** | Historical measurement data | Separate install |
-| **In-Memory Cache** | Real-time data access | Separate install |
+| Component | Purpose | Installation |
+|-----------|---------|-------------|
+| **Java Runtime (JDK)** | Platform runtime | Automatic via setup |
+| **Relational Database (RDB)** | Configuration and metadata | Automatic via setup |
+| **Time Series Database (TSDB)** | Historical measurement data | Automatic via setup |
+| **In-Memory Cache** | Real-time data access | Automatic via setup |
 
 :::tip
-For small and medium systems, all components can be installed on a single server. For large and enterprise systems, distributing databases across separate servers is recommended.
+For small and medium systems, the setup installs all components on a single server automatically — no additional configuration needed. For large and enterprise systems, distributing databases across separate servers in your existing infrastructure is recommended; in this case, components are installed independently and connection details are provided to inSCADA.
 :::
 
 ## Network Requirements

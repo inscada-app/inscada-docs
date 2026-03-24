@@ -76,17 +76,17 @@ Linux ortamında grafiksel arayüz gerekmez. inSCADA servis olarak (systemd) ça
 
 ## Yazılım Bağımlılıkları
 
-inSCADA, aşağıdaki bileşenlerle birlikte çalışır. Bu bileşenler kurulum paketine dahildir veya ayrı kurulabilir:
+inSCADA aşağıdaki bileşenlerle birlikte çalışır. Tüm bileşenler kurulum uygulaması (setup) tarafından **otomatik olarak kurulur**. İstenirse bu bileşenler mevcut altyapınıza uygun şekilde ayrı sunuculara da kurulabilir.
 
-| Bileşen | Amaç | Dahil mi? |
-|---------|-------|-----------|
-| **Java Runtime (JDK)** | Platform çalışma zamanı | Dahil |
-| **İlişkisel Veritabanı (RDB)** | Yapılandırma ve metadata | Ayrı kurulum |
-| **Zaman Serisi Veritabanı (TSDB)** | Tarihsel ölçüm verileri | Ayrı kurulum |
-| **Bellek İçi Önbellek** | Gerçek zamanlı veri erişimi | Ayrı kurulum |
+| Bileşen | Amaç | Kurulum |
+|---------|-------|---------|
+| **Java Runtime (JDK)** | Platform çalışma zamanı | Setup ile otomatik |
+| **İlişkisel Veritabanı (RDB)** | Yapılandırma ve metadata | Setup ile otomatik |
+| **Zaman Serisi Veritabanı (TSDB)** | Tarihsel ölçüm verileri | Setup ile otomatik |
+| **Bellek İçi Önbellek** | Gerçek zamanlı veri erişimi | Setup ile otomatik |
 
 :::tip
-Küçük ve orta ölçekli sistemlerde tüm bileşenler tek sunucuya kurulabilir. Büyük ve kurumsal sistemlerde veritabanlarının ayrı sunuculara dağıtılması önerilir.
+Küçük ve orta ölçekli sistemlerde setup tüm bileşenleri tek sunucuya otomatik kurar — ek yapılandırma gerekmez. Büyük ve kurumsal sistemlerde veritabanlarının mevcut altyapınızdaki ayrı sunuculara dağıtılması önerilir; bu durumda bileşenler bağımsız olarak kurulup inSCADA'ya bağlantı bilgileri verilir.
 :::
 
 ## Ağ Gereksinimleri
