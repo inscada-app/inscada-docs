@@ -80,11 +80,10 @@ Detaylı mimari bilgi için [Platform Mimarisi](/docs/tr/platform/architecture/)
 
 ## Başlangıç Adımları
 
-inSCADA ile çalışmaya başlamak dört adımda özetlenebilir:
-
-1. **Kur** — inSCADA'yı sunucunuza kurun, tarayıcıdan yönetim arayüzüne erişin
-2. **Proje oluştur** — Space ve proje tanımlayın, çalışma ortamınızı hazırlayın
-3. **Bağlantı ekle** — Saha cihazlarınızla protokol bağlantısı kurun, değişkenleri tanımlayın
-4. **İzlemeye başla** — Ekranlar tasarlayın, alarm kuralları belirleyin, sistemi canlıya alın
+1. **Kur ve giriş yap** — inSCADA'yı bilgisayarınıza kurun. Tarayıcıdan veya inSCADA Viewer'dan platforma login olun.
+2. **İlk projenizi oluşturun** — Varsayılan `default_space` çalışma alanında ilk projenizi oluşturun.
+3. **Veri yapısını kurun** — Projenize Bağlantı (Connection), Cihaz (Device), Veri Bloğu (Frame) ve Değişken (Variable) tanımlayın.
+4. **Haberleşmeyi başlatın** — Runtime Control Panel'den bağlantınızı başlatın, canlı veri akışını doğrulayın.
+5. **Uygulamanızı geliştirin** — SVG animasyon ekranları veya HTML arayüzler tasarlayın, alarm grupları ve alarm kuralları oluşturun, trend tanımları yapın ve uygulamanızı genişletin.
 
 Detaylı kurulum adımları için [Sistem Gereksinimleri](/docs/tr/getting-started/system-requirements/) sayfasına geçin.

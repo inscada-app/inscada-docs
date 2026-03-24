@@ -80,11 +80,10 @@ For detailed architecture information, see [Platform Architecture](/docs/en/plat
 
 ## Getting Started Steps
 
-Getting started with inSCADA can be summarised in four steps:
-
-1. **Install** — Install inSCADA on your server, access the management interface via browser
-2. **Create a project** — Define a space and project, prepare your working environment
-3. **Add connections** — Establish protocol connections to your field devices, define variables
-4. **Start monitoring** — Design screens, set alarm rules, go live
+1. **Install and log in** — Install inSCADA on your machine. Log in to the platform via browser or inSCADA Viewer.
+2. **Create your first project** — Create your first project in the default `default_space` workspace.
+3. **Set up the data structure** — Define a Connection, Device, Frame (data block) and Variables in your project.
+4. **Start communication** — Start your connection from the Runtime Control Panel and verify live data flow.
+5. **Develop your application** — Design SVG animation screens or HTML interfaces, create alarm groups and alarm rules, set up trends and expand your application.
 
 For detailed installation steps, proceed to [System Requirements](/docs/en/getting-started/system-requirements/).
