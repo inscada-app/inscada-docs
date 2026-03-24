@@ -8,12 +8,12 @@ sidebar:
 Bu bölüm inSCADA platformunun kurulumu ve çalışması için gerekli donanım, yazılım ve ağ altyapısı bilgilerini içerir.
 
 :::caution[Önemli]
-inSCADA, platform bileşenleri (RDB, TSDB, In-Memory Cache) ile birlikte özel sunuculara kurulmalıdır. Aynı sunucuda kaynak tüketen başka uygulamalar çalıştırılmamalıdır.
+inSCADA, platform bileşenleri (RDB, TSDB, In-Memory Cache) ile birlikte özel bir bilgisayara kurulmalıdır. Aynı bilgisayarda kaynak tüketen başka uygulamalar çalıştırılmamalıdır.
 :::
 
-## Sunucu Donanım Gereksinimleri
+## Donanım Gereksinimleri
 
-Aşağıdaki tablo, tag (değişken) sayısına göre minimum sunucu donanım gereksinimlerini gösterir. Daha yüksek olan tag veya cihaz sayısını baz alın.
+inSCADA; sunucu, masaüstü PC, endüstriyel PC veya mini bilgisayar gibi farklı donanımlarda çalışabilir. Aşağıdaki tablo, tag (değişken) sayısına göre minimum donanım gereksinimlerini gösterir. Daha yüksek olan tag veya cihaz sayısını baz alın.
 
 | Sistem Ölçeği | Tag Sayısı | CPU (Çekirdek) | RAM | Disk (SSD) |
 |---------------|-----------|----------------|-----|------------|
@@ -25,7 +25,7 @@ Aşağıdaki tablo, tag (değişken) sayısına göre minimum sunucu donanım ge
 
 :::note
 - Listelenen değerler minimum gereksinimlerdir. RAM değerlerini ikiye katlamanızı öneririz.
-- Cluster yapıda her node için ayrı donanım hesaplanmalıdır.
+- Yedekli (cluster) yapıda her node için ayrı donanım hesaplanmalıdır.
 - Disk alanı, tarihsel veri saklama süresine ve loglama sıklığına bağlı olarak artabilir.
 :::
 
@@ -37,7 +37,7 @@ inSCADA web tabanlı olduğundan istemci tarafında kurulum gerekmez. Herhangi b
 |---------|---------|
 | **Tarayıcı** | Chrome 90+, Edge 90+, Firefox 90+ |
 | **Ekran Çözünürlüğü** | 1920 × 1080 |
-| **Ağ** | Sunucuya HTTPS erişimi |
+| **Ağ** | inSCADA'ya HTTPS erişimi |
 
 **inSCADA Viewer** masaüstü uygulaması için ek gereksinimler:
 
@@ -53,7 +53,7 @@ inSCADA sunucusu aşağıdaki işletim sistemlerinde çalışır:
 
 ### Windows
 
-| İşletim Sistemi | Sunucu | İstemci (Viewer) |
+| İşletim Sistemi | inSCADA | İstemci (Viewer) |
 |-----------------|--------|-----------------|
 | Windows Server 2022 | ✓ | — |
 | Windows Server 2019 | ✓ | — |
@@ -63,7 +63,7 @@ inSCADA sunucusu aşağıdaki işletim sistemlerinde çalışır:
 
 ### Linux
 
-| Dağıtım | Sunucu |
+| Dağıtım | inSCADA |
 |----------|--------|
 | Ubuntu 22.04 LTS / 24.04 LTS | ✓ |
 | Red Hat Enterprise Linux 8 / 9 | ✓ |
@@ -86,7 +86,7 @@ inSCADA aşağıdaki bileşenlerle birlikte çalışır. Tüm bileşenler kurulu
 | **Bellek İçi Önbellek** | Gerçek zamanlı veri erişimi | Setup ile otomatik |
 
 :::tip
-Küçük ve orta ölçekli sistemlerde setup tüm bileşenleri tek sunucuya otomatik kurar — ek yapılandırma gerekmez. Büyük ve kurumsal sistemlerde veritabanlarının mevcut altyapınızdaki ayrı sunuculara dağıtılması önerilir; bu durumda bileşenler bağımsız olarak kurulup inSCADA'ya bağlantı bilgileri verilir.
+Küçük ve orta ölçekli sistemlerde setup tüm bileşenleri tek bilgisayara otomatik kurar — ek yapılandırma gerekmez. Büyük ve kurumsal sistemlerde veritabanlarının mevcut altyapınızdaki ayrı makinelere dağıtılması önerilir; bu durumda bileşenler bağımsız olarak kurulup inSCADA'ya bağlantı bilgileri verilir.
 :::
 
 ## Ağ Gereksinimleri
@@ -95,9 +95,9 @@ Küçük ve orta ölçekli sistemlerde setup tüm bileşenleri tek sunucuya otom
 
 | Kullanım | Minimum |
 |----------|---------|
-| Sunucu – Saha Cihazları | 100 Mbps Ethernet |
-| Sunucu – İstemciler | 100 Mbps (1 Gbps önerilir) |
-| Sunucu – Sunucu (Cluster) | 1 Gbps |
+| inSCADA – Saha Cihazları | 100 Mbps Ethernet |
+| inSCADA – İstemciler | 100 Mbps (1 Gbps önerilir) |
+| Node – Node (Cluster) | 1 Gbps |
 | Seri haberleşme | 19.200 bps minimum baud rate |
 
 ### Port Gereksinimleri
@@ -125,7 +125,7 @@ Firewall kuralları yapılandırılırken yalnızca gerekli portların açılmas
 
 inSCADA aşağıdaki sanallaştırma platformlarında desteklenir:
 
-| Platform | Sunucu | İstemci |
+| Platform | inSCADA | İstemci |
 |----------|--------|---------|
 | VMware vSphere / ESXi | ✓ | ✓ |
 | Microsoft Hyper-V | ✓ | ✓ |

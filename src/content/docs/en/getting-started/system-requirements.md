@@ -8,12 +8,12 @@ sidebar:
 This section covers the hardware, software and network infrastructure requirements for installing and running the inSCADA platform.
 
 :::caution[Important]
-inSCADA should be installed on dedicated servers along with its platform components (RDB, TSDB, In-Memory Cache). Do not run other resource-intensive applications on the same server.
+inSCADA should be installed on a dedicated machine along with its platform components (RDB, TSDB, In-Memory Cache). Do not run other resource-intensive applications on the same machine.
 :::
 
-## Server Hardware Requirements
+## Hardware Requirements
 
-The following table shows minimum server hardware requirements by tag (variable) count. Use the higher of the tag or device count as your basis.
+inSCADA can run on a wide range of hardware — from servers and desktop PCs to industrial PCs and mini computers. The following table shows minimum hardware requirements by tag (variable) count. Use the higher of the tag or device count as your basis.
 
 | System Scale | Tag Count | CPU (Cores) | RAM | Disk (SSD) |
 |-------------|-----------|-------------|-----|------------|
@@ -25,7 +25,7 @@ The following table shows minimum server hardware requirements by tag (variable)
 
 :::note
 - Listed values are minimum requirements. We recommend doubling the RAM values.
-- In a cluster setup, hardware should be calculated separately for each node.
+- In a redundant (cluster) setup, hardware should be calculated separately for each node.
 - Disk space may increase depending on historical data retention period and logging frequency.
 :::
 
@@ -37,7 +37,7 @@ Since inSCADA is web-based, no client-side installation is required. Any modern 
 |-----------|---------|
 | **Browser** | Chrome 90+, Edge 90+, Firefox 90+ |
 | **Screen Resolution** | 1920 × 1080 |
-| **Network** | HTTPS access to server |
+| **Network** | HTTPS access to inSCADA |
 
 Additional requirements for the **inSCADA Viewer** desktop application:
 
@@ -53,7 +53,7 @@ The inSCADA server runs on the following operating systems:
 
 ### Windows
 
-| Operating System | Server | Client (Viewer) |
+| Operating System | inSCADA | Client (Viewer) |
 |-----------------|--------|-----------------|
 | Windows Server 2022 | ✓ | — |
 | Windows Server 2019 | ✓ | — |
@@ -63,7 +63,7 @@ The inSCADA server runs on the following operating systems:
 
 ### Linux
 
-| Distribution | Server |
+| Distribution | inSCADA |
 |-------------|--------|
 | Ubuntu 22.04 LTS / 24.04 LTS | ✓ |
 | Red Hat Enterprise Linux 8 / 9 | ✓ |
@@ -86,7 +86,7 @@ inSCADA works with the following components. All components are **automatically 
 | **In-Memory Cache** | Real-time data access | Automatic via setup |
 
 :::tip
-For small and medium systems, the setup installs all components on a single server automatically — no additional configuration needed. For large and enterprise systems, distributing databases across separate servers in your existing infrastructure is recommended; in this case, components are installed independently and connection details are provided to inSCADA.
+For small and medium systems, the setup installs all components on a single server automatically — no additional configuration needed. For large and enterprise systems, distributing databases across separate machines in your existing infrastructure is recommended; in this case, components are installed independently and connection details are provided to inSCADA.
 :::
 
 ## Network Requirements
@@ -95,9 +95,9 @@ For small and medium systems, the setup installs all components on a single serv
 
 | Usage | Minimum |
 |-------|---------|
-| Server – Field Devices | 100 Mbps Ethernet |
-| Server – Clients | 100 Mbps (1 Gbps recommended) |
-| Server – Server (Cluster) | 1 Gbps |
+| inSCADA – Field Devices | 100 Mbps Ethernet |
+| inSCADA – Clients | 100 Mbps (1 Gbps recommended) |
+| Node – Node (Cluster) | 1 Gbps |
 | Serial communication | 19,200 bps minimum baud rate |
 
 ### Port Requirements
@@ -125,7 +125,7 @@ When configuring firewall rules, only open the required ports. Ports marked as i
 
 inSCADA is supported on the following virtualisation platforms:
 
-| Platform | Server | Client |
+| Platform | inSCADA | Client |
 |----------|--------|--------|
 | VMware vSphere / ESXi | ✓ | ✓ |
 | Microsoft Hyper-V | ✓ | ✓ |
