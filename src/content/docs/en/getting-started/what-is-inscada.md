@@ -7,7 +7,17 @@ sidebar:
 
 **inSCADA** is a web-based platform designed for developing SCADA, HMI and IIoT applications across all areas of industry. It has a fully RESTful architecture — every operation on the platform can be performed through the REST API. Its multi-tenant structure allows multiple workspaces (Spaces) and projects to be managed simultaneously in isolation. With multi-user access, different roles and permissions can be defined so teams can work in parallel.
 
-All development activities — project creation, connection configuration, screen design, script development — are carried out through the web interface. Any browser can be used, and for a streamlined operator experience the **inSCADA Viewer** desktop application is also available.
+Project creation, connection configuration, alarm definitions, trend settings, notification rules and more — 95% of the development and configuration activities needed in the SCADA domain are carried out through the web interface. Any browser can be used, and for a streamlined user experience the **inSCADA Viewer** desktop application is also available.
+
+### Screen Design: Two Different Approaches
+
+inSCADA offers two different methods for developing user interfaces:
+
+**Traditional Method — SVG Animation:** The classic approach of binding live data and animations to visual objects, as found in traditional SCADA software. inSCADA delivers this through an SVG-based solution. Outputs from any SVG editor (Figma, Illustrator, Inkscape, etc.) can be imported directly into the platform. Any object within the SVG (text, rectangle, path, circle, etc.) can be assigned an animation type — colour change, movement, rotation, value display, opacity and more.
+
+**Modern Method — HTML/JS/CSS Application Development:** Using the Custom Menu feature, you can develop fully custom interfaces with HTML, JavaScript and CSS. This method allows you to create dashboards, control panels or reporting screens with unlimited flexibility using standard web technologies.
+
+Both methods can be used together in the same project — you can create **hybrid interfaces**. For example, an SVG mimic screen can sit alongside an HTML-based trend chart or control panel.
 
 ## Key Differentiator: Runtime = Development
 
@@ -24,7 +34,7 @@ This approach:
 
 ### SCADA / HMI
 
-Collect live data from field devices and present operators with visual screens. SVG-based mimic screens can be imported directly from design tools like Figma. Any SVG object (text, rectangle, path, etc.) can be bound to an animation type and live data — colour changes, movement, rotation, value display and more.
+Collect live data from field devices and present users with visual screens. Using the SVG and HTML/JS/CSS methods described above, design interfaces tailored to your facility. Live values, trend charts, alarm indicators and control buttons can all be combined in a single screen.
 
 ### Data Collection and Communication
 
