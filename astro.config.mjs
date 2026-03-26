@@ -66,7 +66,11 @@ export default defineConfig({
 							collapsed: true,
 							autogenerate: { directory: 'protocols/iec61850' },
 						},
-						{ slug: 'protocols/opc-ua' },
+						{
+							label: 'OPC UA',
+							collapsed: true,
+							autogenerate: { directory: 'protocols/opc-ua' },
+						},
 						{ slug: 'protocols/opc-da' },
 						{ slug: 'protocols/opc-xml' },
 						{ slug: 'protocols/s7' },
