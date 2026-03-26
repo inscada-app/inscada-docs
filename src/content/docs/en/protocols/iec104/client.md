@@ -84,37 +84,54 @@ When **Use IOA Addresses = false**, simple `Read Address` / `Write Address` fiel
 
 In inSCADA, an IEC 104 variable can have both a **Read Address** and a **Write Address**. Correct usage of these two addresses is critical for efficient configuration.
 
-**Basic rule:** If you only enter a Write Address for a variable, you **cannot see** the written value on inSCADA screens — because no read address is defined. This is a common configuration mistake, especially with control commands.
+**Basic rule:** If you only enter a Write Address for a variable, you **cannot see** the written value on inSCADA screens — because no read address is defined.
 
-**Recommended approach:**
+#### Best Practice: Use the Same IOA Address
 
-When configuring IEC 104 on the RTU or PLC side, create a read address for every writable address so the same value can be read back. This allows a single variable in inSCADA to handle both reading and writing:
+In the IEC 104 standard, reading (monitoring) and writing (control) for the same data point use different ASDU types. However, the **IOA address can remain the same** — because the ASDU type is determined by the Frame type. inSCADA automatically knows which ASDU type to use:
 
-- **Read Address:** Current value or status read from the device (e.g., breaker position)
-- **Write Address:** Command or setpoint sent to the device (e.g., breaker open command)
+| Operation | ASDU Type | Type Group | Direction |
+|-----------|-----------|------------|-----------|
+| **Read** | M_SP_NA_1 (TI 1) | Single Point Information | Monitoring |
+| **Read (timestamped)** | M_SP_TB_1 (TI 30) | Single Point Information | Monitoring |
+| **Write** | C_SC_NA_1 (TI 45) | Single Command | Control |
+| **Write (timestamped)** | C_SC_TA_1 (TI 58) | Single Command | Control |
+
+Notice: These all belong to the same **Single Point** data group. The only difference is whether it is monitoring (M_) or control (C_) and whether it includes a timestamp. Therefore, **you can enter the same IOA address for both Read and Write:**
+
+```
+Variable: "Breaker_1"
+├── Read Address:  100    ← Read as M_SP_NA_1 (Frame type determines this)
+└── Write Address: 100    ← Written as C_SC_NA_1 (Frame type determines this)
+```
+
+inSCADA automatically selects the correct ASDU type by looking at the Frame type the variable belongs to:
+- Frame type **Single Point Information** → M_SP_NA_1/TB_1 for reading, C_SC_NA_1/TA_1 for writing
+- Frame type **Measured Value, Short Float** → M_ME_NC_1/TF_1 for reading, C_SE_NC_1 for writing
+
+**This means:**
+- A single variable definition with the same IOA address is sufficient
+- The same address can be used for both monitoring and control on the RTU/PLC side
+- **No need to create separate variables** for reading and writing
+- You can see the current value on screens and send control commands from the same variable
 
 **Example — Breaker Control:**
 
-| Scenario | Read Address | Write Address | Description |
-|---------|:-----------:|:------------:|-------------|
-| Breaker Status + Control | IOA 100 (position) | IOA 200 (command) | Single variable: reads position, writes command |
-| Setpoint + Feedback | IOA 300 (actual value) | IOA 400 (target value) | Single variable: reads measurement, writes setpoint |
-
-With this approach:
-- **No need to create separate variables** for reading and writing
-- You can see the variable's current value on screens and send control commands from the same variable
-- Project configuration becomes simpler and more manageable
+| Variable | Read Address | Write Address | Read ASDU | Write ASDU |
+|----------|:-----------:|:------------:|:---------:|:----------:|
+| Breaker_1 | 100 | 100 | M_SP_NA_1 | C_SC_NA_1 |
+| Temp_Setpoint | 200 | 200 | M_ME_NC_1 | C_SE_NC_1 |
 
 :::caution[Important Recommendation]
-We strongly recommend adopting this read/write addressing approach as a standard practice in your IEC 104 applications. Creating an addressing plan on the RTU/PLC side that follows this pattern simplifies inSCADA configuration and improves the operator experience during operation.
+We strongly recommend adopting this addressing approach as a standard practice in your IEC 104 applications. Configuring the same IOA address for both monitoring and control on the RTU/PLC side halves the number of variables in inSCADA and significantly simplifies project management.
 :::
 
 ## Step 5: Start the Connection
 
-**Runtime Control Panel**'den bağlantıyı başlatın. inSCADA otomatik olarak:
-1. TCP bağlantısı kurar
-2. STARTDT (Start Data Transfer) gönderir
-3. Background scan başlatır (yapılandırılmışsa)
-4. Spontaneous event'leri dinlemeye başlar
+Start the connection from the **Runtime Control Panel**. inSCADA will automatically:
+1. Establish the TCP connection
+2. Send STARTDT (Start Data Transfer)
+3. Start background scan (if configured)
+4. Begin listening for spontaneous events
 
-Bağlantı durumu "Connected" olarak görünecektir.
+The connection status will show "Connected".

@@ -84,29 +84,46 @@ IEC 104 değişkenleri IOA (Information Object Address) ile tanımlanır:
 
 inSCADA'da bir IEC 104 variable'ına hem **Read Address** hem de **Write Address** girilebilir. Bu iki adresin doğru kullanımı, verimli bir yapılandırma için kritiktir.
 
-**Temel kural:** Bir variable'a yalnızca Write Address girerseniz, yazılan değeri inSCADA ekranlarında **göremezsiniz** — çünkü okuma adresi tanımlı değildir. Bu durum özellikle kontrol komutlarında karşılaşılan yaygın bir yapılandırma hatasıdır.
+**Temel kural:** Bir variable'a yalnızca Write Address girerseniz, yazılan değeri inSCADA ekranlarında **göremezsiniz** — çünkü okuma adresi tanımlı değildir.
 
-**Önerilen yaklaşım:**
+#### En İyi Yaklaşım: Aynı IOA Adresini Kullanın
 
-RTU veya PLC tarafında IEC 104 yapılandırması yaparken, yazılabilir her adres için aynı değerin okunabileceği bir read adresi de oluşturun. Bu sayede inSCADA'da tek bir variable tanımıyla hem okuma hem yazma yapılabilir:
+IEC 104 standardında, aynı veri noktası için okuma (monitoring) ve yazma (control) farklı ASDU tipleri ile yapılır. Ancak **IOA adresi aynı kalabilir** — çünkü ASDU tipi Frame'in tipinden belirlenir. inSCADA hangi ASDU tipini kullanacağını zaten bilir:
 
-- **Read Address:** Cihazdan okunan güncel değer veya durum (ör. kesici pozisyon bilgisi)
-- **Write Address:** Cihaza gönderilen komut veya setpoint (ör. kesici açma komutu)
+| İşlem | ASDU Tipi | Tip Grubu | Yön |
+|-------|-----------|-----------|-----|
+| **Okuma** | M_SP_NA_1 (TI 1) | Single Point Information | Monitoring |
+| **Okuma (zaman damgalı)** | M_SP_TB_1 (TI 30) | Single Point Information | Monitoring |
+| **Yazma** | C_SC_NA_1 (TI 45) | Single Command | Control |
+| **Yazma (zaman damgalı)** | C_SC_TA_1 (TI 58) | Single Command | Control |
+
+Dikkat edin: Bunların hepsi aynı **Single Point** veri grubuna aittir. Fark yalnızca monitoring (M_) veya control (C_) olması ve zaman damgası içerip içermemesidir. Dolayısıyla **aynı IOA adresini hem Read hem Write olarak girebilirsiniz:**
+
+```
+Variable: "Kesici_1"
+├── Read Address:  100    ← M_SP_NA_1 olarak okunur (Frame tipi belirler)
+└── Write Address: 100    ← C_SC_NA_1 olarak yazılır (Frame tipi belirler)
+```
+
+inSCADA, variable'ın bağlı olduğu Frame tipine bakarak otomatik olarak doğru ASDU tipini seçer:
+- Frame tipi **Single Point Information** → okuma için M_SP_NA_1/TB_1, yazma için C_SC_NA_1/TA_1
+- Frame tipi **Measured Value, Short Float** → okuma için M_ME_NC_1/TF_1, yazma için C_SE_NC_1
+
+**Bu sayede:**
+- Aynı IOA adresi ile tek bir variable tanımı yeterlidir
+- RTU/PLC tarafında da aynı adres hem monitoring hem control için kullanılabilir
+- Okuma ve yazma için **ayrı variable oluşturmanıza gerek kalmaz**
+- Ekranlarda değişkenin güncel değerini görebilir, aynı değişken üzerinden kontrol komutu gönderebilirsiniz
 
 **Örnek — Kesici Kontrolü:**
 
-| Senaryo | Read Address | Write Address | Açıklama |
-|---------|:-----------:|:------------:|----------|
-| Kesici Durumu + Kontrol | IOA 100 (pozisyon) | IOA 200 (komut) | Tek variable: pozisyon okur, komut yazar |
-| Setpoint + Feedback | IOA 300 (gerçek değer) | IOA 400 (hedef değer) | Tek variable: ölçümü okur, setpoint yazar |
-
-Bu yaklaşımla:
-- Okuma ve yazma için **ayrı ayrı variable oluşturmanıza gerek kalmaz**
-- Ekranlarda değişkenin güncel değerini görebilir, aynı değişken üzerinden kontrol komutu gönderebilirsiniz
-- Proje yapılandırması daha sade ve yönetilebilir olur
+| Variable | Read Address | Write Address | Okuma ASDU | Yazma ASDU |
+|----------|:-----------:|:------------:|:----------:|:----------:|
+| Kesici_1 | 100 | 100 | M_SP_NA_1 | C_SC_NA_1 |
+| Sıcaklık_Setpoint | 200 | 200 | M_ME_NC_1 | C_SE_NC_1 |
 
 :::caution[Önemli Tavsiye]
-IEC 104 kullandığınız uygulamalarınızda bu read/write adresleme yaklaşımını bir standart olarak benimsemenizi önemle tavsiye ederiz. RTU/PLC yapılandırmasında bu pattern'e uygun adresleme planı oluşturulması, hem inSCADA tarafındaki yapılandırmayı basitleştirir hem de işletme sırasında operatör deneyimini iyileştirir.
+IEC 104 kullandığınız uygulamalarınızda bu adresleme yaklaşımını standart olarak benimsemenizi önemle tavsiye ederiz. RTU/PLC tarafında aynı IOA adresinin hem monitoring hem control için yapılandırılması, inSCADA tarafındaki variable sayısını yarıya indirir ve proje yönetimini önemli ölçüde basitleştirir.
 :::
 
 ## Adım 5: Bağlantıyı Başlatma
