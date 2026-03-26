@@ -51,7 +51,11 @@ export default defineConfig({
 							collapsed: true,
 							autogenerate: { directory: 'protocols/modbus' },
 						},
-						{ slug: 'protocols/dnp3' },
+						{
+							label: 'DNP3',
+							collapsed: true,
+							autogenerate: { directory: 'protocols/dnp3' },
+						},
 						{ slug: 'protocols/iec104' },
 						{ slug: 'protocols/iec61850' },
 						{ slug: 'protocols/opc-ua' },
