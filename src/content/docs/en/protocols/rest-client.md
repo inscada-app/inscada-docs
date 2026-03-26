@@ -117,11 +117,14 @@ ins.rest("POST", "https://erp.company.com/api/production", "application/json", p
 
 ## Script Zamanlama
 
-`ins.rest()` fonksiyonunu periyodik olarak çalıştırmak için inSCADA'nın **Script** modülünü kullanın:
+`ins.rest()` fonksiyonunu periyodik olarak çalıştırmak için inSCADA'nın **Script** modülünde bir script oluşturun ve zamanlama tipini seçin:
 
-- **CronJob:** Cron expression ile zamanlama (ör. `0 */5 * * * *` — her 5 dakikada)
-- **PeriodicJob:** Sabit aralıkla (ör. her 10000 ms)
-- **DailyJob:** Günlük belirli saatte (ör. her gün 08:00)
+| Zamanlama Tipi | Parametreler | Açıklama |
+|----------------|-------------|----------|
+| **Periodic** | Period (ms), Offset (ms) | Sabit aralıkla tekrarlayan çalıştırma. Ör: Period = 300000 → her 5 dakikada |
+| **Daily** | Saat:Dakika | Her gün belirli bir saatte çalıştırma. Ör: 08:00 |
+| **Once** | Gecikme (ms) | Tek seferlik çalıştırma. Script bir kez çalışır ve durur |
+| **None** | — | Otomatik zamanlama yok. Script yalnızca API üzerinden veya manuel tetiklenir |
 
 Bu sayede REST API Client protokolü olmadan da periyodik HTTP veri toplama ve gönderme işlemleri gerçekleştirilebilir.
 
