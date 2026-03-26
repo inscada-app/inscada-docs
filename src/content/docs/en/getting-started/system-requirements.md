@@ -102,23 +102,49 @@ For small and medium systems, the setup installs all components on a single serv
 
 ### Port Requirements
 
+**Platform Ports:**
+
 | Port | Service | Direction |
 |------|---------|-----------|
+| 8081 | inSCADA Web Interface (HTTP) | Inbound |
 | 8082 | inSCADA Web Interface (HTTPS) | Inbound |
-| 8083 | Script Sandbox (HTTPS) | Internal |
 | 5432 | Relational Database | Internal |
 | 8086 | Time Series Database | Internal |
 | 6379 | In-Memory Cache | Internal |
 | 7800 | Cluster Communication | Internal (inter-node) |
 | 61616 | Message Queue (Cluster) | Internal (inter-node) |
-| 502 | Modbus TCP | Outbound |
-| 2404 | IEC 60870-5-104 | Outbound/Inbound |
-| 102 | IEC 61850 MMS | Outbound |
-| 4840 | OPC UA | Outbound/Inbound |
-| 20000 | DNP3 | Outbound/Inbound |
+
+**Protocol Ports (Client — inSCADA → Field Device):**
+
+When inSCADA connects to field devices as a client/master, it initiates outbound connections to the target device's port. These ports generally do not need to be opened on the inSCADA side; they must be open on the target device.
+
+| Port | Protocol | Description |
+|------|----------|-------------|
+| 502 | Modbus TCP | Default Modbus port |
+| 102 | IEC 61850 MMS | MMS communication |
+| 2404 | IEC 60870-5-104 | Default IEC 104 port |
+| 20000 | DNP3 | Default DNP3 port |
+| 4840 | OPC UA | Default OPC UA port |
+| 102 | Siemens S7 | S7 communication port |
+| 1883 | MQTT | Default MQTT broker port |
+| 44818 | EtherNet/IP | Default EIP port |
+
+**Protocol Ports (Server — External System → inSCADA):**
+
+For protocols where inSCADA operates in server/slave role, the relevant port must be **open for inbound connections** on the inSCADA side so external systems can connect.
+
+| Port | Protocol | Description |
+|------|----------|-------------|
+| Configurable | Modbus TCP Slave | Default: 502 (can be changed) |
+| Configurable | IEC 60870-5-104 Server | Default: 2404 (can be changed) |
+| Configurable | IEC 61850 Server | MMS server port |
+| Configurable | DNP3 Slave | Default: 20000 (can be changed) |
+| Configurable | OPC UA Server | Default: 4840 (can be changed) |
 
 :::note
-When configuring firewall rules, only open the required ports. Ports marked as internal should only be accessible within the server or between cluster nodes.
+- Only open ports that are actually in use in your firewall rules
+- Internal ports (database, cache, cluster) should only be accessible within the same machine or between cluster nodes
+- Server/Slave protocol ports can be changed from connection settings
 :::
 
 ## Virtualisation

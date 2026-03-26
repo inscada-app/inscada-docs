@@ -102,23 +102,49 @@ Küçük ve orta ölçekli sistemlerde setup tüm bileşenleri tek bilgisayara o
 
 ### Port Gereksinimleri
 
+**Platform Portları:**
+
 | Port | Servis | Yön |
 |------|--------|-----|
+| 8081 | inSCADA Web Arayüzü (HTTP) | Gelen |
 | 8082 | inSCADA Web Arayüzü (HTTPS) | Gelen |
-| 8083 | Script Sandbox (HTTPS) | Dahili |
 | 5432 | İlişkisel Veritabanı | Dahili |
 | 8086 | Zaman Serisi Veritabanı | Dahili |
 | 6379 | Bellek İçi Önbellek | Dahili |
 | 7800 | Cluster Haberleşme | Dahili (node arası) |
 | 61616 | Mesaj Kuyruğu (Cluster) | Dahili (node arası) |
-| 502 | Modbus TCP | Giden |
-| 2404 | IEC 60870-5-104 | Giden/Gelen |
-| 102 | IEC 61850 MMS | Giden |
-| 4840 | OPC UA | Giden/Gelen |
-| 20000 | DNP3 | Giden/Gelen |
+
+**Protokol Portları (Client — inSCADA → Saha Cihazı):**
+
+inSCADA client/master olarak saha cihazlarına bağlanırken hedef cihazın portuna giden bağlantı kurar. Bu portların inSCADA tarafında açılmasına genellikle gerek yoktur; hedef cihazda açık olmalıdır.
+
+| Port | Protokol | Açıklama |
+|------|----------|----------|
+| 502 | Modbus TCP | Varsayılan Modbus portu |
+| 102 | IEC 61850 MMS | MMS haberleşme |
+| 2404 | IEC 60870-5-104 | Varsayılan IEC 104 portu |
+| 20000 | DNP3 | Varsayılan DNP3 portu |
+| 4840 | OPC UA | Varsayılan OPC UA portu |
+| 102 | Siemens S7 | S7 haberleşme portu |
+| 1883 | MQTT | Varsayılan MQTT broker portu |
+| 44818 | EtherNet/IP | Varsayılan EIP portu |
+
+**Protokol Portları (Server — Dış Sistem → inSCADA):**
+
+inSCADA'nın server/slave rolünde çalıştığı protokollerde, dış sistemlerin inSCADA'ya bağlanabilmesi için ilgili portun inSCADA tarafında **gelen bağlantılara açık** olması gerekir.
+
+| Port | Protokol | Açıklama |
+|------|----------|----------|
+| Yapılandırılabilir | Modbus TCP Slave | Varsayılan: 502 (değiştirilebilir) |
+| Yapılandırılabilir | IEC 60870-5-104 Server | Varsayılan: 2404 (değiştirilebilir) |
+| Yapılandırılabilir | IEC 61850 Server | MMS server portu |
+| Yapılandırılabilir | DNP3 Slave | Varsayılan: 20000 (değiştirilebilir) |
+| Yapılandırılabilir | OPC UA Server | Varsayılan: 4840 (değiştirilebilir) |
 
 :::note
-Firewall kuralları yapılandırılırken yalnızca gerekli portların açılması önerilir. Dahili olarak işaretlenen portlar yalnızca sunucu içi veya cluster node'ları arasında erişilebilir olmalıdır.
+- Firewall kurallarında yalnızca kullanılan portları açın
+- Dahili portlar (veritabanı, cache, cluster) yalnızca aynı makine veya cluster node'ları arasında erişilebilir olmalıdır
+- Server/Slave protokol portları bağlantı ayarlarından değiştirilebilir
 :::
 
 ## Sanallaştırma
