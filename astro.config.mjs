@@ -45,7 +45,26 @@ export default defineConfig({
 				{
 					label: 'Protokoller',
 					translations: { en: 'Protocols' },
-					autogenerate: { directory: 'protocols' },
+					items: [
+						{
+							label: 'MODBUS',
+							collapsed: true,
+							autogenerate: { directory: 'protocols/modbus' },
+						},
+						{ slug: 'protocols/dnp3' },
+						{ slug: 'protocols/iec104' },
+						{ slug: 'protocols/iec61850' },
+						{ slug: 'protocols/opc-ua' },
+						{ slug: 'protocols/opc-da' },
+						{ slug: 'protocols/opc-xml' },
+						{ slug: 'protocols/s7' },
+						{ slug: 'protocols/mqtt' },
+						{ slug: 'protocols/ethernet-ip' },
+						{ slug: 'protocols/fatek' },
+						{ slug: 'protocols/rest-client' },
+						{ slug: 'protocols/bacnet' },
+						{ slug: 'protocols/knx' },
+					],
 				},
 				{
 					label: 'REST API',

@@ -52,6 +52,11 @@ starlight-theme-select {
 	display: none !important;
 }
 
+/* Sidebar group labels: force uppercase for protocol names */
+nav.sidebar summary span.large {
+	text-transform: none;
+}
+
 /* Logo */
 .site-title img {
 	max-height: 1.75rem;
