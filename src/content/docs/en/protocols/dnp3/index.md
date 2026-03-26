@@ -2,7 +2,7 @@
 title: "DNP3"
 description: "inSCADA'da DNP3 protokolü — genel bakış, mimari ve ortak parametreler"
 sidebar:
-  order: 2
+  order: 0
   label: "DNP3"
 ---
 
