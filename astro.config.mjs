@@ -61,7 +61,11 @@ export default defineConfig({
 							collapsed: true,
 							autogenerate: { directory: 'protocols/iec104' },
 						},
-						{ slug: 'protocols/iec61850' },
+						{
+							label: 'IEC 61850',
+							collapsed: true,
+							autogenerate: { directory: 'protocols/iec61850' },
+						},
 						{ slug: 'protocols/opc-ua' },
 						{ slug: 'protocols/opc-da' },
 						{ slug: 'protocols/opc-xml' },
