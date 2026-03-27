@@ -44,7 +44,7 @@ export default defineConfig({
 						{ slug: 'platform/alarms' },
 						{
 							label: 'Script Engine',
-							collapsed: true,
+							collapsed: false,
 							autogenerate: { directory: 'platform/scripts' },
 						},
 					],
