@@ -52,9 +52,19 @@ starlight-theme-select {
 	display: none !important;
 }
 
-/* Sidebar group labels: force uppercase for protocol names */
+/* Sidebar group labels: always bold with visible chevron */
 nav.sidebar summary span.large {
 	text-transform: none;
+	font-weight: 700 !important;
+	color: var(--sl-color-white) !important;
+}
+
+nav.sidebar details > summary {
+	font-weight: 600 !important;
+}
+
+nav.sidebar details > summary svg {
+	opacity: 1 !important;
 }
 
 /* Logo */
