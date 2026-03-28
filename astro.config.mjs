@@ -42,6 +42,10 @@ export default defineConfig({
 						{ slug: 'platform/devices' },
 						{ slug: 'platform/variables' },
 						{ slug: 'platform/alarms' },
+						{ slug: 'platform/users-roles' },
+						{ slug: 'platform/expressions' },
+						{ slug: 'platform/data-transfers' },
+						{ slug: 'platform/logs' },
 						{
 							label: 'Script Engine',
 							collapsed: false,
