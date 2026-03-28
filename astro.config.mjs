@@ -51,7 +51,11 @@ export default defineConfig({
 							collapsed: false,
 							autogenerate: { directory: 'platform/scripts' },
 						},
-						{ slug: 'platform/svg-animations' },
+						{
+							label: 'SVG Animations',
+							collapsed: true,
+							autogenerate: { directory: 'platform/animations' },
+						},
 						{ slug: 'platform/faceplates' },
 						{ slug: 'platform/custom-menus' },
 						{ slug: 'platform/web-components' },
