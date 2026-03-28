@@ -24,6 +24,25 @@ Connection API, script'ler içinden haberleşme bağlantılarını yönetir.
 | **ins.updateDevice(connName, devName, map)** | Cihaz parametrelerini güncelle |
 | **ins.updateFrame(connName, devName, frameName, map)** | Frame parametrelerini güncelle |
 
-### Örnek
+### Örnekler
 
+```javascript
+// Bağlantı durumunu sorgula
+var status = ins.getConnectionStatus("LOCAL-Energy");
+// → "Connected"
+```
 
+```javascript
+// Bağlantıyı yeniden başlat
+ins.stopConnection("MODBUS-PLC");
+java.lang.Thread.sleep(2000);
+ins.startConnection("MODBUS-PLC");
+```
+
+```javascript
+// Bağlantı parametresini güncelle (örn: IP değişikliği)
+ins.updateConnection("MODBUS-PLC", {
+    "ip": "192.168.1.100",
+    "port": 502
+});
+```

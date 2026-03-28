@@ -16,19 +16,20 @@ Harici bir HTTP servisine istek gönderir.
 ```javascript
 // GET isteği
 var response = ins.rest("GET",
-    "https://api.example.com/data",
+    "https://jsonplaceholder.typicode.com/todos/1",
     "application/json", null);
 
-// POST isteği
-var payload = JSON.stringify({temperature: 25.4, pressure: 3.2});
-var response = ins.rest("POST",
-    "https://api.example.com/telemetry",
-    "application/json", payload);
+var statusCode = response.statusCode;
+var body = response.body;
+var data = JSON.parse(body);
+```
 
-// Yanıt
-var statusCode = response.statusCode;  // 200
-var body = response.body;              // yanıt gövdesi (string)
-var data = JSON.parse(body);           // JSON parse
+Yanıt:
+```json
+{
+  "statusCode": 200,
+  "body": "{\n  \"userId\": 1,\n  \"id\": 1,\n  \"title\": \"delectus aut autem\",\n  \"completed\": false\n}"
+}
 ```
 
 ### ins.rest(httpMethod, url, headers, body)
@@ -37,12 +38,13 @@ var data = JSON.parse(body);           // JSON parse
 
 ```javascript
 var headers = {
-    "Authorization": "Bearer eyJhbGci...",
     "Content-Type": "application/json",
-    "X-API-Key": "my-key"
+    "Accept": "application/json"
 };
 
-var response = ins.rest("GET", "https://api.example.com/secure", headers, null);
+var response = ins.rest("GET",
+    "https://jsonplaceholder.typicode.com/todos/1",
+    headers, null);
 ```
 
 **Desteklenen HTTP metodları:** `GET`, `POST`, `PUT`, `DELETE`
@@ -112,7 +114,7 @@ Sunucunun güncel zamanını döndürür.
 
 ```javascript
 var now = ins.now();
-ins.consoleLog("Şu an: " + now.toISOString());
+// → Sat Mar 28 11:31:47 TRT 2026
 ```
 
 ### ins.getDate(ms)
@@ -122,6 +124,7 @@ Milisaniye değerinden Date nesnesi oluşturur.
 ```javascript
 var yesterday = ins.getDate(Date.now() - 86400000);
 var oneHourAgo = ins.getDate(Date.now() - 3600000);
+// → Sat Mar 28 10:32:43 TRT 2026
 ```
 
 ## Sayı ve Metin Formatlama
@@ -132,10 +135,10 @@ Sayıyı belirli formatta metin olarak döndürür.
 
 ```javascript
 ins.formatNumber(1234567.89, "#,##0.00", ",", ".");
-// "1.234.567,89"
+// → "1.234.567,89"
 
 ins.formatNumber(3.14159, "0.00", ".", ",");
-// "3.14"
+// → "3.14"
 ```
 
 ### ins.leftPad(str, len, padChar)
@@ -143,8 +146,8 @@ ins.formatNumber(3.14159, "0.00", ".", ",");
 Metnin soluna karakter ekleyerek belirli uzunluğa tamamlar.
 
 ```javascript
-ins.leftPad("42", 5, "0");   // "00042"
-ins.leftPad("AB", 4, " ");   // "  AB"
+ins.leftPad("42", 5, "0");   // → "00042"
+ins.leftPad("AB", 4, " ");   // → "  AB"
 ```
 
 ### ins.uuid()
@@ -152,7 +155,8 @@ ins.leftPad("AB", 4, " ");   // "  AB"
 Benzersiz UUID üretir.
 
 ```javascript
-var id = ins.uuid();  // "550e8400-e29b-41d4-a716-446655440000"
+var id = ins.uuid();
+// → "f4cbb047-4376-4d8b-ae46-5cafed31155b"
 ```
 
 ## Bit İşlemleri
@@ -176,6 +180,11 @@ word = ins.setBit(word, 0, true);   // bit 0 = 1 → word = 1
 word = ins.setBit(word, 3, true);   // bit 3 = 1 → word = 9
 ```
 
+Yanıt:
+```json
+{ "word": 9, "bit0": true, "bit1": false, "bit3": true }
+```
+
 ## Ağ
 
 ### ins.ping(address, timeout)
@@ -183,7 +192,9 @@ word = ins.setBit(word, 3, true);   // bit 3 = 1 → word = 9
 Bir IP adresine ping gönderir.
 
 ```javascript
-var reachable = ins.ping("192.168.1.1", 3000);
+var reachable = ins.ping("127.0.0.1", 3000);
+// → true
+
 if (!reachable) {
     ins.notify("warning", "Ağ Uyarısı", "PLC erişilemez!");
 }
@@ -194,7 +205,8 @@ if (!reachable) {
 Belirli bir porta TCP bağlantı testi yapar.
 
 ```javascript
-var portOpen = ins.ping("192.168.1.1", 502, 3000);
+var portOpen = ins.ping("127.0.0.1", 8081, 3000);
+// → true
 ```
 
 ## JSON

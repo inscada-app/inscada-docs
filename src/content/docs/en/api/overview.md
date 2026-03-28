@@ -131,6 +131,7 @@ Her protokolün kendi CRUD endpoint'leri vardır:
 | PUT | `/api/scripts/{id}` | Script güncelle |
 | DELETE | `/api/scripts/{id}` | Script sil |
 | GET | `/api/scripts/{id}/status` | Script çalışma durumu |
+| POST | `/api/scripts/runner` | Script kodu çalıştır (ad-hoc) |
 
 ### Animasyon (SVG Ekranlar)
 
@@ -178,6 +179,16 @@ Her protokolün kendi CRUD endpoint'leri vardır:
 | GET | `/api/license` | Lisans bilgisi |
 | GET | `/api/cluster/leader` | Cluster lider node |
 | GET | `/api/system/status` | Sistem durumu |
+
+### Örnek: Versiyon Sorgulama
+
+```bash
+curl -b cookies.txt http://localhost:8081/api/version -H "X-Space: default_space"
+```
+
+```
+20260311-1-jdk11
+```
 
 ## Swagger / API Dokümantasyonu
 

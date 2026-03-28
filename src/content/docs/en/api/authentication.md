@@ -32,9 +32,14 @@ Başarılı login, yanıt header'ında iki cookie set eder:
 
 ```
 HTTP/1.1 200 OK
-Set-Cookie: ins_access_token=eyJhbG...; Path=/; HttpOnly
-Set-Cookie: ins_refresh_token=eyJhbG...; Path=/; HttpOnly
+Set-Cookie: ins_access_token=eyJhbG...; Path=/; Max-Age=300; HttpOnly; SameSite=Lax
+Set-Cookie: ins_refresh_token=eyJhbG...; Path=/; Max-Age=86400; HttpOnly; SameSite=Lax
+Content-Type: application/json
+
+{"expire-seconds":300,"spaces":["default_space","production"]}
 ```
+
+Yanıt gövdesi access token süresini (saniye) ve erişilebilir space listesini döndürür.
 
 ### cURL Örneği
 
