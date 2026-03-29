@@ -1,5 +1,5 @@
 ---
-title: "Yapılandırma"
+title: "Configuration"
 description: "application.yml parametreleri, dizin yapısı, NSSM servis kurulumu ve SSL sertifika yönetimi"
 sidebar:
   order: 0

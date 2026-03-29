@@ -1,5 +1,5 @@
 ---
-title: "Kimlik Doğrulama"
+title: "Authentication"
 description: "inSCADA REST API kimlik doğrulama — login, token yönetimi ve güvenlik"
 sidebar:
   order: 2

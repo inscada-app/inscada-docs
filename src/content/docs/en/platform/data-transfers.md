@@ -1,5 +1,5 @@
 ---
-title: "Veri Aktarımı"
+title: "Data Transfers"
 description: "Projeler arası değişken veri aktarımı ve istatistik hesaplama"
 sidebar:
   order: 8

@@ -1,5 +1,5 @@
 ---
-title: "REST API Genel Bakış"
+title: "REST API Overview"
 description: "inSCADA REST API — kimlik doğrulama, endpoint yapısı ve kullanım"
 sidebar:
   order: 1

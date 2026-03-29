@@ -3,7 +3,7 @@ title: "Script Engine"
 description: "inSCADA Nashorn JavaScript script motoru — genel bakış, zamanlama ve kullanım alanları"
 sidebar:
   order: 0
-  label: "Genel Bakış"
+  label: "Overview"
 ---
 
 inSCADA, sunucu tarafında çalışan bir JavaScript script motoru içerir. Bu motor sayesinde otomasyon, veri işleme, entegrasyon ve raporlama gibi görevler platforma gömülü scriptlerle gerçekleştirilebilir.

@@ -1,6 +1,6 @@
 ---
-title: "Kullanıcı & Rol Yönetimi"
-description: "Kullanıcı oluşturma, rol tanımlama, yetki ve menü atama"
+title: "Users title: "Kullanıcı & Rol Yönetimi" Roles"
+description: "User creation, role definition, permissions and menu assignment"
 sidebar:
   order: 6
 ---

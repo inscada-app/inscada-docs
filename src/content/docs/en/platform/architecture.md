@@ -1,6 +1,6 @@
 ---
-title: "Platform Mimarisi"
-description: "inSCADA veri hiyerarşisi, bileşenler, veri akışı ve çoklu çalışma alanı yapısı"
+title: "Platform Architecture"
+description: "inSCADA data hierarchy, components, data flow and multi-tenant architecture"
 sidebar:
   order: 0
 ---

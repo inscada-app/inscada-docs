@@ -1,6 +1,6 @@
 ---
-title: "Proje Yönetimi"
-description: "Proje oluşturma, yapılandırma ve durum izleme"
+title: "Project Management"
+description: "Project creation, configuration and status monitoring"
 sidebar:
   order: 1
 ---

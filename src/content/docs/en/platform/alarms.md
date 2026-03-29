@@ -1,5 +1,5 @@
 ---
-title: "Alarm Yönetimi"
+title: "Alarm Management"
 description: "Alarm grubu, alarm tanımları, alarm tipleri ve alarm izleme"
 sidebar:
   order: 5

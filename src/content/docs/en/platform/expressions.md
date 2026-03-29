@@ -1,5 +1,5 @@
 ---
-title: "Expression (Formüller)"
+title: "Expressions"
 description: "Paylaşımlı formül tanımlama ve değişkenlerde kullanımı"
 sidebar:
   order: 7

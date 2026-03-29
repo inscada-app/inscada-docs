@@ -1,6 +1,6 @@
 ---
-title: "Değişkenler"
-description: "Değişken tanımlama, ölçekleme, loglama ve value expression"
+title: "Variables"
+description: "Variable definition, scaling, logging and value expressions"
 sidebar:
   order: 4
 ---

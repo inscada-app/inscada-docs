@@ -3,7 +3,7 @@ title: "SVG Animations"
 description: "SVG tabanlı interaktif SCADA ekranları — genel bakış, tasarım ve yapı"
 sidebar:
   order: 0
-  label: "Genel Bakış"
+  label: "Overview"
 ---
 
 SVG Animation, inSCADA'nın temel görselleştirme bileşenidir. Her animation bir SVG dosyasından oluşur ve değişken değerlerine bağlanarak gerçek zamanlı SCADA ekranları oluşturur.

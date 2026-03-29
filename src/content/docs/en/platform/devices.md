@@ -1,6 +1,6 @@
 ---
-title: "Cihaz ve Frame"
-description: "Cihaz (Device) ve veri çerçevesi (Frame) yapılandırması"
+title: "Devices title: "Cihaz ve Frame" Frames"
+description: "Device and Frame configuration"
 sidebar:
   order: 3
 ---

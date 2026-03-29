@@ -1,6 +1,6 @@
 ---
-title: "Bağlantı Yönetimi"
-description: "Protokol bağlantıları oluşturma, yapılandırma ve izleme"
+title: "Connection Management"
+description: "Protocol connections setup, configuration and monitoring"
 sidebar:
   order: 2
 ---
