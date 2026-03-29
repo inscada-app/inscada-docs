@@ -66,60 +66,60 @@ inSCADA **36 farklı animation tipi** destekler:
 
 | Tip | Açıklama | Sayfa |
 |-----|----------|-------|
-| **Get** | Değişken değerini metin olarak göster | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Color** | Öğenin rengini değere göre değiştir | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Bar** | Değere göre çubuk yüksekliği/genişliği | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Opacity** | Değere göre saydamlık | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Visibility** | Koşula göre göster/gizle | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Rotate** | Değere göre döndürme | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Move** | Değere göre X/Y kaydırma | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Scale** | Değere göre ölçekleme | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Blink** | Koşula göre yanıp sönme | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Pipe** | Boru/hat akış animasyonu | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Tooltip** | Hover bilgi balonu | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **Image** | Değere göre resim değiştirme | [Detay →](/docs/tr/platform/animations/data-display/) |
-| **AlarmIndication** | Alarm durumunu göster | [Detay →](/docs/tr/platform/animations/data-display/) |
+| **Get** | Değişken değerini metin olarak göster | [Detay →](/docs/tr/platform/animations/get/) |
+| **Color** | Öğenin rengini değere göre değiştir | [Detay →](/docs/tr/platform/animations/color/) |
+| **Bar** | Değere göre çubuk yüksekliği/genişliği | [Detay →](/docs/tr/platform/animations/bar-scale/) |
+| **Opacity** | Değere göre saydamlık | [Detay →](/docs/tr/platform/animations/opacity-visibility-blink/) |
+| **Visibility** | Koşula göre göster/gizle | [Detay →](/docs/tr/platform/animations/opacity-visibility-blink/) |
+| **Rotate** | Değere göre döndürme | [Detay →](/docs/tr/platform/animations/rotate-move/) |
+| **Move** | Değere göre X/Y kaydırma | [Detay →](/docs/tr/platform/animations/rotate-move/) |
+| **Scale** | Değere göre ölçekleme | [Detay →](/docs/tr/platform/animations/bar-scale/) |
+| **Blink** | Koşula göre yanıp sönme | [Detay →](/docs/tr/platform/animations/opacity-visibility-blink/) |
+| **Pipe** | Boru/hat akış animasyonu | [Detay →](/docs/tr/platform/animations/pipe-tooltip-image/) |
+| **Tooltip** | Hover bilgi balonu | [Detay →](/docs/tr/platform/animations/pipe-tooltip-image/) |
+| **Image** | Değere göre resim değiştirme | [Detay →](/docs/tr/platform/animations/pipe-tooltip-image/) |
+| **AlarmIndication** | Alarm durumunu göster | [Detay →](/docs/tr/platform/animations/pipe-tooltip-image/) |
 
 #### Grafik & Veri Tablosu
 
 | Tip | Açıklama | Sayfa |
 |-----|----------|-------|
-| **Chart** | Grafik bileşeni | [Detay →](/docs/tr/platform/animations/charts-tables/) |
-| **Peity** | Inline sparkline mini grafik | [Detay →](/docs/tr/platform/animations/charts-tables/) |
-| **Datatable** | Tablo bileşeni | [Detay →](/docs/tr/platform/animations/charts-tables/) |
+| **Chart** | Grafik bileşeni | [Detay →](/docs/tr/platform/animations/chart-peity/) |
+| **Peity** | Inline sparkline mini grafik | [Detay →](/docs/tr/platform/animations/chart-peity/) |
+| **Datatable** | Tablo bileşeni | [Detay →](/docs/tr/platform/animations/chart-peity/) |
 
 #### Kontrol & Etkileşim
 
 | Tip | Açıklama | Sayfa |
 |-----|----------|-------|
-| **Set** | Değişkene değer yaz (click ile) | [Detay →](/docs/tr/platform/animations/controls/) |
-| **Slider** | Kaydırıcı ile değer ayarla | [Detay →](/docs/tr/platform/animations/controls/) |
-| **Input** | Metin/sayı girişi | [Detay →](/docs/tr/platform/animations/controls/) |
-| **Button** | Buton bileşeni | [Detay →](/docs/tr/platform/animations/controls/) |
-| **Click** | Tıklama olayı | [Detay →](/docs/tr/platform/animations/controls/) |
-| **MouseDown / MouseUp / MouseOver** | Fare olayları | [Detay →](/docs/tr/platform/animations/controls/) |
+| **Set** | Değişkene değer yaz (click ile) | [Detay →](/docs/tr/platform/animations/set-button-click/) |
+| **Slider** | Kaydırıcı ile değer ayarla | [Detay →](/docs/tr/platform/animations/slider-input/) |
+| **Input** | Metin/sayı girişi | [Detay →](/docs/tr/platform/animations/slider-input/) |
+| **Button** | Buton bileşeni | [Detay →](/docs/tr/platform/animations/set-button-click/) |
+| **Click** | Tıklama olayı | [Detay →](/docs/tr/platform/animations/set-button-click/) |
+| **MouseDown / MouseUp / MouseOver** | Fare olayları | [Detay →](/docs/tr/platform/animations/set-button-click/) |
 
 #### Navigasyon & Gömme
 
 | Tip | Açıklama | Sayfa |
 |-----|----------|-------|
-| **Open** | Başka bir animation'a geç | [Detay →](/docs/tr/platform/animations/navigation/) |
-| **Iframe** | Harici URL gömme | [Detay →](/docs/tr/platform/animations/navigation/) |
-| **Menu** | Menü açma | [Detay →](/docs/tr/platform/animations/navigation/) |
-| **Faceplate** | Faceplate bileşeni yerleştir | [Detay →](/docs/tr/platform/animations/navigation/) |
+| **Open** | Başka bir animation'a geç | [Detay →](/docs/tr/platform/animations/open-iframe-faceplate/) |
+| **Iframe** | Harici URL gömme | [Detay →](/docs/tr/platform/animations/open-iframe-faceplate/) |
+| **Menu** | Menü açma | [Detay →](/docs/tr/platform/animations/open-iframe-faceplate/) |
+| **Faceplate** | Faceplate bileşeni yerleştir | [Detay →](/docs/tr/platform/animations/open-iframe-faceplate/) |
 
 #### Script & Gelişmiş
 
 | Tip | Açıklama | Sayfa |
 |-----|----------|-------|
-| **Script** | Özel JavaScript çalıştır | [Detay →](/docs/tr/platform/animations/scripting/) |
-| **FormScript** | Form tabanlı script | [Detay →](/docs/tr/platform/animations/scripting/) |
-| **GetSymbol** | Symbol kütüphanesinden sembol yükle | [Detay →](/docs/tr/platform/animations/scripting/) |
-| **Animate** | CSS/SVG animasyon tetikle | [Detay →](/docs/tr/platform/animations/scripting/) |
-| **Access** | Yetki bazlı görünürlük | [Detay →](/docs/tr/platform/animations/scripting/) |
-| **Three** | 3D görselleştirme | [Detay →](/docs/tr/platform/animations/scripting/) |
-| **QRCodeGeneration** | QR kod oluşturma | [Detay →](/docs/tr/platform/animations/scripting/) |
-| **QRCodeScan** | QR kod okuma | [Detay →](/docs/tr/platform/animations/scripting/) |
+| **Script** | Özel JavaScript çalıştır | [Detay →](/docs/tr/platform/animations/script-animate/) |
+| **FormScript** | Form tabanlı script | [Detay →](/docs/tr/platform/animations/script-animate/) |
+| **GetSymbol** | Symbol kütüphanesinden sembol yükle | [Detay →](/docs/tr/platform/animations/script-animate/) |
+| **Animate** | CSS/SVG animasyon tetikle | [Detay →](/docs/tr/platform/animations/script-animate/) |
+| **Access** | Yetki bazlı görünürlük | [Detay →](/docs/tr/platform/animations/script-animate/) |
+| **Three** | 3D görselleştirme | [Detay →](/docs/tr/platform/animations/script-animate/) |
+| **QRCodeGeneration** | QR kod oluşturma | [Detay →](/docs/tr/platform/animations/script-animate/) |
+| **QRCodeScan** | QR kod okuma | [Detay →](/docs/tr/platform/animations/script-animate/) |
 
 ### Expression Tipleri
 
