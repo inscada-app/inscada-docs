@@ -219,12 +219,61 @@ Her animation element'te değerin nasıl hesaplanacağını belirler:
 
 ## Animation Scripts
 
-Her animation'a script bağlanabilir:
+Her animation'a Pre ve Post script bağlanabilir. Runtime'da Visualization ekranı açıldığında çalışma sırası şöyledir:
+
+```
+1. Pre-Animation Code      ← İlk çalışır (bir kez)
+2. Animation Elements       ← Periyodik döngü başlar (her duration ms'de)
+3. Post-Animation Code      ← Ekran kapatıldığında çalışır
+```
 
 | Script | Çalışma Zamanı | Kullanım |
 |--------|---------------|----------|
-| **Pre-Animation Code** | Ekran açıldığında | Başlangıç değerleri, veri çekme |
-| **Post-Animation Code** | Ekran kapandığında | Temizlik |
+| **Pre-Animation Code** | Ekran açıldığında, element döngüsünden önce | Başlangıç değerleri, veri çekme, tablo doldurma |
+| **Post-Animation Code** | Ekran kapatıldığında | Temizlik, kaynak serbest bırakma |
+
+### Yerleşik Sistem Değişkenleri
+
+Animation script'leri ve element expression'ları içinde kullanılabilen yerleşik değişkenler:
+
+| Değişken | Tip | Açıklama |
+|----------|-----|----------|
+| `__firstScan` | Boolean | İlk çalışma döngüsünde `true`, sonraki döngülerde `false` |
+| `__animName` | String | Çalışan animation'ın adı |
+| `__parameters` | String | Animation'a geçirilen placeholder parametreleri |
+
+### `__firstScan` Kullanımı
+
+`__firstScan`, animation ekranı açıldığında sadece **ilk döngüde** `true` olur. Yalnızca bir kez çalışması gereken kodları (tarihsel veri çekme, tablo başlangıç doldurma, tek seferlik API çağrısı vb.) bu değişkenle kontrol edebilirsiniz:
+
+```javascript
+if (__firstScan) {
+    // Sadece ekran ilk açıldığında çalışır
+    var end = ins.now();
+    var start = ins.getDate(end.getTime() - 3600000);
+    var logs = ins.getLoggedVariableValuesByPage(
+        Java.to(['ActivePower_kW'], 'java.lang.String[]'),
+        start, end, 0, 100
+    );
+    // Tabloya veya grafiğe ilk verileri yükle...
+}
+
+// Bu kısım her döngüde çalışır
+var power = ins.getVariableValue("ActivePower_kW").value;
+return power.toFixed(1);
+```
+
+### `__animName` ve `__parameters` Kullanımı
+
+Parametrik ekranlarda (placeholder ile açılan animation'lar) hangi animation'ın çalıştığını ve geçirilen parametreleri okumak için kullanılır:
+
+```javascript
+// Hangi animation çalışıyor
+var name = __animName; // "Motor_Detail"
+
+// Geçirilen parametreler
+var params = __parameters; // "motor_id=3&motor_name=Motor 3"
+```
 
 ## SVG Tasarım İlkeleri
 
