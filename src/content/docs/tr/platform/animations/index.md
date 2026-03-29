@@ -73,10 +73,31 @@ Kalem ikonuna tıklayarak animation'ın genel ayarlarını (Duration, Play Order
 | **Name** | Evet | Ekran adı (proje içinde benzersiz) |
 | **SVG Content** | Evet | SVG kaynak kodu |
 | **Duration** | Evet | Animasyon güncelleme periyodu (ms, min: 100) |
-| **Play Order** | Evet | Sıralama (birden fazla ekran varsa) |
-| **Main** | Evet | Ana ekran mı |
+| **Play Order** | Evet | Visualization ekranındaki sıralama numarası |
+| **Main** | Evet | Visualization menüsünde görünsün mü |
 | **Color** | Hayır | Arka plan rengi |
 | **Description** | Hayır | Açıklama |
+
+### Main ve Play Order
+
+**Runtime → Visualization** menüsü, projedeki **Main** işaretli animation'ları otomatik olarak listeler. Bu ekranda alt kısımda sayfa geçiş butonları yer alır ve animation'lar **Play Order** numarasına göre soldan sağa sıralanır.
+
+```
+Visualization Ekranı
+┌──────────────────────────────────────────────────┐
+│                                                  │
+│          [ Aktif Animation İçeriği ]             │
+│                                                  │
+├──────────────────────────────────────────────────┤
+│  ⚡ Energy Overview  │  📈 Power Chart  │  ...   │  ← Play Order sırası
+└──────────────────────────────────────────────────┘
+```
+
+- **Main = true** → Animation, Visualization menüsünde görünür
+- **Main = false** → Animation yalnızca Development ekranında düzenleme için erişilebilir, Visualization'da listelenmez (örn: Open ile açılan alt ekranlar, popup'lar)
+- **Play Order = 1** → En solda, **Play Order = 2** → Bir sonraki, ...
+
+Örneğin yukarıdaki screenshot'ta "Energy Overview" (Play Order: 1) ve "Power Chart" (Play Order: 2) butonları alt kısımda görünmektedir.
 
 ## Animation Yapısı
 
