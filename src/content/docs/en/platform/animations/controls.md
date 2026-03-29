@@ -2,7 +2,7 @@
 title: "Kontrol & Etkileşim"
 description: "Set, Slider, Input, Button, Click ve fare olay animation tipleri"
 sidebar:
-  order: 3
+  order: 4
 ---
 
 Bu sayfadaki animation tipleri, operatörün ekran üzerinden değişkenlere değer yazmasını ve etkileşimde bulunmasını sağlar.

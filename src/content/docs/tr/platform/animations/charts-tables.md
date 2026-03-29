@@ -2,7 +2,7 @@
 title: "Grafik & Tablolar"
 description: "Chart, Peity (sparkline) ve Datatable animation tipleri"
 sidebar:
-  order: 2
+  order: 3
 ---
 
 ## Chart (Grafik)

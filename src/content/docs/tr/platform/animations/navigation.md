@@ -2,7 +2,7 @@
 title: "Navigasyon & Gömme"
 description: "Open, Iframe, Menu ve Faceplate animation tipleri"
 sidebar:
-  order: 4
+  order: 5
 ---
 
 Bu sayfadaki animation tipleri, ekranlar arası geçiş ve harici içerik gömme sağlar.

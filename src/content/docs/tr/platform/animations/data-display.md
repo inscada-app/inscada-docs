@@ -2,7 +2,7 @@
 title: "Veri Gösterimi"
 description: "Get, Color, Bar, Opacity, Visibility, Rotate, Move, Scale, Blink, Pipe, Tooltip, Image, AlarmIndication"
 sidebar:
-  order: 1
+  order: 2
 ---
 
 Bu sayfada değişken değerlerini ekranda görselleştirmek için kullanılan animation element tipleri anlatılmaktadır.

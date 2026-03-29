@@ -2,7 +2,7 @@
 title: "Script & Gelişmiş"
 description: "Script, FormScript, GetSymbol, Animate, Access, Three, QRCode animation tipleri"
 sidebar:
-  order: 5
+  order: 6
 ---
 
 Bu sayfadaki animation tipleri, gelişmiş scripting, erişim kontrolü ve özel bileşenler sağlar.
