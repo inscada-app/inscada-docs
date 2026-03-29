@@ -10,23 +10,61 @@ SVG Animation, inSCADA'nın temel görselleştirme bileşenidir. Her animation b
 
 ![Energy Monitoring Dashboard](../../../../../assets/docs/variable-tracking.png)
 
-## Animation Dev Ekranı
+## Ekran Geliştirme Süreci
+
+Bir SCADA ekranı oluşturmak üç adımdan oluşur:
+
+### 1. SVG Tasarımı (Harici Editör)
+
+SVG ekranı, herhangi bir SVG editörü ile tasarlanır. **Inkscape** (ücretsiz, açık kaynak) önerilen editördür.
+
+Tasarım sırasında:
+- Ekranın görsel düzenini oluşturun (arka plan, cihaz sembolleri, metin alanları, butonlar, göstergeler)
+- **SVG ID'leri ile ilgilenmenize gerek yok** — inSCADA bu ID'leri otomatik algılar
+- Standart SVG öğeleri kullanın: `<rect>`, `<circle>`, `<text>`, `<path>`, `<g>`, `<image>`
+- İstediğiniz kadar karmaşık tasarım yapabilirsiniz — katmanlar, gruplar, gradyanlar, filtreler
+
+:::tip
+Inkscape'te tasarım yaparken objelere anlamlı isimler vermek işinizi kolaylaştırır (Inkscape'te Object Properties → Label/ID). Ancak zorunlu değildir — inSCADA tüm SVG ağacını otomatik tarar.
+:::
+
+### 2. SVG Yükleme (Animation Dev)
+
+Tasarlanan SVG dosyasını platforma yükleyin:
 
 **Menü:** Development → Animations → Animation Dev
 
 ![Animation Dev](../../../../../assets/docs/dev-animation-dev.png)
 
-### Animation Yapılandırma Paneli
+Yeni animation oluşturun veya mevcut bir animation'ın SVG içeriğini güncelleyin. SVG dosyası upload edildikten sonra ekranda görselleşir.
 
-Sağ üstteki kalem (✏️) ikonuna tıklayarak animation'ın genel ayarlarını düzenleyebilirsiniz:
+### 3. Animation Binding (Element Editor)
 
-![Animation Yapılandırma](../../../../../assets/docs/editor-anim-config.png)
+SVG yüklendikten sonra, ekran üzerinde **mouse ile objelere tıklayarak** her objeye animation davranışı bağlarsınız:
+
+1. SVG üzerinde bir objeye **mouse ile tıklayın** — obje seçilir ve vurgulanır
+2. Sağ üstteki **Element Editor** (sihirli değnek ikonu) butonuna tıklayın
+3. Seçilen objenin tipine göre uygulanabilir animation tipleri otomatik listelenir
+4. İstediğiniz animation tipini seçip yapılandırın
+5. **Save** ile kaydedin
+
+![Animation Element Editor](../../../../../assets/docs/animations.png)
+
+Bu üç adım sonucunda, Visualization ekranında çalıştırdığınızda SVG ekranı canlı SCADA verisiyle güncellenir.
+
+Detaylı bilgi: [Element Editor →](/docs/tr/platform/animations/element-editor/)
 
 ### Preview (Ön İzleme)
 
-Roket (🚀) ikonuna tıklayarak animation'ı canlı olarak önizleyebilirsiniz:
+Roket ikonuna tıklayarak animation'ı canlı olarak önizleyebilirsiniz:
 
 ![Preview Animation](../../../../../assets/docs/editor-preview.png)
+
+### Animation Yapılandırma Paneli
+
+Kalem ikonuna tıklayarak animation'ın genel ayarlarını (Duration, Play Order, Alignment, Scripts) düzenleyebilirsiniz:
+
+![Animation Yapılandırma](../../../../../assets/docs/editor-anim-config.png)
 
 ## Animation Oluşturma
 
