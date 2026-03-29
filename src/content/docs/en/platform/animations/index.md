@@ -282,24 +282,10 @@ var name = __animName; // "Motor_Detail"
 var params = __parameters; // "motor_id=3&motor_name=Motor 3"
 ```
 
-## SVG Tasarım İlkeleri
-
-### ID Kuralları
-
-SVG öğelerine anlamlı `id` değerleri verin — Animation Element `domId` alanı bunları referans eder:
-
-```xml
-<text id="temp_display">--</text>
-<rect id="motor_indicator" fill="#cccccc"/>
-<g id="valve_group" transform="rotate(0)">
-  <path d="..."/>
-</g>
-```
-
-### Gerçek Zamanlı Güncelleme
+## Gerçek Zamanlı Güncelleme
 
 Animation açıldığında WebSocket bağlantısı kurulur. Platform, `duration` parametresinde belirtilen aralıkta değişken değerlerini istemciye push eder ve binding'ler otomatik güncellenir.
 
-### Placeholder (Parametrik Ekran)
+## Placeholder (Parametrik Ekran)
 
 Animation'lara placeholder tanımlanabilir. Aynı SVG tasarımı farklı parametrelerle (farklı cihaz, farklı değişken seti) tekrar kullanılabilir.
