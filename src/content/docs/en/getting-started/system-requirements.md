@@ -98,7 +98,13 @@ For small and medium systems, the setup installs all components on a single serv
 | inSCADA – Field Devices | 100 Mbps Ethernet |
 | inSCADA – Clients | 100 Mbps (1 Gbps recommended) |
 | Node – Node (Cluster) | 1 Gbps |
-| Serial communication | 19,200 bps minimum baud rate |
+| Serial communication | Terminal Server (RS232/RS485 → Ethernet converter) |
+
+:::caution[Serial Communication]
+inSCADA communicates exclusively over **TCP/UDP** — it does not directly access the computer's COM (serial) ports. For devices requiring RS232 or RS485 serial communication (Modbus RTU, DNP3 Serial, etc.), a **Terminal Server** (RS232/RS485 to Ethernet transparent converter) hardware is required. This device converts serial communication to TCP/IP, allowing inSCADA to access it over the network.
+
+Example: For a Modbus RTU over TCP connection, an RS485-to-Ethernet converter is placed on the field side.
+:::
 
 ### Port Requirements
 

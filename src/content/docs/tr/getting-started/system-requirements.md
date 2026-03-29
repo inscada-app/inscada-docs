@@ -98,7 +98,13 @@ Küçük ve orta ölçekli sistemlerde setup tüm bileşenleri tek bilgisayara o
 | inSCADA – Saha Cihazları | 100 Mbps Ethernet |
 | inSCADA – İstemciler | 100 Mbps (1 Gbps önerilir) |
 | Node – Node (Cluster) | 1 Gbps |
-| Seri haberleşme | 19.200 bps minimum baud rate |
+| Seri haberleşme | Terminal Server (RS232/RS485 → Ethernet dönüştürücü) |
+
+:::caution[Seri Haberleşme]
+inSCADA yalnızca **TCP/UDP** üzerinden haberleşme yapar — bilgisayarın COM (seri) portlarına doğrudan erişmez. RS232 veya RS485 seri haberleşme gerektiren cihazlar (Modbus RTU, DNP3 Serial vb.) için **Terminal Server** (RS232/RS485 to Ethernet transparent dönüştürücü) donanımı kullanılmalıdır. Bu cihaz seri haberleşmeyi TCP/IP'ye çevirerek inSCADA'nın ağ üzerinden erişmesini sağlar.
+
+Örnek: Modbus RTU over TCP bağlantısı için saha tarafında bir RS485-Ethernet dönüştürücü konumlandırılır.
+:::
 
 ### Port Gereksinimleri
 
