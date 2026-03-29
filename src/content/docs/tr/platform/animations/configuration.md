@@ -25,7 +25,7 @@ Animation Dev ekranında kalem ikonuna tıklayarak yapılandırma panelini açab
 | **Main** | Evet | Visualization menüsünde görünsün mü |
 | **Color** | Hayır | Ekranın arka plan rengi. Varsayılan: `#00DDDC` |
 | **Alignment** | Hayır | SVG'nin ekrana hizalama modu |
-| **Join** | Hayır | Zincirleme bağlanacak animation |
+| **Join** | Hayır | Arka katman olarak bağlanacak animation (tepegöz asetat mantığı) |
 
 ### Duration (Bekleme Süresi)
 
