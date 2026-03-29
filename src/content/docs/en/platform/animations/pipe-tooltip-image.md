@@ -1,144 +1,180 @@
 ---
 title: "Pipe, Tooltip & Image"
-description: "Flow animation, information tooltip, and dynamic image switching"
+description: "Akış animasyonu, bilgi balonu ve dinamik resim"
 sidebar:
   order: 15
 ---
 
-## Pipe (Flow Animation)
+## Pipe (Akış Animasyonu)
 
-**Pipe** creates an animation showing the flow direction in pipelines or cables. It visualizes liquid/gas flow with a moving dash pattern on the SVG line.
+**Pipe**, boru hatları veya kablolarda akış yönünü gösteren animasyon oluşturur. SVG çizgi üzerinde hareket eden tire deseni ile sıvı/gaz akışını görselleştirir.
 
-### Usage
-
-| Field | Value |
-|-------|-------|
+| Alan | Değer |
+|------|-------|
 | **Type** | Pipe |
-| **Suitable SVG Elements** | `<path>`, `<line>`, `<polyline>` |
-| **Expression Type** | Tag (Boolean), Expression |
+| **Uygun SVG Öğeleri** | `<path>`, `<line>`, `<polyline>`, `<rect>` |
 
-### SVG Preparation
+### TAG — Değişken Seçimi
 
-```xml
-<!-- Pipeline -->
-<path id="main_pipe" d="M 50,100 L 200,100 L 200,250 L 350,250"
-      fill="none" stroke="#3498db" stroke-width="6"
-      stroke-dasharray="15,10"/>
-```
+![Pipe — Tag](../../../../../assets/docs/anim-pipe-tag.png)
 
-### How It Works
+Boolean değişken seçilir. `true` → akış animasyonu başlar, `false` → durur.
 
-- `true` → `stroke-dashoffset` CSS animation starts, dashes move
-- `false` → animation stops, line remains static
+| Alan | Açıklama |
+|------|----------|
+| **Variable** | Açılır listeden değişken seçimi |
+| **Default** | Varsayılan durum |
+| **Array** | `stroke-dasharray` değeri — tire deseni aralığı (varsayılan: 8). Büyük değer = uzun tireler |
+| **Width** | `stroke-width` değeri — çizgi kalınlığı (varsayılan: 3) |
+| **Speed** | Animasyon döngü süresi ms cinsinden (varsayılan: 3000). Küçük değer = hızlı akış |
 
-### Expression Examples
+### EXPRESSION — JavaScript ile Koşul
 
-**Boolean — Tag:**
-```
-Pump_Running
-```
-When the pump is running, flow is visible in the pipeline.
+![Pipe — Expression](../../../../../assets/docs/anim-pipe-expression.png)
 
-**Conditional — Expression:**
+`true` veya `false` döndürülür. Array, Width, Speed alanları expression modunda da kullanılır.
+
 ```javascript
+// Akış hızı > 0 ise boru animasyonu aktif
 var flow = ins.getVariableValue("Flow_Rate").value;
-return flow > 0; // Animation when there is flow
+return flow > 0;
 ```
+
+### Çalışma Prensibi
+
+Pipe, SVG `<animate>` elementi ile `stroke-dashoffset` değerini sürekli değiştirerek tire deseninin hareket etmesini sağlar. Bu sayede boru üzerinde akış yönü görsel olarak ifade edilir.
+
+| Parametre | Etki |
+|-----------|------|
+| **Array = 4** | Kısa tireler, sık aralık |
+| **Array = 16** | Uzun tireler, geniş aralık |
+| **Width = 2** | İnce boru |
+| **Width = 6** | Kalın boru |
+| **Speed = 1000** | Hızlı akış |
+| **Speed = 5000** | Yavaş akış |
 
 ---
 
-## Tooltip (Information Balloon)
+## Tooltip (Bilgi Balonu)
 
-**Tooltip** is a popup balloon that shows detail information when hovering over an SVG element. It provides additional information without taking up space on the main screen.
+**Tooltip**, SVG öğesi üzerine gelindiğinde (hover) popup bilgi balonu gösterir. Detay bilgi, ek parametreler, açıklama metinleri için kullanılır. **Tippy.js** kütüphanesi ile render edilir ve HTML içerik destekler.
 
-### Usage
-
-| Field | Value |
-|-------|-------|
+| Alan | Değer |
+|------|-------|
 | **Type** | Tooltip |
-| **Suitable SVG Elements** | All |
-| **Expression Type** | Expression, Text |
+| **Uygun SVG Öğeleri** | Tümü |
 
-### Expression Examples
+### TAG — Değişken Değeri ile Tooltip
 
-**Static text — Text:**
+![Tooltip — Tag](../../../../../assets/docs/anim-tooltip-tag.png)
+
+Listeden değişken seçilir. Değişkenin güncel değeri tooltip içeriği olarak gösterilir.
+
+| Alan | Açıklama |
+|------|----------|
+| **Variable** | Açılır listeden değişken seçimi |
+| **Default** | Değer okunamadığında gösterilecek metin |
+
+### TEXT — Sabit Metin
+
+![Tooltip — Text](../../../../../assets/docs/anim-tooltip-text.png)
+
+Sabit bir metin tooltip olarak gösterilir. HTML etiketleri desteklenir.
+
+```html
+<b>Aktif Güç Ölçümü</b><br>Trafometre çıkışı
 ```
-Active Power Measurement - Transformer output
-```
 
-**Dynamic — Expression (supports HTML):**
+### EXPRESSION — Dinamik HTML İçerik
+
+![Tooltip — Expression](../../../../../assets/docs/anim-tooltip-expression.png)
+
+JavaScript ile dinamik tooltip içeriği oluşturulur. HTML desteklenir.
+
 ```javascript
 var p = ins.getVariableValue("ActivePower_kW");
 var v = ins.getVariableValue("Voltage_V");
-return "<b>Energy Analyzer</b><br>"
-     + "Power: " + p.value.toFixed(1) + " kW<br>"
-     + "Voltage: " + v.value.toFixed(1) + " V<br>"
-     + "Last update: " + new Date(p.dateInMs).toLocaleTimeString();
+return "<b>Enerji Analizörü</b><br>"
+     + "Güç: " + p.value.toFixed(1) + " kW<br>"
+     + "Gerilim: " + v.value.toFixed(1) + " V<br>"
+     + "Son güncelleme: " + new Date(p.dateInMs).toLocaleTimeString();
 ```
 
-When the user hovers over the SVG element, a rich HTML tooltip appears.
+Kullanıcı SVG öğesi üzerine geldiğinde zengin HTML içerikli tooltip balonu görünür.
 
 ---
 
-## Image (Image Switching)
+## Image (Dinamik Resim)
 
-**Image** changes the source (`href`) of an SVG `<image>` element based on a value. It is used for showing different icons, photos, or symbols based on state.
+**Image**, bir SVG öğesine dinamik olarak resim yükler. Değere göre farklı resimler göstermek veya dosya sisteminden resim çekmek için kullanılır.
 
-### Usage
-
-| Field | Value |
-|-------|-------|
+| Alan | Değer |
+|------|-------|
 | **Type** | Image |
-| **Suitable SVG Elements** | `<image>`, `<rect>` (with foreignObject) |
-| **Expression Type** | Switch, Expression |
+| **Uygun SVG Öğeleri** | `<rect>`, `<image>` |
 
-### SVG Preparation
+### EXPRESSION
 
-```xml
-<image id="equipment_icon" x="50" y="50" width="64" height="64"
-       href="/images/default.png"/>
+![Image — Expression](../../../../../assets/docs/anim-image-expression.png)
+
+Image yalnızca **EXPRESSION** tipini destekler. Döndürülen değer iki formatta olabilir:
+
+#### Format 1: Dosya Yolu
+
+```javascript
+// Dosya sisteminden resim yükle
+return {
+    type: "file",
+    value: "/files/images/motor-on.png"
+};
 ```
 
-### Switch Example
+#### Format 2: Base64 Veri
 
-```
-0 → /images/motor-off.png
-1 → /images/motor-on.png
-2 → /images/motor-fault.png
-3 → /images/motor-maintenance.png
+```javascript
+// Veritabanından base64 resim
+return {
+    type: "database",
+    value: "data:image/png;base64,iVBORw0KGgo..."
+};
 ```
 
-### Expression Example
+#### Örnek: Duruma Göre Resim Değiştirme
 
 ```javascript
 var status = ins.getVariableValue("Motor_Status").value;
-var base = "/images/motor-";
-if (status === 0) return base + "off.png";
-if (status === 1) return base + "on.png";
-if (status === 2) return base + "fault.png";
-return base + "unknown.png";
+var base = "/files/images/motor-";
+if (status === 0) return { type: "file", value: base + "off.png" };
+if (status === 1) return { type: "file", value: base + "on.png" };
+if (status === 2) return { type: "file", value: base + "fault.png" };
+return { type: "file", value: base + "unknown.png" };
 ```
 
-## AlarmIndication (Alarm Indicator)
+| Return Alanı | Açıklama |
+|-------------|----------|
+| **type: "file"** | Platform dosya sisteminden yükler (`/files/` dizini) |
+| **type: "database"** | Base64 kodlanmış resim verisi doğrudan kullanılır |
+| **value** | Dosya yolu veya base64 string |
 
-**AlarmIndication** automatically displays the status of an alarm group with color and blinking. It uses the color settings (OnNoAck, OnAck, OffNoAck, OffAck) from the alarm group definition.
+---
 
-### Usage
+## AlarmIndication (Alarm Göstergesi)
 
-| Field | Value |
-|-------|-------|
+**AlarmIndication**, alarm grubunun durumunu otomatik olarak renk ve yanıp sönme ile gösterir. Alarm grubu tanımındaki renk ayarlarını kullanır.
+
+| Alan | Değer |
+|------|-------|
 | **Type** | AlarmIndication |
-| **Suitable SVG Elements** | `<rect>`, `<circle>`, `<path>` |
+| **Uygun SVG Öğeleri** | `<rect>`, `<circle>`, `<path>` |
 | **Expression Type** | Alarm |
-| **Expression** | Alarm group reference |
 
-### Automatic Behavior
+### 4 Alarm Durumu
 
-| Alarm State | Appearance |
-|-------------|------------|
-| Normal | OffAck color from the alarm group |
-| Fired + No Ack | OnNoAck color, blinking |
-| Fired + Ack | OnAck color, solid |
-| Off + No Ack | OffNoAck color |
+| Durum | Açıklama | Tipik Görünüm |
+|-------|----------|--------------|
+| **Fired + No Ack** | Alarm aktif, onaylanmamış | Kırmızı yanıp söner |
+| **Fired + Ack** | Alarm aktif, onaylanmış | Kırmızı sabit |
+| **Off + No Ack** | Alarm kapanmış, onaylanmamış | Sarı |
+| **Off + Ack** | Alarm kapanmış, onaylanmış | Normal (gri/beyaz) |
 
-You do not need to set the colors manually — the colors from the alarm group definition are applied automatically.
+Renkler alarm grubu tanımından otomatik alınır — elle ayarlamaya gerek yoktur.
