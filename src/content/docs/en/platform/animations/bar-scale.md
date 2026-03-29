@@ -59,27 +59,83 @@ TYPE bölümünden **EXPRESSION** seçildiğinde JavaScript kod editörü açıl
 
 Expression modunda da **Min**, **Max**, **Direction** ve **Gradient** alanları aynı şekilde kullanılır.
 
-#### Örnek: Doğrudan Değer
+#### Return Formatları
+
+Expression'dan iki farklı formatta değer döndürülebilir:
+
+**Format 1: Sayısal Değer (Basit)**
+
+Sadece sayı döndürülür. Min/Max/Direction/Gradient ayarları editördeki form alanlarından alınır.
 
 ```javascript
+// Doğrudan değişken değeri
 return ins.getVariableValue('ActivePower_kW').value;
 ```
 
-#### Örnek: Yüzdeye Dönüştürme
-
 ```javascript
+// Hesaplama ile yüzde
 var val = ins.getVariableValue("ActivePower_kW").value;
 var maxPower = 1000;
-return (val / maxPower) * 100; // 0-100 arası yüzde
+return (val / maxPower) * 100;
 ```
 
-#### Örnek: İki Değişkenin Oranı
-
 ```javascript
+// İki değişkenin oranı
 var output = ins.getVariableValue("Output_kW").value;
 var input = ins.getVariableValue("Input_kW").value;
-if (input > 0) return (output / input) * 100; // verimlilik %
+if (input > 0) return (output / input) * 100;
 return 0;
+```
+
+**Format 2: Nesne (Dinamik Props)**
+
+Tüm bar ayarları expression içinden dinamik olarak kontrol edilebilir. Döndürülen nesne, editördeki form alanlarını geçersiz kılar.
+
+```javascript
+var power = ins.getVariableValue("ActivePower_kW").value;
+return {
+    value: power,
+    min: 0,
+    max: 1000,
+    orientation: "Right",
+    fillColor: power > 800 ? "#FF0000" : "#04B3FF",
+    opacity: 1,
+    duration: 0.5
+};
+```
+
+Nesne formatında kullanılabilir alanlar:
+
+| Alan | Tip | Varsayılan | Açıklama |
+|------|-----|-----------|----------|
+| **value** | Number | — | Bar doluluk değeri (zorunlu) |
+| **min** | Number | `0` | Minimum değer (bar boş) |
+| **max** | Number | `100` | Maksimum değer (bar dolu) |
+| **orientation** | String | `"Bottom"` | Yön: `"Bottom"`, `"Top"`, `"Left"`, `"Right"` |
+| **fillColor** | String | `"#04B3FF"` | Bar dolgu rengi |
+| **opacity** | Number | `1` | Saydamlık (0-1) |
+| **duration** | Number | `1` | Animasyon süresi (saniye) |
+| **isRadial** | Boolean | `false` | Radyal (dairesel) bar modu |
+| **strokeWidth** | Number | `3` | Radyal modda çizgi kalınlığı |
+
+:::tip
+Nesne formatı ile bar rengini değere göre dinamik olarak değiştirebilirsiniz — örneğin normal aralıkta mavi, yüksek yükte kırmızı. Form ayarlarını her tarama döngüsünde programatik olarak geçersiz kılma imkanı verir.
+:::
+
+#### Radyal (Dairesel) Bar Modu
+
+`isRadial: true` ayarı ile bar, SVG path öğesinde `stroke-dasharray` tabanlı dairesel doluluk animasyonu oluşturur. Gösterge kadranı, dairesel ilerleme çubuğu gibi gösterimlerde kullanılır.
+
+```javascript
+return {
+    value: 75,
+    min: 0,
+    max: 100,
+    isRadial: true,
+    strokeWidth: 5,
+    fillColor: "#00CC00",
+    duration: 0.8
+};
 ```
 
 ---
