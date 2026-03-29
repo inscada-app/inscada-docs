@@ -18,14 +18,28 @@ Bir SCADA ekranı oluşturmak üç adımdan oluşur:
 
 SVG ekranı, herhangi bir SVG editörü ile tasarlanır. **Inkscape** (ücretsiz, açık kaynak) önerilen editördür.
 
+![Inkscape ile SVG Tasarımı](../../../../../assets/docs/inkscape-editor.png)
+
 Tasarım sırasında:
-- Ekranın görsel düzenini oluşturun (arka plan, cihaz sembolleri, metin alanları, butonlar, göstergeler)
-- **SVG ID'leri ile ilgilenmenize gerek yok** — inSCADA bu ID'leri otomatik algılar
+- Ekranın görsel düzenini serbest bir şekilde oluşturun — cihaz sembolleri, metin alanları, butonlar, göstergeler, grafikler
+- **SVG ID'leri ile ilgilenmenize gerek yok** — inSCADA tüm SVG ağacını otomatik tarar ve her objeyi seçilebilir hale getirir
 - Standart SVG öğeleri kullanın: `<rect>`, `<circle>`, `<text>`, `<path>`, `<g>`, `<image>`
 - İstediğiniz kadar karmaşık tasarım yapabilirsiniz — katmanlar, gruplar, gradyanlar, filtreler
 
-:::tip
-Inkscape'te tasarım yaparken objelere anlamlı isimler vermek işinizi kolaylaştırır (Inkscape'te Object Properties → Label/ID). Ancak zorunlu değildir — inSCADA tüm SVG ağacını otomatik tarar.
+### Document Properties (Sayfa Ayarları)
+
+Inkscape'te **File → Document Properties** (Dosya → Belge Özellikleri) bölümünde sayfa boyutunu ayarlayın:
+
+| Ayar | Önerilen Değer | Açıklama |
+|------|---------------|----------|
+| **Genişlik** | 1920 px | Full HD ekran genişliği |
+| **Yükseklik** | 1080 px | Full HD ekran yüksekliği |
+| **Birim** | px | Piksel birimi |
+| **Ölçek** | 1.0 | 1:1 ölçek |
+| **Yönlendirme** | Yatay (Landscape) | SCADA ekranları genellikle yatay |
+
+:::caution[Arka Plan Rengi]
+Inkscape'te ayarlanan arka plan rengi inSCADA'ya **aktarılmaz**. Arka plan rengi, inSCADA'da animation'ın yapılandırma panelindeki **Color** alanından ayarlanır. Tasarım sırasında Inkscape arka planını yalnızca görsel referans olarak kullanın.
 :::
 
 ### 2. SVG Yükleme (Animation Dev)
