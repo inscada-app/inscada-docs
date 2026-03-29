@@ -1,87 +1,155 @@
 ---
 title: "Color"
-description: "Changing color based on value"
+description: "Değere göre renk değiştirme"
 sidebar:
   order: 11
 ---
 
-**Color** dynamically changes the fill or stroke color of an SVG element based on a variable value. It is used for status indicators, alarm coloring, and threshold-based visualization.
+**Color**, bir SVG öğesinin dolgu (fill) veya çizgi (stroke) rengini değişken değerine göre dinamik olarak değiştirir. Durum göstergesi, alarm renklendirme, eşik bazlı görselleştirme için kullanılır.
 
-## Usage
+## Kullanım
 
-| Field | Value |
-|-------|-------|
+| Alan | Değer |
+|------|-------|
 | **Type** | Color |
-| **Suitable SVG Elements** | `<rect>`, `<circle>`, `<ellipse>`, `<polygon>`, `<path>`, `<text>` |
-| **Expression Type** | Expression, Switch, Tetra Color |
+| **Uygun SVG Öğeleri** | `<rect>`, `<circle>`, `<ellipse>`, `<polygon>`, `<path>`, `<text>` |
 
-## SVG Preparation
+## Yapılandırma Tipleri
 
-```xml
-<circle id="status_led" cx="50" cy="50" r="12" fill="#cccccc" stroke="#999"/>
-```
+### SWITCH — Koşullu Renk Tablosu (Kod Yazmadan)
 
-## Configuration Examples
+En yaygın kullanım. Değer aralıklarına göre farklı renkler atanır — kod yazmaya gerek yoktur.
 
-### Boolean Status — With Switch
+![Color — Switch](../../../../../assets/docs/anim-color-switch.png)
 
-Expression Type: **Switch**
-```
-true → #00cc00
-false → #ff0000
-```
-Green if the motor is running, red if stopped.
+TYPE bölümünden **SWITCH** seçildiğinde değişken seçimi ve koşullu renk tablosu açılır.
 
-### Multiple States — With Switch
+#### Temel Alanlar
 
-```
-0 → #999999
-1 → #00cc00
-2 → #ff0000
-3 → #ff8800
-```
-0=Off (gray), 1=Running (green), 2=Fault (red), 3=Warning (orange)
+| Alan | Açıklama |
+|------|----------|
+| **Variable** | Açılır listeden değişken seçimi |
+| **Default** | Hiçbir koşul sağlanmazsa kullanılacak varsayılan renk |
 
-### Threshold-Based — With Expression
+#### Koşul Tablosu (Condition / Value / Color)
 
-Expression Type: **Expression**
+**Add** butonuyla satır ekleyerek değer → renk eşleşmeleri tanımlanır:
+
+| Condition | Value | Color |
+|-----------|-------|-------|
+| `>` | `80` | 🔴 `#FF0000` (Kırmızı — Kritik) |
+| `>` | `60` | 🟠 `#FF8800` (Turuncu — Uyarı) |
+| `>` | `40` | 🟡 `#FFCC00` (Sarı — Dikkat) |
+| `<=` | `40` | 🟢 `#00CC00` (Yeşil — Normal) |
+
+Boolean değişkenler için:
+
+| Condition | Value | Color |
+|-----------|-------|-------|
+| `==` | `true` | 🟢 `#00CC00` (Çalışıyor) |
+| `==` | `false` | 🔴 `#FF0000` (Durdu) |
+
+#### Hata Durumu Renkleri
+
+| Alan | Açıklama |
+|------|----------|
+| **Comm Error Color** | Haberleşme hatası olduğunda gösterilecek renk (örn: gri `#999999`) |
+| **Stale Duration** | Verinin "eski" sayılacağı süre (ms) |
+| **Stale Color** | Veri güncelliğini yitirdiğinde gösterilecek renk |
+
+:::tip
+Comm Error Color ve Stale Color ayarları, operatörlerin haberleşme kesintilerini renk değişiminden hızlıca fark etmesini sağlar.
+:::
+
+### EXPRESSION — JavaScript ile Serbest Renk Hesaplama
+
+Karmaşık koşullar veya birden fazla değişkene bağlı renk kararları için kullanılır.
+
+![Color — Expression](../../../../../assets/docs/anim-color-expression.png)
+
+TYPE bölümünden **EXPRESSION** seçildiğinde JavaScript kod editörü açılır. `return` ile döndürülen hex renk kodu SVG öğesine uygulanır.
+
+#### Örnek: Eşik Bazlı Renk
+
 ```javascript
 var temp = ins.getVariableValue("Temperature_C").value;
-if (temp > 80) return "#ff0000";      // red — critical
-if (temp > 60) return "#ff8800";      // orange — warning
-if (temp > 40) return "#ffcc00";      // yellow — caution
-return "#00cc00";                     // green — normal
+if (temp > 80) return "#FF0000";      // kırmızı — kritik
+if (temp > 60) return "#FF8800";      // turuncu — uyarı
+if (temp > 40) return "#FFCC00";      // sarı — dikkat
+return "#00CC00";                     // yeşil — normal
 ```
 
-### Gradient / Blinking
+#### Örnek: Birden Fazla Değişkene Bağlı
 
-Blinking effect between two colors:
 ```javascript
-return "#ff0000/#ffffff";  // red ↔ white blinking
+var power = ins.getVariableValue("ActivePower_kW").value;
+var status = ins.getVariableValue("GridStatus").value;
+if (!status) return "#999999";        // bağlantı yok — gri
+if (power > 500) return "#FF0000";    // aşırı yük — kırmızı
+if (power > 300) return "#FF8800";    // yüksek yük — turuncu
+return "#00CC00";                     // normal — yeşil
 ```
 
-When two colors are specified with the `/` character, an SVG `<animate>` element is created and a color transition is performed.
+#### Örnek: Yanıp Sönme
 
-### Tetra Color (Alarm 4 Colors)
+İki renk arasında yanıp sönme efekti oluşturmak için `/` ayracı kullanılır:
 
-Expression Type: **Tetra Color**
+```javascript
+var temp = ins.getVariableValue("Temperature_C").value;
+if (temp > 80) return "#FF0000/#FFFFFF";  // kırmızı ↔ beyaz yanıp sönme
+return "#00CC00";
+```
 
-Automatic coloring based on the four states of an alarm group:
+`/` karakteri ile iki renk belirtildiğinde SVG `<animate>` elementi oluşturulur ve renkler arasında otomatik geçiş yapılır.
 
-| State | Default Color |
-|-------|--------------|
-| Fired + No Ack | Red blinking |
-| Fired + Ack | Red solid |
-| Off + No Ack | Yellow |
-| Off + Ack | Normal (gray/white) |
+### TETRA — Alarm 4 Renk Durumu
 
-Automatically applies the color settings from the alarm group definition.
+Alarm grubunun dört durumuna göre otomatik renklendirme sağlar. Alarm grubu tanımındaki renk ayarlarını kullanır.
 
-## Full SVG Example
+![Color — Tetra](../../../../../assets/docs/anim-color-tetra.png)
+
+TYPE bölümünden **TETRA** seçildiğinde alarm tag bağlama ve 4 durum yapılandırması açılır.
+
+#### Alanlar
+
+| Alan | Açıklama |
+|------|----------|
+| **Tag** | Alarm değişkeni referansı |
+| **Tag K** | Onay (acknowledge) değişkeni referansı |
+
+#### 4 Alarm Durumu
+
+Her satır bir alarm durumunu temsil eder. Her duruma renk ve yanıp sönme (blink) atanabilir:
+
+| Durum | Açıklama | Tipik Renk |
+|-------|----------|-----------|
+| **AB-on (ack)** | Alarm aktif, onaylanmış | 🔴 Kırmızı sabit |
+| **AB-on (no ack)** | Alarm aktif, onaylanmamış | 🔴 Kırmızı yanıp söner |
+| **AB-off (ack)** | Alarm kapanmış, onaylanmış | ⚪ Normal (gri/beyaz) |
+| **AB-off (no ack)** | Alarm kapanmış, onaylanmamış | 🟡 Sarı |
+
+Her satırdaki checkbox yanıp sönme efektini etkinleştirir.
+
+:::note
+TETRA tipi, alarm grubu tanımındaki renk kodlarıyla (OnNoAck, OnAck, OffNoAck, OffAck) uyumlu çalışır. Renkleri elle ayarlamanıza gerek yoktur — alarm grubundaki yapılandırmayı kullanır.
+:::
+
+---
+
+## Ne Zaman Hangi Tip?
+
+| İhtiyaç | Önerilen Tip |
+|---------|-------------|
+| Değer aralığına göre renk, hızlı yapılandırma | **SWITCH** |
+| Birden fazla değişkene bağlı karmaşık koşul | **EXPRESSION** |
+| Alarm durumu renklendirme (4 durum) | **TETRA** |
+| Yanıp sönme efekti | **EXPRESSION** (`renk1/renk2` formatı) |
+
+## Tam SVG Örneği
 
 ```xml
 <svg viewBox="0 0 300 100">
-  <!-- 3 motor status indicators -->
+  <!-- 3 motor durum göstergesi -->
   <g transform="translate(30,50)">
     <circle id="motor1_led" r="15" fill="#ccc"/>
     <text y="35" text-anchor="middle" font-size="11">Motor 1</text>
@@ -97,7 +165,7 @@ Automatically applies the color settings from the alarm group definition.
 </svg>
 ```
 
-For each `motor*_led`, a Color element:
-- Expression Type: Switch
-- Expression: `Motor1_Status` (Tag)
-- Switch: `true → #00cc00 | false → #ff0000`
+Her `motor*_led` için Color element:
+- TYPE: SWITCH
+- Variable: `Motor1_Status`
+- Switch: `true → #00CC00` | `false → #FF0000`
