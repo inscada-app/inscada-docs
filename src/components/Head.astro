@@ -4,3 +4,40 @@ const { head } = Astro.locals.starlightRoute;
 
 {head.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
 <script is:inline>document.documentElement.dataset.theme = 'light';</script>
+
+<script>
+import mediumZoom from 'medium-zoom';
+
+document.addEventListener('DOMContentLoaded', () => {
+  mediumZoom('.sl-markdown-content img', {
+    margin: 24,
+    background: 'rgba(0, 0, 0, 0.85)',
+    scrollOffset: 0,
+  });
+});
+
+// Starlight navigates via View Transitions — re-init on page change
+document.addEventListener('astro:page-load', () => {
+  mediumZoom('.sl-markdown-content img', {
+    margin: 24,
+    background: 'rgba(0, 0, 0, 0.85)',
+    scrollOffset: 0,
+  });
+});
+</script>
+
+<style is:global>
+  .sl-markdown-content img {
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+  }
+  .sl-markdown-content img:hover {
+    opacity: 0.9;
+  }
+  .medium-zoom-overlay {
+    z-index: 9999;
+  }
+  .medium-zoom-image--opened {
+    z-index: 10000;
+  }
+</style>
