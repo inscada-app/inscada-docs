@@ -75,7 +75,11 @@ Boolean veya sayısal değişken seçilir. Değer `true` veya `0`'dan farklı is
 
 **Bit alanı** özellikle durum word'lerinde kullanışlıdır. Bir Integer değişkenin tek bir bit'ini izleyerek o bit'e göre öğeyi gösterir/gizler.
 
-**Inverse** alanı ile mantığı tersine çevirebilirsiniz — örneğin "alarm yoksa göster" yerine "alarm varsa gizle" gibi.
+**Inverse** alanı, dönen değeri tersine çevirerek değerlendirir — `true` → gizle, `false` → göster.
+
+:::caution[Visibility Önceliği]
+Visibility, aynı objeye bağlı **tüm diğer animation type'lardan önceliklidir**. Bir obje Visibility ile gizlendiğinde, o objeye bağlı Color, Get, Bar, Blink gibi diğer element'ler çalışsa bile obje ekranda görünmez. Visibility `false` döndürdüğünde obje tamamen `display: none` olur — diğer animation'lar render edilmez.
+:::
 
 ### EXPRESSION — JavaScript ile Koşul
 
