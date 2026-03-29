@@ -176,9 +176,61 @@ if (__firstScan) {
 }
 ```
 
-**2. Script Seçimi**
+**2. Script Seçimi (Fonksiyon Kütüphanesi)**
 
-Projede tanımlı zamanlanmış script'lerden seçim yapılır. Birden fazla script seçilebilir — seçilen script'ler sırayla çalıştırılır.
+Projede tanımlı script'lerden seçim yapılır. Seçilen script'lerin **içeriği** animation'a eklenir ve script içinde tanımlı fonksiyonlar artık animation element expression'larından çağrılabilir hale gelir.
+
+Bu mekanizma, script'leri bir **fonksiyon kütüphanesi** olarak kullanmayı sağlar:
+
+```javascript
+// Script: "ChartHelpers" (Schedule Type: None)
+// Bu script bağımsız çalışmaz, animation'a kütüphane olarak eklenir
+
+function buildChartData(varName, hours) {
+    var end = ins.now();
+    var start = ins.getDate(end.getTime() - hours * 3600000);
+    var logs = ins.getLoggedVariableValuesByPage(
+        [varName], start, end, 0, 100
+    );
+    var labels = [];
+    var values = [];
+    for (var i = logs.length - 1; i >= 0; i--) {
+        labels.push(logs[i].dttm);
+        values.push(logs[i].value);
+    }
+    return { labels: labels, values: values };
+}
+
+function formatValue(val, decimals, unit) {
+    return val.toFixed(decimals) + " " + unit;
+}
+```
+
+Bu script animation'a bağlandığında, herhangi bir element expression'ında şu şekilde çağrılabilir:
+
+```javascript
+// Element expression içinde — kütüphane fonksiyonunu çağır
+var data = buildChartData("ActivePower_kW", 1);
+return data;
+```
+
+```javascript
+// Başka bir element expression'ında
+var power = ins.getVariableValue("ActivePower_kW").value;
+return formatValue(power, 1, "kW");
+```
+
+#### Önemli Kurallar
+
+| Durum | Davranış |
+|-------|---------|
+| Script'te fonksiyon **tanımlı ama çağrılmamış** | Fonksiyon çalışmaz, sadece tanım olarak animation'a eklenir. Element expression'larından çağrılmayı bekler |
+| Script'te fonksiyon **tanımlı ve çağrılmış** | Fonksiyon her tarama döngüsünde otomatik çalışır (arka plan görevi) |
+| Script'in Schedule Type'ı | **None** olarak ayarlayın — script bağımsız zamanlamada çalışmaz, yalnızca animation kütüphanesi olarak kullanılır |
+
+:::tip[Kütüphane Yaklaşımı]
+Sık kullanılan yardımcı fonksiyonları (veri formatlama, grafik hazırlama, hesaplama) ayrı bir script'te toplayıp birden fazla animation'a bağlayabilirsiniz. Fonksiyonu bir kez yazarsınız, tüm animation'larda kullanırsınız.
+:::
 
 ### Post-Animation Code
 
