@@ -1,5 +1,5 @@
 ---
-title: "Logs title: "Log & Denetim" Audit"
+title: "Logs & Audit"
 description: "Olay logları, giriş denemeleri ve script logları"
 sidebar:
   order: 9

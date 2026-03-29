@@ -1,5 +1,5 @@
 ---
-title: "Users title: "Kullanıcı & Rol Yönetimi" Roles"
+title: "Users & Roles"
 description: "User creation, role definition, permissions and menu assignment"
 sidebar:
   order: 6

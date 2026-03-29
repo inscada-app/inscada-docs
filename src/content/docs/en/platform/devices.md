@@ -1,5 +1,5 @@
 ---
-title: "Devices title: "Cihaz ve Frame" Frames"
+title: "Devices & Frames"
 description: "Device and Frame configuration"
 sidebar:
   order: 3
