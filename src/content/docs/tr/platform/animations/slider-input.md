@@ -9,45 +9,49 @@ sidebar:
 
 **Slider**, sürüklenebilir kaydırıcı ile analog değer ayarlamak için kullanılır. Setpoint, hız ayarı, sıcaklık hedefi, dimmer gibi sürekli değer kontrolleri.
 
-### Kullanım
-
 | Alan | Değer |
 |------|-------|
 | **Type** | Slider |
-| **Uygun SVG Öğeleri** | `<rect>` (foreignObject) |
-| **Expression Type** | Tag, Expression |
+| **Uygun SVG Öğeleri** | `<rect>` (foreignObject olarak render edilir) |
 
-### Yapılandırma (Props)
+### TAG — Değişken Seçimi
 
-| Özellik | Açıklama | Örnek |
-|---------|----------|-------|
-| **min** | Minimum değer | 0 |
-| **max** | Maksimum değer | 100 |
-| **step** | Adım büyüklüğü | 1 |
-| **title** | Başlık | "Sıcaklık Setpoint" |
+![Slider — Tag](../../../../../assets/docs/anim-slider-tag.png)
 
-### SVG Hazırlığı
+Listeden değişken seçilir. Operatör kaydırıcıyı sürüklediğinde değer doğrudan değişkene yazılır.
 
-```xml
-<foreignObject id="temp_slider" x="50" y="200" width="300" height="60"/>
-```
+| Alan | Açıklama |
+|------|----------|
+| **Variable** | Açılır listeden hedef değişken seçimi |
+| **Back Visibility** | Kaydırıcının arka plan dikdörtgenini göster/gizle |
+| **Min Value** | Kaydırıcı minimum değeri |
+| **Max Value** | Kaydırıcı maksimum değeri |
+| **Extra Width** | Kaydırıcı genişliğine ek piksel |
+| **Extra Height** | Kaydırıcı yüksekliğine ek piksel |
 
-### Yapılandırma
+### EXPRESSION — JavaScript ile
 
-- Expression Type: **Tag** → `Temperature_Setpoint`
-- Props: min=0, max=100, step=0.5
+![Slider — Expression](../../../../../assets/docs/anim-slider-expression.png)
 
-Operatör kaydırıcıyı sürüklediğinde değer anında değişkene yazılır.
+Expression modunda da aynı yapılandırma alanları kullanılır. Expression, slider'ın mevcut değerini hesaplamak veya yazma öncesi dönüşüm yapmak için kullanılabilir.
 
-### Expression ile İleri Düzey
+| Alan | Açıklama |
+|------|----------|
+| **Back Visibility** | Arka plan görünürlüğü |
+| **Min Value / Max Value** | Değer aralığı |
+| **Extra Width / Extra Height** | Boyut ayarı |
 
-```javascript
-// Değer yazıldığında loglama
-var newValue = value; // slider'dan gelen değer
-ins.setVariableValue("Temperature_Setpoint", {value: newValue});
-ins.writeLog("INFO", "Setpoint", "Temperature setpoint: " + newValue + "°C");
-return newValue;
-```
+### Çalışma Prensibi
+
+Slider, **noUiSlider** kütüphanesi ile render edilir. Operatör kaydırıcıyı sürüklediğinde:
+
+1. Slider pozisyonu Min-Max aralığına göre değere dönüştürülür
+2. Değer API aracılığıyla değişkene yazılır
+3. SVG rect alanı içine foreignObject olarak yerleştirilir
+
+:::caution
+Slider kontrol element'idir — kullanıcının `SET_VARIABLE_VALUE` yetkisi gereklidir.
+:::
 
 ---
 
@@ -55,41 +59,31 @@ return newValue;
 
 **Input**, metin veya sayı giriş alanı oluşturur. Operatör klavyeden değer girer ve Enter ile onaylar.
 
-### Kullanım
-
 | Alan | Değer |
 |------|-------|
 | **Type** | Input |
-| **Uygun SVG Öğeleri** | `<rect>` (foreignObject) |
-| **Expression Type** | Tag, Expression |
+| **Uygun SVG Öğeleri** | `<rect>` (foreignObject olarak render edilir) |
 
-### Yapılandırma (Props)
+### Yapılandırma
 
-| Özellik | Açıklama | Örnek |
-|---------|----------|-------|
+| Alan | Açıklama | Örnek |
+|------|----------|-------|
 | **type** | Giriş tipi | `number`, `text` |
 | **min** | Minimum değer (number) | 0 |
 | **max** | Maksimum değer (number) | 100 |
 | **placeholder** | Boş iken gösterilen metin | "Setpoint girin..." |
 
-### SVG Hazırlığı
-
-```xml
-<foreignObject id="setpoint_input" x="100" y="150" width="150" height="35"/>
-```
-
 ### Kullanım Senaryoları
 
 **Sayısal setpoint:**
-- Expression Type: Tag → `Temperature_Setpoint`
-- Props: type=number, min=0, max=100
+- Variable: `Temperature_Setpoint`
+- Tip: number, min: 0, max: 100
 
 **Tarif adı:**
-- Expression Type: Tag → `Recipe_Name`
-- Props: type=text, placeholder="Tarif adı..."
+- Variable: `Recipe_Name`
+- Tip: text, placeholder: "Tarif adı..."
 
-**Parametre girişi:**
-- Expression Type: Expression
+**Validasyonlu giriş (Expression ile):**
 ```javascript
 var val = parseFloat(value);
 if (val < 0 || val > 100) {
@@ -99,3 +93,7 @@ if (val < 0 || val > 100) {
 ins.setVariableValue("Setpoint", {value: val});
 ins.notify("success", "OK", "Setpoint güncellendi: " + val);
 ```
+
+:::caution
+Input kontrol element'idir — kullanıcının `SET_VARIABLE_VALUE` yetkisi gereklidir.
+:::

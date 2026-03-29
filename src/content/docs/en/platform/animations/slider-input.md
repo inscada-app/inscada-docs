@@ -1,101 +1,99 @@
 ---
 title: "Slider & Input"
-description: "Slider and text/number input controls"
+description: "Kaydırıcı ve metin/sayı giriş kontrolleri"
 sidebar:
   order: 18
 ---
 
-## Slider
+## Slider (Kaydırıcı)
 
-**Slider** is used to set analog values with a draggable slider. For continuous value controls such as setpoint, speed adjustment, temperature target, and dimmer.
+**Slider**, sürüklenebilir kaydırıcı ile analog değer ayarlamak için kullanılır. Setpoint, hız ayarı, sıcaklık hedefi, dimmer gibi sürekli değer kontrolleri.
 
-### Usage
-
-| Field | Value |
-|-------|-------|
+| Alan | Değer |
+|------|-------|
 | **Type** | Slider |
-| **Suitable SVG Elements** | `<rect>` (foreignObject) |
-| **Expression Type** | Tag, Expression |
+| **Uygun SVG Öğeleri** | `<rect>` (foreignObject olarak render edilir) |
 
-### Configuration (Props)
+### TAG — Değişken Seçimi
 
-| Property | Description | Example |
-|----------|-------------|---------|
-| **min** | Minimum value | 0 |
-| **max** | Maximum value | 100 |
-| **step** | Step size | 1 |
-| **title** | Title | "Temperature Setpoint" |
+![Slider — Tag](../../../../../assets/docs/anim-slider-tag.png)
 
-### SVG Preparation
+Listeden değişken seçilir. Operatör kaydırıcıyı sürüklediğinde değer doğrudan değişkene yazılır.
 
-```xml
-<foreignObject id="temp_slider" x="50" y="200" width="300" height="60"/>
-```
+| Alan | Açıklama |
+|------|----------|
+| **Variable** | Açılır listeden hedef değişken seçimi |
+| **Back Visibility** | Kaydırıcının arka plan dikdörtgenini göster/gizle |
+| **Min Value** | Kaydırıcı minimum değeri |
+| **Max Value** | Kaydırıcı maksimum değeri |
+| **Extra Width** | Kaydırıcı genişliğine ek piksel |
+| **Extra Height** | Kaydırıcı yüksekliğine ek piksel |
 
-### Configuration
+### EXPRESSION — JavaScript ile
 
-- Expression Type: **Tag** → `Temperature_Setpoint`
-- Props: min=0, max=100, step=0.5
+![Slider — Expression](../../../../../assets/docs/anim-slider-expression.png)
 
-When the operator drags the slider, the value is written to the variable immediately.
+Expression modunda da aynı yapılandırma alanları kullanılır. Expression, slider'ın mevcut değerini hesaplamak veya yazma öncesi dönüşüm yapmak için kullanılabilir.
 
-### Advanced with Expression
+| Alan | Açıklama |
+|------|----------|
+| **Back Visibility** | Arka plan görünürlüğü |
+| **Min Value / Max Value** | Değer aralığı |
+| **Extra Width / Extra Height** | Boyut ayarı |
 
-```javascript
-// Logging when value is written
-var newValue = value; // value from the slider
-ins.setVariableValue("Temperature_Setpoint", {value: newValue});
-ins.writeLog("INFO", "Setpoint", "Temperature setpoint: " + newValue + "°C");
-return newValue;
-```
+### Çalışma Prensibi
+
+Slider, **noUiSlider** kütüphanesi ile render edilir. Operatör kaydırıcıyı sürüklediğinde:
+
+1. Slider pozisyonu Min-Max aralığına göre değere dönüştürülür
+2. Değer API aracılığıyla değişkene yazılır
+3. SVG rect alanı içine foreignObject olarak yerleştirilir
+
+:::caution
+Slider kontrol element'idir — kullanıcının `SET_VARIABLE_VALUE` yetkisi gereklidir.
+:::
 
 ---
 
-## Input (Input Field)
+## Input (Giriş Alanı)
 
-**Input** creates a text or number input field. The operator enters a value from the keyboard and confirms with Enter.
+**Input**, metin veya sayı giriş alanı oluşturur. Operatör klavyeden değer girer ve Enter ile onaylar.
 
-### Usage
-
-| Field | Value |
-|-------|-------|
+| Alan | Değer |
+|------|-------|
 | **Type** | Input |
-| **Suitable SVG Elements** | `<rect>` (foreignObject) |
-| **Expression Type** | Tag, Expression |
+| **Uygun SVG Öğeleri** | `<rect>` (foreignObject olarak render edilir) |
 
-### Configuration (Props)
+### Yapılandırma
 
-| Property | Description | Example |
-|----------|-------------|---------|
-| **type** | Input type | `number`, `text` |
-| **min** | Minimum value (number) | 0 |
-| **max** | Maximum value (number) | 100 |
-| **placeholder** | Text shown when empty | "Enter setpoint..." |
+| Alan | Açıklama | Örnek |
+|------|----------|-------|
+| **type** | Giriş tipi | `number`, `text` |
+| **min** | Minimum değer (number) | 0 |
+| **max** | Maksimum değer (number) | 100 |
+| **placeholder** | Boş iken gösterilen metin | "Setpoint girin..." |
 
-### SVG Preparation
+### Kullanım Senaryoları
 
-```xml
-<foreignObject id="setpoint_input" x="100" y="150" width="150" height="35"/>
-```
+**Sayısal setpoint:**
+- Variable: `Temperature_Setpoint`
+- Tip: number, min: 0, max: 100
 
-### Usage Scenarios
+**Tarif adı:**
+- Variable: `Recipe_Name`
+- Tip: text, placeholder: "Tarif adı..."
 
-**Numeric setpoint:**
-- Expression Type: Tag → `Temperature_Setpoint`
-- Props: type=number, min=0, max=100
-
-**Recipe name:**
-- Expression Type: Tag → `Recipe_Name`
-- Props: type=text, placeholder="Recipe name..."
-
-**Parameter input:**
-- Expression Type: Expression
+**Validasyonlu giriş (Expression ile):**
 ```javascript
 var val = parseFloat(value);
 if (val < 0 || val > 100) {
-    ins.notify("error", "Error", "Value must be between 0-100!");
+    ins.notify("error", "Hata", "Değer 0-100 aralığında olmalı!");
     return;
 }
 ins.setVariableValue("Setpoint", {value: val});
-ins.notify("success", "OK", "Setpoint updated: " + val);
+ins.notify("success", "OK", "Setpoint güncellendi: " + val);
 ```
+
+:::caution
+Input kontrol element'idir — kullanıcının `SET_VARIABLE_VALUE` yetkisi gereklidir.
+:::

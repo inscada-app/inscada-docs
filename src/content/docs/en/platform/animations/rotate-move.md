@@ -1,120 +1,139 @@
 ---
 title: "Rotate & Move"
-description: "Rotation and translation animations"
+description: "Döndürme ve kaydırma animasyonları"
 sidebar:
   order: 13
 ---
 
-## Rotate (Rotation)
+## Rotate (Döndürme)
 
-**Rotate** rotates an SVG element based on a value. It is used for circular displays such as gauge needles, valve positions, wind direction, and compass.
+**Rotate**, bir SVG öğesini değere göre döndürür. Gösterge ibresi, vana pozisyonu, rüzgar yönü, kompas gibi dairesel gösterimlerde kullanılır.
 
-### Usage
-
-| Field | Value |
-|-------|-------|
+| Alan | Değer |
+|------|-------|
 | **Type** | Rotate |
-| **Suitable SVG Elements** | `<g>`, `<path>`, `<line>`, `<rect>` |
-| **Expression Type** | Tag, Expression |
+| **Uygun SVG Öğeleri** | `<g>`, `<path>`, `<line>`, `<rect>` |
 
-### Configuration (Props)
+### TAG — Değişken Seçimi
 
-| Property | Description |
-|----------|-------------|
-| **cx** | Rotation center X coordinate |
-| **cy** | Rotation center Y coordinate |
-| **minAngle** | Minimum angle (degrees) |
-| **maxAngle** | Maximum angle (degrees) |
-| **minValue** | Minimum value |
-| **maxValue** | Maximum value |
+![Rotate — Tag](../../../../../assets/docs/anim-rotate-tag.png)
 
-### SVG Preparation — Analog Gauge
+Listeden değişken seçilir. Değer, Min-Max aralığına göre 0°-360° dönüş açısına dönüştürülür.
 
-```xml
-<svg viewBox="0 0 200 200">
-  <!-- Dial background -->
-  <circle cx="100" cy="100" r="90" fill="none" stroke="#ddd" stroke-width="4"/>
+| Alan | Açıklama |
+|------|----------|
+| **Variable** | Açılır listeden değişken seçimi |
+| **Min** | Minimum değer (bu değerde açı = 0°) |
+| **Max** | Maksimum değer (bu değerde açı = 360°) |
+| **Rotate Center** | Döndürme merkez noktası (pivot) |
 
-  <!-- Dial markings -->
-  <line x1="100" y1="15" x2="100" y2="25" stroke="#333" stroke-width="2"/>
+#### Rotate Center (Döndürme Merkezi)
 
-  <!-- Needle -->
-  <g id="gauge_needle">
-    <line x1="100" y1="100" x2="100" y2="20"
-          stroke="#e74c3c" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="100" cy="100" r="5" fill="#e74c3c"/>
-  </g>
+Objenin hangi noktası etrafında döneceğini belirler. 9 pozisyon seçilebilir:
 
-  <!-- Value text -->
-  <text id="gauge_value" x="100" y="160"
-        text-anchor="middle" font-size="18" fill="#333">--</text>
-</svg>
-```
+| | Sol | Orta | Sağ |
+|---|---|---|---|
+| **Üst** | tl (top-left) | tc (top-center) | tr (top-right) |
+| **Orta** | ml (mid-left) | mc (mid-center) | mr (mid-right) |
+| **Alt** | bl (bottom-left) | bc (bottom-center) | br (bottom-right) |
 
-### Configuration
+Varsayılan: **mc** (objenin tam ortası)
 
-- `gauge_needle` → **Rotate**
-  - Props: cx=100, cy=100, minAngle=-135, maxAngle=135, minValue=0, maxValue=100
-  - Expression Type: Tag → `Temperature_C`
-- `gauge_value` → **Get**
-  - Expression: `ins.getVariableValue("Temperature_C").value.toFixed(1) + " °C"`
+Dönüş formülü: `açı = (değer - min) × 360 / (max - min)`
 
-Result: At 0°C the needle is at the lower left (-135°), at 100°C at the lower right (135°).
+Örnek: Min=0, Max=100, Değer=25 → açı = 90°
 
-### Valve Position Example
+### EXPRESSION — JavaScript ile Hesaplama
+
+![Rotate — Expression](../../../../../assets/docs/anim-rotate-expression.png)
+
+Derece cinsinden açı değeri döndürülür. Rotate Center alanı expression modunda da kullanılır.
 
 ```javascript
-// 0 = closed (0°), 100 = open (90°)
+// Vana pozisyonu: 0 = kapalı (0°), 100 = açık (90°)
 var pos = ins.getVariableValue("Valve_Position").value;
-return pos * 0.9; // 0-90 degrees
+return pos * 0.9;
+```
+
+```javascript
+// Rüzgar yönü (0-360°)
+var dir = ins.getVariableValue("Wind_Direction").value;
+return dir;
 ```
 
 ---
 
-## Move (Translation)
+## Move (Kaydırma)
 
-**Move** translates an SVG element along the X and/or Y axis based on a value. It is used for linear motion animations such as level indicators, conveyor positions, and elevators.
+**Move**, bir SVG öğesini X ve/veya Y ekseninde değere göre kaydırır. Seviye göstergesi, konveyör pozisyonu, asansör gibi lineer hareket animasyonlarında kullanılır.
 
-### Usage
-
-| Field | Value |
-|-------|-------|
+| Alan | Değer |
+|------|-------|
 | **Type** | Move |
-| **Suitable SVG Elements** | `<g>`, `<rect>`, `<circle>`, `<image>` |
-| **Expression Type** | Tag, Expression |
+| **Uygun SVG Öğeleri** | `<g>`, `<rect>`, `<circle>`, `<image>` |
 
-### Configuration (Props)
+### TAG — Değişken Seçimi
 
-| Property | Description |
-|----------|-------------|
-| **axis** | Movement axis: `x` or `y` |
-| **minPos** | Minimum position (pixels) |
-| **maxPos** | Maximum position (pixels) |
-| **minValue** | Minimum value |
-| **maxValue** | Maximum value |
+![Move — Tag](../../../../../assets/docs/anim-move-tag.png)
 
-### Elevator Example
+Listeden değişken seçilir. Değer aralığı piksel pozisyon aralığına eşlenir.
+
+| Alan | Açıklama |
+|------|----------|
+| **Variable** | Açılır listeden değişken seçimi |
+| **Min Value** | Minimum değişken değeri |
+| **Max Value** | Maksimum değişken değeri |
+| **Min Pos** | Minimum piksel pozisyonu (Min Value'da objenin konumu) |
+| **Max Pos** | Maksimum piksel pozisyonu (Max Value'da objenin konumu) |
+| **Smooth Off** | İşaretlenirse animasyon geçişi devre dışı kalır (anlık pozisyon atlaması) |
+
+Pozisyon formülü:
+```
+oran = (değer - minValue) / (maxValue - minValue)
+pozisyon = minPos + (maxPos - minPos) × oran
+```
+
+Örnek: MinValue=0, MaxValue=10, MinPos=0, MaxPos=300, Değer=5 → pozisyon = 150px
+
+**Smooth Off**: Varsayılan olarak pozisyon değişimleri yumuşak animasyonla geçiş yapar. Smooth Off işaretlenirse obje anlık olarak yeni pozisyona atlar — hızlı değişen veriler için daha uygun olabilir.
+
+### EXPRESSION — JavaScript ile Hesaplama
+
+![Move — Expression](../../../../../assets/docs/anim-move-expression.png)
+
+Piksel pozisyonu döndürülür. Min/Max alanları expression modunda da kullanılır.
+
+```javascript
+// Tank seviyesi: 0-100% → Y pozisyon 200-0 (ters yön)
+var level = ins.getVariableValue("Tank_Level").value;
+return 200 - (level * 2);
+```
+
+```javascript
+// Konveyör pozisyonu
+var pos = ins.getVariableValue("Conveyor_Position").value;
+return pos * 3; // 0-100 → 0-300px
+```
+
+### Kullanım Örnekleri
+
+#### Asansör
 
 ```xml
 <svg viewBox="0 0 100 400">
-  <!-- Shaft -->
   <rect x="20" y="10" width="60" height="380" fill="none" stroke="#999"/>
-  <!-- Cabin -->
   <g id="elevator_cabin">
     <rect x="25" y="0" width="50" height="40" fill="#3498db" rx="3"/>
   </g>
 </svg>
 ```
 
-- `elevator_cabin` → **Move**
-  - Props: axis=y, minPos=10, maxPos=350, minValue=0, maxValue=10
-  - Expression Type: Tag → `Floor_Position`
-  - At floor 0 the cabin is at the bottom, at floor 10 at the top
+- TYPE: TAG, Variable: `Floor_Position`
+- Min Value: `0`, Max Value: `10`, Min Pos: `350`, Max Pos: `10`
+- Kat 0'da kabin en altta, kat 10'da en üstte
 
-### Level Indicator Example
+#### Seviye Göstergesi
 
-```javascript
-// Tank level 0-100% → Y position 200-0 (reverse direction)
-var level = ins.getVariableValue("Tank_Level").value;
-return 200 - (level * 2);
-```
+- TYPE: TAG, Variable: `Tank_Level`
+- Min Value: `0`, Max Value: `100`, Min Pos: `200`, Max Pos: `0`
+- %0'da ok en altta, %100'de en üstte
