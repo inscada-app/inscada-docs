@@ -1,173 +1,173 @@
 ---
-title: "Animation Yapılandırma"
-description: "Animation ayarları, erişim rolleri, toolbar araçları ve Pre/Post Animation Scripts"
+title: "Animation Configuration"
+description: "Animation settings, access roles, toolbar tools, and Pre/Post Animation Scripts"
 sidebar:
   order: 1
-  label: "Yapılandırma"
+  label: "Configuration"
 ---
 
-Bu sayfada bir animation'ın yapılandırma paneli, toolbar araçları ve script ayarları açıklanmaktadır.
+This page explains the configuration panel, toolbar tools, and script settings of an animation.
 
-## Yapılandırma Paneli
+## Configuration Panel
 
-Animation Dev ekranında kalem ikonuna tıklayarak yapılandırma panelini açabilirsiniz:
+You can open the configuration panel by clicking the pencil icon on the Animation Dev screen:
 
-![Animation Yapılandırma Paneli](../../../../../assets/docs/editor-anim-config.png)
+![Animation Configuration Panel](../../../../../assets/docs/editor-anim-config.png)
 
-### Temel Ayarlar
+### Basic Settings
 
-| Alan | Zorunlu | Açıklama |
-|------|---------|----------|
-| **Name** | Evet | Ekran adı (proje içinde benzersiz) |
-| **Description** | Hayır | Açıklama |
-| **Duration** | Evet | Tarama sonrası bekleme süresi (ms, min: 100). Detay aşağıda |
-| **Play Order** | Evet | Visualization ekranındaki sıralama numarası |
-| **Main** | Evet | Visualization menüsünde görünsün mü |
-| **Color** | Hayır | Ekranın arka plan rengi. Varsayılan: `#00DDDC` |
-| **Alignment** | Hayır | SVG'nin ekrana hizalama modu |
-| **Join** | Hayır | Arka katman olarak bağlanacak animation (tepegöz asetat mantığı) |
+| Field | Required | Description |
+|-------|----------|-------------|
+| **Name** | Yes | Screen name (unique within the project) |
+| **Description** | No | Description |
+| **Duration** | Yes | Wait time after scan (ms, min: 100). Details below |
+| **Play Order** | Yes | Ordering number in the Visualization screen |
+| **Main** | Yes | Should it appear in the Visualization menu |
+| **Color** | No | Screen background color. Default: `#00DDDC` |
+| **Alignment** | No | SVG screen alignment mode |
+| **Join** | No | Animation to attach as a background layer (overlay transparency concept) |
 
-### Duration (Bekleme Süresi)
+### Duration (Wait Time)
 
-Duration, iki tarama arasındaki **bekleme süresidir** — tarama periyodu değil:
+Duration is the **wait time** between two scans — not the scan period:
 
 ```
-Toplam Döngü = Tarama Süresi + Duration (bekleme)
+Total Cycle = Scan Time + Duration (wait)
 ```
 
-1. Sunucu tüm element expression'larını çalıştırır → **tarama süresi**
-2. Tarama tamamlandıktan sonra `duration` ms kadar beklenir
-3. Yeni tarama başlar
+1. The server runs all element expressions → **scan time**
+2. After the scan completes, it waits for `duration` ms
+3. A new scan begins
 
-:::caution[Çok Küçük Duration]
-Duration çok küçük ayarlandığında, element sayısı fazla veya expression'lar ağır ise tarayıcıda **arayüz donması** oluşabilir.
+:::caution[Very Small Duration]
+When Duration is set too small, if the element count is high or expressions are heavy, **UI freezing** may occur in the browser.
 
-| Senaryo | Önerilen Duration |
-|---------|------------------|
-| Az element (< 20), basit expression | 200 - 500 ms |
-| Orta element (20-50), karışık expression | 500 - 1000 ms |
-| Çok element (50+), ağır hesaplama | 1000 - 2000 ms |
+| Scenario | Recommended Duration |
+|----------|---------------------|
+| Few elements (< 20), simple expressions | 200 - 500 ms |
+| Medium elements (20-50), mixed expressions | 500 - 1000 ms |
+| Many elements (50+), heavy computation | 1000 - 2000 ms |
 :::
 
-### Main ve Play Order
+### Main and Play Order
 
-**Runtime → Visualization** menüsü, projedeki **Main** işaretli animation'ları listeler. Alt kısımda sayfa geçiş butonları **Play Order** sırasına göre soldan sağa dizilir.
+The **Runtime → Visualization** menu lists the animations marked as **Main** in the project. The page navigation buttons at the bottom are arranged from left to right according to **Play Order**.
 
 ```
-Visualization Ekranı
+Visualization Screen
 ┌──────────────────────────────────────────────────┐
 │                                                  │
-│          [ Aktif Animation İçeriği ]             │
+│          [ Active Animation Content ]            │
 │                                                  │
 ├──────────────────────────────────────────────────┤
-│  ⚡ Energy Overview  │  📈 Power Chart  │  ...   │  ← Play Order sırası
+│  ⚡ Energy Overview  │  📈 Power Chart  │  ...   │  ← Play Order sequence
 └──────────────────────────────────────────────────┘
 ```
 
-- **Main = true** → Visualization menüsünde görünür
-- **Main = false** → Yalnızca Development'ta erişilebilir (Open ile açılan alt ekranlar, popup'lar için)
-- **Play Order = 1** → En solda, **2** → sonraki, ...
+- **Main = true** → Visible in the Visualization menu
+- **Main = false** → Accessible only in Development (for sub-screens opened via Open, popups)
+- **Play Order = 1** → Leftmost, **2** → next, ...
 
-### Color (Arka Plan Rengi)
+### Color (Background Color)
 
-Animation'ın arka plan rengi bu alandan ayarlanır.
+The animation's background color is set from this field.
 
 :::note
-Inkscape'te ayarlanan arka plan rengi inSCADA'ya aktarılmaz. Arka plan rengi yalnızca bu alandan belirlenir.
+The background color set in Inkscape is not transferred to inSCADA. The background color is determined solely from this field.
 :::
 
-### Alignment (Hizalama)
+### Alignment
 
-SVG içeriğinin ekrandaki konumunu belirler:
+Determines the position of the SVG content on the screen:
 
-| Değer | Konum |
-|-------|-------|
-| **top-left** | Sol üst |
-| **top-mid** | Üst orta |
-| **top-right** | Sağ üst |
-| **mid-left** | Orta sol |
-| **mid-mid** | Tam orta (varsayılan) |
-| **mid-right** | Orta sağ |
-| **bottom-left** | Sol alt |
-| **bottom-mid** | Alt orta |
-| **bottom-right** | Sağ alt |
-| **none** | Hizalama yok |
+| Value | Position |
+|-------|----------|
+| **top-left** | Top left |
+| **top-mid** | Top center |
+| **top-right** | Top right |
+| **mid-left** | Middle left |
+| **mid-mid** | Center (default) |
+| **mid-right** | Middle right |
+| **bottom-left** | Bottom left |
+| **bottom-mid** | Bottom center |
+| **bottom-right** | Bottom right |
+| **none** | No alignment |
 
-### Join (Katman Birleştirme)
+### Join (Layer Merging)
 
-Join, **tepegöz asetat** mantığında çalışır — bir animation'ı başka bir animation'ın **arka planına** sabit katman olarak bağlar. Join ile bağlanan animation, ana animation'ın arkasında her zaman görünür kalır.
+Join works with an **overlay transparency** concept — it attaches an animation as a **fixed background layer** behind another animation. The animation attached via Join always remains visible behind the main animation.
 
-Bu sayede her sayfada tekrar eden ortak öğeleri (üst bar, alt bar, alarm banner, navigasyon menüsü, logo, saat, durum göstergeleri) tek bir animation'da tasarlayıp tüm sayfalara katman olarak bağlayabilirsiniz.
+This allows you to design common elements that repeat on every page (top bar, bottom bar, alarm banner, navigation menu, logo, clock, status indicators) in a single animation and attach it as a layer to all pages.
 
 ```
 ┌──────────────────────────────────────────┐
-│  ▸ Üst Bar: Logo, Saat, Alarm Sayacı    │  ← Join Animation (arka katman)
+│  ▸ Top Bar: Logo, Clock, Alarm Counter   │  ← Join Animation (background layer)
 ├──────────────────────────────────────────┤
 │                                          │
-│     [ Ana Animation İçeriği ]            │  ← Ana Animation (ön katman)
-│     Sayfa bazlı değişen içerik           │
+│     [ Main Animation Content ]           │  ← Main Animation (foreground layer)
+│     Page-specific changing content       │
 │                                          │
 ├──────────────────────────────────────────┤
-│  ▸ Alt Bar: Navigasyon Butonları         │  ← Join Animation (arka katman)
+│  ▸ Bottom Bar: Navigation Buttons        │  ← Join Animation (background layer)
 └──────────────────────────────────────────┘
 ```
 
-#### Kullanım Senaryosu
+#### Usage Scenario
 
-1. **"Common_Layout" animation'ı oluşturun** (Main = false):
-   - Üst kısım: Şirket logosu, tarih/saat, aktif alarm sayacı
-   - Alt kısım: Sayfa geçiş butonları, bağlantı durumu göstergesi
-   - Bu animation tek başına Visualization'da görünmez
+1. **Create a "Common_Layout" animation** (Main = false):
+   - Top section: Company logo, date/time, active alarm counter
+   - Bottom section: Page navigation buttons, connection status indicator
+   - This animation is not visible standalone in Visualization
 
-2. **Her sayfa animation'ında Join alanından "Common_Layout" seçin:**
+2. **Select "Common_Layout" from the Join field in each page animation:**
    - "Energy Overview" → Join: Common_Layout
    - "Motor Detail" → Join: Common_Layout
    - "Alarm Panel" → Join: Common_Layout
 
-3. **Sonuç:** Tüm sayfalar açıldığında Common_Layout arka katmanda sabit kalır, sayfa içeriği önde değişir. Ortak öğeleri **tek bir yerde** güncellemeniz yeterlidir.
+3. **Result:** When all pages are opened, Common_Layout stays fixed in the background layer, while the page content changes in the foreground. You only need to update the common elements **in one place**.
 
-#### Join ve Alignment Birlikte Kullanımı
+#### Using Join and Alignment Together
 
-Join animation'ın Alignment ayarı, arka katmanın ekrandaki konumunu belirler. Ana animation'ın Alignment ayarı ise ön katmanın konumunu belirler. İkisi birlikte ekran düzenini oluşturur.
+The Alignment setting of the Join animation determines the position of the background layer on the screen. The Alignment setting of the main animation determines the position of the foreground layer. Together they compose the screen layout.
 
 :::tip
-Join animation'ı genellikle **Main = false** olarak ayarlanır — Visualization'da bağımsız sayfa olarak listelenmez, yalnızca diğer animation'ların arka katmanı olarak çalışır.
+The Join animation is typically set to **Main = false** — it is not listed as an independent page in Visualization, it only works as a background layer for other animations.
 :::
 
 ---
 
-## Erişim Rolleri (Access Roles)
+## Access Roles
 
-Yapılandırma panelinin alt kısmında **Access Roles** bölümü bulunur. Bu bölümde platformda tanımlı tüm roller checkbox olarak listelenir.
+At the bottom of the configuration panel, there is an **Access Roles** section. This section lists all roles defined in the platform as checkboxes.
 
-Seçilen roller, bu animation'a **runtime'da kimlerin erişebileceğini** belirler:
+The selected roles determine **who can access this animation at runtime**:
 
-- Yalnızca işaretli rollere sahip kullanıcılar bu animation'ı Visualization'da görebilir
-- Hiçbir rol seçilmezse veya tümü seçilirse tüm kullanıcılar erişebilir
-- Bu sayede aynı projede farklı kullanıcı gruplarına farklı ekranlar gösterilebilir
+- Only users with the checked roles can see this animation in Visualization
+- If no roles are selected or all are selected, all users can access it
+- This allows showing different screens to different user groups within the same project
 
-Örnek:
-- "Genel Bakış" ekranı → tüm roller erişebilir
-- "Kontrol Paneli" ekranı → yalnızca "Engineer" ve "Administrator" rolleri
-- "Yönetim Raporu" ekranı → yalnızca "Administrator" rolü
+Examples:
+- "Overview" screen → all roles can access
+- "Control Panel" screen → only "Engineer" and "Administrator" roles
+- "Management Report" screen → only "Administrator" role
 
 ---
 
 ## Pre/Post Animation Scripts
 
-Animation'a iki tür script bağlanabilir:
+Two types of scripts can be attached to an animation:
 
 ### Pre-Animation Code
 
-Her tarama döngüsünde, element expression'larından **önce** çalışır. İki şekilde tanımlanabilir:
+Runs **before** element expressions in every scan cycle. Can be defined in two ways:
 
-**1. Satır İçi Kod (Custom Code)**
+**1. Inline Code (Custom Code)**
 
-Doğrudan JavaScript kodu yazılır:
+JavaScript code is written directly:
 
 ```javascript
 if (__firstScan) {
-    // İlk açılışta tarihsel veri yükle
+    // Load historical data on first load
     var end = ins.now();
     var start = ins.getDate(end.getTime() - 3600000);
     var logs = ins.getLoggedVariableValuesByPage(
@@ -176,15 +176,15 @@ if (__firstScan) {
 }
 ```
 
-**2. Script Seçimi (Fonksiyon Kütüphanesi)**
+**2. Script Selection (Function Library)**
 
-Projede tanımlı script'lerden seçim yapılır. Seçilen script'lerin **içeriği** animation'a eklenir ve script içinde tanımlı fonksiyonlar artık animation element expression'larından çağrılabilir hale gelir.
+A selection is made from scripts defined in the project. The **contents** of the selected scripts are added to the animation, and functions defined in the script become callable from animation element expressions.
 
-Bu mekanizma, script'leri bir **fonksiyon kütüphanesi** olarak kullanmayı sağlar:
+This mechanism allows using scripts as a **function library**:
 
 ```javascript
 // Script: "ChartHelpers" (Schedule Type: None)
-// Bu script bağımsız çalışmaz, animation'a kütüphane olarak eklenir
+// This script does not run independently, it is added to the animation as a library
 
 function buildChartData(varName, hours) {
     var end = ins.now();
@@ -206,90 +206,90 @@ function formatValue(val, decimals, unit) {
 }
 ```
 
-Bu script animation'a bağlandığında, herhangi bir element expression'ında şu şekilde çağrılabilir:
+When this script is attached to an animation, it can be called from any element expression as follows:
 
 ```javascript
-// Element expression içinde — kütüphane fonksiyonunu çağır
+// Inside element expression — call the library function
 var data = buildChartData("ActivePower_kW", 1);
 return data;
 ```
 
 ```javascript
-// Başka bir element expression'ında
+// In another element expression
 var power = ins.getVariableValue("ActivePower_kW").value;
 return formatValue(power, 1, "kW");
 ```
 
-#### Önemli Kurallar
+#### Important Rules
 
-| Durum | Davranış |
-|-------|---------|
-| Script'te fonksiyon **tanımlı ama çağrılmamış** | Fonksiyon çalışmaz, sadece tanım olarak animation'a eklenir. Element expression'larından çağrılmayı bekler |
-| Script'te fonksiyon **tanımlı ve çağrılmış** | Fonksiyon her tarama döngüsünde otomatik çalışır (arka plan görevi) |
-| Script'in Schedule Type'ı | **None** olarak ayarlayın — aksi halde script hem animation döngüsünde hem de kendi zamanlamasıyla (Periodic/Daily) bağımsız olarak arka planda çalışır ki bu gereksiz bir kaynak tüketimidir |
+| Situation | Behavior |
+|-----------|----------|
+| Function **defined but not called** in the script | Function does not run, it is only added as a definition to the animation. It waits to be called from element expressions |
+| Function **defined and called** in the script | Function runs automatically every scan cycle (background task) |
+| Script's Schedule Type | Set to **None** — otherwise the script runs both in the animation cycle and independently on its own schedule (Periodic/Daily) in the background, which is unnecessary resource consumption |
 
-:::tip[Kütüphane Yaklaşımı]
-Sık kullanılan yardımcı fonksiyonları (veri formatlama, grafik hazırlama, hesaplama) ayrı bir script'te toplayıp birden fazla animation'a bağlayabilirsiniz. Fonksiyonu bir kez yazarsınız, tüm animation'larda kullanırsınız.
+:::tip[Library Approach]
+You can collect frequently used helper functions (data formatting, chart preparation, calculations) in a separate script and attach it to multiple animations. You write the function once, and use it across all animations.
 :::
 
 ### Post-Animation Code
 
-Her tarama döngüsünde, element expression'larından **sonra** çalışır. Aynı şekilde satır içi kod veya script seçimi ile tanımlanır.
+Runs **after** element expressions in every scan cycle. Defined in the same way with inline code or script selection.
 
-### Çalışma Sırası
+### Execution Order
 
 ```
-Her döngüde:
+Each cycle:
 1. Pre-Animation Code
-2. Animation Elements (tüm binding'ler)
+2. Animation Elements (all bindings)
 3. Post-Animation Code
-    ↓ duration ms bekleme
-    ↑ tekrar başa dön
+    ↓ duration ms wait
+    ↑ repeat from beginning
 ```
 
-### Yerleşik Değişkenler
+### Built-in Variables
 
-Script'ler ve element expression'ları içinde kullanılabilen yerleşik değişkenler:
+Built-in variables available in scripts and element expressions:
 
-| Değişken | Tip | Açıklama |
-|----------|-----|----------|
-| `__firstScan` | Boolean | İlk döngüde `true`, sonrasında `false` |
-| `__animName` | String | Çalışan animation'ın adı |
-| `__parameters` | String | Placeholder parametreleri |
-
----
-
-## Toolbar Araçları
-
-Animation Dev ekranının sağ üst köşesindeki toolbar ikonları:
-
-| İkon | Araç | Açıklama |
-|------|------|----------|
-| **+** (artı) | Yeni Animation | Yeni animation oluştur |
-| **✏️** (kalem) | Yapılandırma | Animation ayarlarını düzenle (bu sayfa) |
-| **−** (eksi) | Sil | Animation'ı sil |
-| **✨** (sihirli değnek) | Element Editor | SVG objesine animation binding yap |
-| **🚀** (roket) | Preview | Animation'ı canlı önizle |
-| **⬆** (upload) | SVG Yükle | SVG dosyası upload et |
-| **⬇** (download) | SVG İndir | Mevcut SVG'yi indir |
-| **+** (daire) | Placeholder | Animation parametrelerini yönet |
-
-### Üç Nokta Menüsü (⋮)
-
-| Araç | Açıklama |
-|------|----------|
-| **Clone** | Animation'ı kopyala |
-| **Show Scripts** | Bağlı script'leri göster |
-| **Generate Link** | Paylaşılabilir bağlantı oluştur |
-| **Backup** | Animation'ı dışa aktar |
-| **Restore** | Animation'ı içe aktar |
+| Variable | Type | Description |
+|----------|------|-------------|
+| `__firstScan` | Boolean | `true` in the first cycle, `false` afterwards |
+| `__animName` | String | Name of the running animation |
+| `__parameters` | String | Placeholder parameters |
 
 ---
 
-## Placeholder (Parametrik Ekran)
+## Toolbar Tools
 
-Toolbar'daki Placeholder butonu ile animation'a parametreler tanımlanabilir. Bu parametreler sayesinde aynı SVG tasarımı farklı değerlerle tekrar kullanılabilir.
+The toolbar icons in the upper right corner of the Animation Dev screen:
 
-Kullanım: Bir "Motor Detay" ekranı tasarlayın, `{motor_id}` ve `{motor_name}` placeholder'ları tanımlayın. Open animation tipi ile farklı parametrelerle açıldığında her seferinde farklı motoru gösterir.
+| Icon | Tool | Description |
+|------|------|-------------|
+| **+** (plus) | New Animation | Create a new animation |
+| **✏️** (pencil) | Configuration | Edit animation settings (this page) |
+| **−** (minus) | Delete | Delete the animation |
+| **✨** (magic wand) | Element Editor | Create animation binding on SVG object |
+| **🚀** (rocket) | Preview | Live preview the animation |
+| **⬆** (upload) | Upload SVG | Upload an SVG file |
+| **⬇** (download) | Download SVG | Download the current SVG |
+| **+** (circle) | Placeholder | Manage animation parameters |
 
-Placeholder değerleri script içinde `__parameters` değişkeni ile okunabilir.
+### Three-Dot Menu (⋮)
+
+| Tool | Description |
+|------|-------------|
+| **Clone** | Copy the animation |
+| **Show Scripts** | Show attached scripts |
+| **Generate Link** | Create a shareable link |
+| **Backup** | Export the animation |
+| **Restore** | Import an animation |
+
+---
+
+## Placeholder (Parametric Screen)
+
+Parameters can be defined for an animation using the Placeholder button in the toolbar. These parameters allow the same SVG design to be reused with different values.
+
+Usage: Design a "Motor Detail" screen, define `{motor_id}` and `{motor_name}` placeholders. When opened with different parameters via the Open animation type, it shows a different motor each time.
+
+Placeholder values can be read in scripts using the `__parameters` variable.

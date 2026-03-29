@@ -1,49 +1,49 @@
 ---
 title: "Slider & Input"
-description: "Kaydırıcı ve metin/sayı giriş kontrolleri"
+description: "Slider and text/number input controls"
 sidebar:
   order: 18
 ---
 
-## Slider (Kaydırıcı)
+## Slider
 
-**Slider**, sürüklenebilir kaydırıcı ile analog değer ayarlamak için kullanılır. Setpoint, hız ayarı, sıcaklık hedefi, dimmer gibi sürekli değer kontrolleri.
+**Slider** is used to set analog values with a draggable slider. For continuous value controls such as setpoint, speed adjustment, temperature target, and dimmer.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Slider |
-| **Uygun SVG Öğeleri** | `<rect>` (foreignObject) |
+| **Suitable SVG Elements** | `<rect>` (foreignObject) |
 | **Expression Type** | Tag, Expression |
 
-### Yapılandırma (Props)
+### Configuration (Props)
 
-| Özellik | Açıklama | Örnek |
-|---------|----------|-------|
-| **min** | Minimum değer | 0 |
-| **max** | Maksimum değer | 100 |
-| **step** | Adım büyüklüğü | 1 |
-| **title** | Başlık | "Sıcaklık Setpoint" |
+| Property | Description | Example |
+|----------|-------------|---------|
+| **min** | Minimum value | 0 |
+| **max** | Maximum value | 100 |
+| **step** | Step size | 1 |
+| **title** | Title | "Temperature Setpoint" |
 
-### SVG Hazırlığı
+### SVG Preparation
 
 ```xml
 <foreignObject id="temp_slider" x="50" y="200" width="300" height="60"/>
 ```
 
-### Yapılandırma
+### Configuration
 
 - Expression Type: **Tag** → `Temperature_Setpoint`
 - Props: min=0, max=100, step=0.5
 
-Operatör kaydırıcıyı sürüklediğinde değer anında değişkene yazılır.
+When the operator drags the slider, the value is written to the variable immediately.
 
-### Expression ile İleri Düzey
+### Advanced with Expression
 
 ```javascript
-// Değer yazıldığında loglama
-var newValue = value; // slider'dan gelen değer
+// Logging when value is written
+var newValue = value; // value from the slider
 ins.setVariableValue("Temperature_Setpoint", {value: newValue});
 ins.writeLog("INFO", "Setpoint", "Temperature setpoint: " + newValue + "°C");
 return newValue;
@@ -51,51 +51,51 @@ return newValue;
 
 ---
 
-## Input (Giriş Alanı)
+## Input (Input Field)
 
-**Input**, metin veya sayı giriş alanı oluşturur. Operatör klavyeden değer girer ve Enter ile onaylar.
+**Input** creates a text or number input field. The operator enters a value from the keyboard and confirms with Enter.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Input |
-| **Uygun SVG Öğeleri** | `<rect>` (foreignObject) |
+| **Suitable SVG Elements** | `<rect>` (foreignObject) |
 | **Expression Type** | Tag, Expression |
 
-### Yapılandırma (Props)
+### Configuration (Props)
 
-| Özellik | Açıklama | Örnek |
-|---------|----------|-------|
-| **type** | Giriş tipi | `number`, `text` |
-| **min** | Minimum değer (number) | 0 |
-| **max** | Maksimum değer (number) | 100 |
-| **placeholder** | Boş iken gösterilen metin | "Setpoint girin..." |
+| Property | Description | Example |
+|----------|-------------|---------|
+| **type** | Input type | `number`, `text` |
+| **min** | Minimum value (number) | 0 |
+| **max** | Maximum value (number) | 100 |
+| **placeholder** | Text shown when empty | "Enter setpoint..." |
 
-### SVG Hazırlığı
+### SVG Preparation
 
 ```xml
 <foreignObject id="setpoint_input" x="100" y="150" width="150" height="35"/>
 ```
 
-### Kullanım Senaryoları
+### Usage Scenarios
 
-**Sayısal setpoint:**
+**Numeric setpoint:**
 - Expression Type: Tag → `Temperature_Setpoint`
 - Props: type=number, min=0, max=100
 
-**Tarif adı:**
+**Recipe name:**
 - Expression Type: Tag → `Recipe_Name`
-- Props: type=text, placeholder="Tarif adı..."
+- Props: type=text, placeholder="Recipe name..."
 
-**Parametre girişi:**
+**Parameter input:**
 - Expression Type: Expression
 ```javascript
 var val = parseFloat(value);
 if (val < 0 || val > 100) {
-    ins.notify("error", "Hata", "Değer 0-100 aralığında olmalı!");
+    ins.notify("error", "Error", "Value must be between 0-100!");
     return;
 }
 ins.setVariableValue("Setpoint", {value: val});
-ins.notify("success", "OK", "Setpoint güncellendi: " + val);
+ins.notify("success", "OK", "Setpoint updated: " + val);
 ```

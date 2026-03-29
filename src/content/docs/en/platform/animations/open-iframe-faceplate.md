@@ -1,141 +1,141 @@
 ---
 title: "Open, Iframe & Faceplate"
-description: "Ekran geçişi, harici URL gömme ve faceplate yerleştirme"
+description: "Screen navigation, external URL embedding, and faceplate placement"
 sidebar:
   order: 19
 ---
 
-## Open (Ekran Geçişi)
+## Open (Screen Navigation)
 
-**Open**, tıklandığında başka bir animation ekranına geçiş yapar. SCADA ekranları arasında hiyerarşik navigasyon kurmak için kullanılır.
+**Open** navigates to another animation screen when clicked. It is used to build hierarchical navigation between SCADA screens.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Open |
-| **Uygun SVG Öğeleri** | Tümü (tıklanabilir) |
+| **Suitable SVG Elements** | All (clickable) |
 | **Expression Type** | Animation, Animation Popup |
 
-### SVG Hazırlığı
+### SVG Preparation
 
 ```xml
 <g id="goto_motor_detail" cursor="pointer">
   <rect width="120" height="35" rx="5" fill="#1CA1C1"/>
   <text x="60" y="22" text-anchor="middle" fill="white" font-size="13">
-    Motor Detay →
+    Motor Detail →
   </text>
 </g>
 ```
 
-### Expression Tipleri
+### Expression Types
 
-| Expression Type | Davranış |
-|----------------|---------|
-| **Animation** | Mevcut ekranı kapatıp hedef animation'ı açar |
-| **Animation Popup** | Hedef animation'ı modal popup olarak açar (ana ekran arka planda kalır) |
+| Expression Type | Behavior |
+|----------------|----------|
+| **Animation** | Closes the current screen and opens the target animation |
+| **Animation Popup** | Opens the target animation as a modal popup (main screen stays in the background) |
 
-### Navigasyon Hiyerarşisi Örneği
-
-```
-Ana Ekran (Genel Bakış)
-├── [Open] → Motor Bölümü
-│   ├── [Open] → Motor 1 Detay
-│   └── [Open] → Motor 2 Detay
-├── [Open] → Pompa Bölümü
-└── [Open Popup] → Alarm Özet (modal)
-```
-
-### Parametre Geçişi
-
-Open ile açılan animation'a placeholder parametreleri geçirilebilir:
+### Navigation Hierarchy Example
 
 ```
-Hedef: Motor_Detail
-Parametreler: motor_id=1, motor_name=Motor 1
+Main Screen (Overview)
+├── [Open] → Motor Section
+│   ├── [Open] → Motor 1 Detail
+│   └── [Open] → Motor 2 Detail
+├── [Open] → Pump Section
+└── [Open Popup] → Alarm Summary (modal)
 ```
 
-Hedef ekrandaki `{motor_id}` ve `{motor_name}` placeholder'ları bu değerlerle doldurulur.
+### Parameter Passing
+
+Placeholder parameters can be passed to the animation opened via Open:
+
+```
+Target: Motor_Detail
+Parameters: motor_id=1, motor_name=Motor 1
+```
+
+The `{motor_id}` and `{motor_name}` placeholders in the target screen are filled with these values.
 
 ---
 
-## Iframe (Harici URL Gömme)
+## Iframe (External URL Embedding)
 
-**Iframe**, SVG ekran içine harici web sayfası gömer. Grafana dashboard, IP kamera, harici web uygulaması, PDF doküman gibi içerikleri SCADA ekranına entegre eder.
+**Iframe** embeds an external web page inside the SVG screen. It integrates content such as Grafana dashboards, IP cameras, external web applications, and PDF documents into the SCADA screen.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Iframe |
-| **Uygun SVG Öğeleri** | `<rect>` (foreignObject), `<g>` |
+| **Suitable SVG Elements** | `<rect>` (foreignObject), `<g>` |
 | **Expression Type** | Url |
 
-### SVG Hazırlığı
+### SVG Preparation
 
 ```xml
 <rect id="grafana_embed" x="10" y="300" width="600" height="400"
       fill="#f5f5f5" stroke="#ddd"/>
 ```
 
-### Expression Örnekleri
+### Expression Examples
 
-**Statik URL:**
+**Static URL:**
 ```
 https://grafana.company.com/d/energy/panel?orgId=1&kiosk
 ```
 
-**IP Kamera:**
+**IP Camera:**
 ```
 http://192.168.1.50/video.cgi
 ```
 
-**Dinamik URL — Expression:**
+**Dynamic URL — Expression:**
 ```javascript
 var projectId = 153;
 return "https://grafana.company.com/d/energy?var-project=" + projectId + "&kiosk";
 ```
 
-### Kullanım Senaryoları
+### Usage Scenarios
 
-| İçerik | URL Formatı |
-|--------|-------------|
+| Content | URL Format |
+|---------|------------|
 | Grafana Dashboard | `https://grafana/d/xxx?kiosk` |
-| IP Kamera MJPEG | `http://camera-ip/video` |
-| PDF Rapor | `/files/reports/daily.pdf` |
-| Custom Menu HTML | Platform dahili Custom Menu sayfası |
-| Harici Web App | Herhangi bir web uygulaması |
+| IP Camera MJPEG | `http://camera-ip/video` |
+| PDF Report | `/files/reports/daily.pdf` |
+| Custom Menu HTML | Platform internal Custom Menu page |
+| External Web App | Any web application |
 
 ---
 
-## Faceplate (Bileşen Yerleştirme)
+## Faceplate (Component Placement)
 
-**Faceplate**, önceden tasarlanmış tekrar kullanılabilir SVG bileşenini animation ekranına yerleştirir. Aynı sembolü farklı parametrelerle birden fazla kez kullanmayı sağlar.
+**Faceplate** places a pre-designed reusable SVG component into the animation screen. It allows the same symbol to be used multiple times with different parameters.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Faceplate |
-| **Uygun SVG Öğeleri** | `<g>`, `<rect>`, `<image>` |
+| **Suitable SVG Elements** | `<g>`, `<rect>`, `<image>` |
 | **Expression Type** | Faceplate |
 
-### SVG Hazırlığı
+### SVG Preparation
 
 ```xml
-<!-- Motor 1 alanı -->
+<!-- Motor 1 area -->
 <g id="motor1_area" transform="translate(100, 200)"/>
 
-<!-- Motor 2 alanı -->
+<!-- Motor 2 area -->
 <g id="motor2_area" transform="translate(350, 200)"/>
 
-<!-- Motor 3 alanı -->
+<!-- Motor 3 area -->
 <g id="motor3_area" transform="translate(600, 200)"/>
 ```
 
-### Yapılandırma
+### Configuration
 
-Her alan için aynı Faceplate, farklı placeholder değerleri:
+The same Faceplate for each area, with different placeholder values:
 
 **motor1_area:**
 - Faceplate: `Motor_Standard`
@@ -149,16 +149,16 @@ Her alan için aynı Faceplate, farklı placeholder değerleri:
 - Faceplate: `Motor_Standard`
 - Placeholders: `{motor_name}=Motor 3, {speed_var}=M3_Speed, {status_var}=M3_Status`
 
-3 motor, 1 faceplate tasarımı, 3 placeholder seti.
+3 motors, 1 faceplate design, 3 placeholder sets.
 
-### Menu (Menü Açma)
+### Menu (Open Menu)
 
-**Menu** tipi, tıklandığında Custom Menu sayfasını açar.
+The **Menu** type opens a Custom Menu page when clicked.
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Menu |
 | **Expression Type** | Custom Menu |
-| **Expression** | Custom Menu adı |
+| **Expression** | Custom Menu name |
 
-Detaylı bilgi: [Faceplate →](/docs/tr/platform/faceplates/) | [Custom Menus →](/docs/tr/platform/custom-menus/)
+Detailed information: [Faceplate →](/docs/tr/platform/faceplates/) | [Custom Menus →](/docs/tr/platform/custom-menus/)

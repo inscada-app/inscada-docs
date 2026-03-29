@@ -1,132 +1,132 @@
 ---
 title: "Element Editor"
-description: "Animation Element Editor — SVG üzerinde obje seçerek animation binding yapılandırma"
+description: "Animation Element Editor — configuring animation bindings by selecting objects on the SVG"
 sidebar:
   order: 2
   label: "Element Editor"
 ---
 
-Animation Element Editor, SVG ekran üzerinde görsel olarak obje seçip, seçilen objeye animation davranışı bağlamak için kullanılan düzenleyicidir. Kod yazmadan, görsel yapılandırma arayüzü ile hızlıca SCADA ekranları oluşturulur.
+The Animation Element Editor is the editor used to visually select objects on the SVG screen and bind animation behaviors to the selected objects. SCADA screens are quickly created through a visual configuration interface without writing code.
 
 ![Animation Element Editor](../../../../../assets/docs/animations.png)
 
-## Editöre Erişim
+## Accessing the Editor
 
-**Menü:** Development → Animations → Animation Dev → sağ üst köşedeki **Element Editor** butonu
+**Menu:** Development → Animations → Animation Dev → **Element Editor** button in the upper right corner
 
-Editör, SVG ekranının yanında panel olarak açılır.
+The editor opens as a panel next to the SVG screen.
 
 ---
 
-## İş Akışı
+## Workflow
 
-### Adım 1: SVG Üzerinde Obje Seçme
+### Step 1: Selecting an Object on the SVG
 
-Animation Dev ekranında açık olan SVG üzerinde **mouse ile tıklayarak** obje seçersiniz. Seçilen obje görsel olarak vurgulanır.
+You select an object by **clicking with the mouse** on the SVG open in the Animation Dev screen. The selected object is visually highlighted.
 
-#### Grup İçi Objelere Erişim
+#### Accessing Objects Inside Groups
 
-SVG'deki objeler genellikle `<g>` (group) elementleri içinde gruplanmıştır. Varsayılan tıklamada en üst seviye grup seçilir.
+Objects in SVG are usually grouped within `<g>` (group) elements. The default click selects the top-level group.
 
-**Grup içindeki bir objeye erişmek için:**
+**To access an object inside a group:**
 
-1. **Ctrl** tuşuna bir kez basıp bırakın
-2. Artık mouse ile tıkladığınızda grup yerine **doğrudan tıkladığınız obje** seçilir
-3. Bu sayede bir grup içindeki text, rect, circle gibi iç objeleri hedefleyebilirsiniz
+1. Press and release the **Ctrl** key once
+2. Now when you click with the mouse, the **object you directly clicked on** is selected instead of the group
+3. This allows you to target inner objects like text, rect, circle within a group
 
 :::tip
-Ctrl modu bir kez tıklama sonrası normal moda döner. Tekrar iç obje seçmek isterseniz Ctrl'ye tekrar basın.
+Ctrl mode returns to normal mode after one click. Press Ctrl again if you want to select another inner object.
 :::
 
-### Adım 2: Element Editor'ü Açma
+### Step 2: Opening the Element Editor
 
-Bir obje seçili iken **Element Editor** butonuna tıklayın. Editör açıldığında:
+Click the **Element Editor** button while an object is selected. When the editor opens:
 
-- Seçili objenin **DOM ID**'si otomatik olarak alınır
-- Objenin SVG tag tipine göre (text, rect, g, image, circle, path...) **uygulanabilir animation tipleri** otomatik filtrelenir
-- Uygun animation tipleri sekmeler halinde yapılandırmaya hazır gösterilir
+- The selected object's **DOM ID** is automatically retrieved
+- Based on the object's SVG tag type (text, rect, g, image, circle, path...), the **applicable animation types** are automatically filtered
+- Appropriate animation types are displayed as tabs ready for configuration
 
-#### SVG Tag Tipine Göre Kullanılabilir Animation Tipleri
+#### Available Animation Types by SVG Tag Type
 
-| SVG Tag | Kullanılabilir Tipler |
-|---------|----------------------|
+| SVG Tag | Available Types |
+|---------|----------------|
 | **text / tspan** | Get, Color, Opacity, Visibility, Rotate, Move, Scale, Bar, Pipe, Blink, Tooltip, AlarmIndication, Click |
-| **rect / circle / ellipse / polygon** | Yukarıdakilere ek: Chart, Iframe, Datatable, Slider, Input, QRCode, GetSymbol, Faceplate, Peity, Menu, Button, Image |
+| **rect / circle / ellipse / polygon** | In addition to the above: Chart, Iframe, Datatable, Slider, Input, QRCode, GetSymbol, Faceplate, Peity, Menu, Button, Image |
 | **g (group)** | Animate, Faceplate, Iframe, Rotate, Move, Scale, Opacity, Visibility |
 | **image** | Faceplate, Iframe, Image |
 
-### Adım 3: Animation Tipi Seçme ve Yapılandırma
+### Step 3: Selecting and Configuring an Animation Type
 
-Sekmelerden istediğiniz animation tipini seçin. Her animation tipinin **kendine özel görsel yapılandırma arayüzü** vardır:
+Select the desired animation type from the tabs. Each animation type has its **own visual configuration interface**:
 
-#### Kod Yazmadan Görsel Yapılandırma
+#### Visual Configuration Without Writing Code
 
-Her animation tipi, tipine uygun form alanlarıyla birlikte gelir. Geliştirici bu form alanlarını doldurarak **kod yazmadan** yapılandırma yapar:
+Each animation type comes with form fields appropriate to its type. The developer configures by filling in these form fields **without writing code**:
 
-| Animation Tipi | Yapılandırma Arayüzü |
-|---------------|---------------------|
-| **Get** | Değişken seçici, format ayarı, birim |
-| **Color** | Renk paleti, koşul tablosu (değer → renk eşleşmesi) |
-| **Rotate** | Döndürme merkezi (cx, cy), min/max açı, min/max değer |
-| **Bar** | Yön (yatay/dikey), min/max değer, dolgu rengi |
-| **Move** | Eksen (X/Y), mesafe aralığı, min/max değer |
-| **Slider** | Min, max, step, yön, renk |
-| **Chart** | Grafik tipi, renkler, eksen ayarları, veri kaynağı |
-| **Opacity** | Min/max opaklık, min/max değer |
-| **Visibility** | Koşul (Boolean veya eşik) |
-| **Blink** | Yanıp sönme hızı, renkler |
-| **Set** | Hedef değişken, yazılacak değer |
-| **Input** | Tip (text/number), min, max, placeholder |
-| **Iframe** | URL adresi |
-| **Open** | Hedef animation seçici |
-| **Faceplate** | Faceplate seçici, placeholder değerleri |
-| **Datatable** | Kolon tanımları, veri kaynağı |
-| **AlarmIndication** | Alarm grubu seçici |
+| Animation Type | Configuration Interface |
+|---------------|------------------------|
+| **Get** | Variable selector, format setting, unit |
+| **Color** | Color palette, condition table (value → color mapping) |
+| **Rotate** | Rotation center (cx, cy), min/max angle, min/max value |
+| **Bar** | Direction (horizontal/vertical), min/max value, fill color |
+| **Move** | Axis (X/Y), distance range, min/max value |
+| **Slider** | Min, max, step, direction, color |
+| **Chart** | Chart type, colors, axis settings, data source |
+| **Opacity** | Min/max opacity, min/max value |
+| **Visibility** | Condition (Boolean or threshold) |
+| **Blink** | Blink speed, colors |
+| **Set** | Target variable, value to write |
+| **Input** | Type (text/number), min, max, placeholder |
+| **Iframe** | URL address |
+| **Open** | Target animation selector |
+| **Faceplate** | Faceplate selector, placeholder values |
+| **Datatable** | Column definitions, data source |
+| **AlarmIndication** | Alarm group selector |
 
-### Adım 4: Expression (İleri Düzey — Opsiyonel)
+### Step 4: Expression (Advanced — Optional)
 
-Her animation tipinde bir **Expression** bölümü bulunur. Bu bölüm opsiyoneldir — görsel yapılandırma yeterliyse kullanmanıza gerek yoktur.
+Each animation type has an **Expression** section. This section is optional — you don't need to use it if the visual configuration is sufficient.
 
-Expression, geliştiricinin animation davranışını tamamen serbest biçimde programlamasını sağlar:
+Expression allows the developer to program the animation behavior in a completely freeform manner:
 
-#### Expression Tipleri
+#### Expression Types
 
-| Tip | Açıklama | Ne Zaman Kullanılır |
-|-----|----------|---------------------|
-| **Tag** | Değişken adı referansı | En basit — bir değişkeni doğrudan bağlamak |
-| **Expression** | JavaScript kodu | Hesaplama, formatlama, koşullu mantık |
-| **Switch** | Değer → sonuç tablosu | Durum bazlı çoklu eşleşme |
-| **Numeric** | Sabit sayı | Test amaçlı |
-| **Text** | Sabit metin | Etiket, başlık |
-| **Collection** | Çoklu değişken | Chart, Datatable için |
-| **Alarm** | Alarm referansı | AlarmIndication için |
-| **Faceplate** | Faceplate referansı | Faceplate yerleştirme |
-| **Animation** | Animation referansı | Ekran geçişi (Open) |
-| **Animation Popup** | Popup referansı | Modal ekran açma |
-| **Custom Menu** | Menü referansı | Menü açma |
-| **Url** | URL | Iframe gömme |
-| **Tetra Color** | 4 renkli alarm durumu | Alarm renk kodları |
-| **Button** | Buton yapılandırması | Button tipi |
-| **Html** | HTML içerik | Zengin içerik |
-| **System Page** | Sistem sayfası | Platform dahili sayfa |
-| **InSCADA View** | Platform görünümü | Dahili görünüm |
+| Type | Description | When to Use |
+|------|-------------|-------------|
+| **Tag** | Variable name reference | Simplest — directly binding a variable |
+| **Expression** | JavaScript code | Calculation, formatting, conditional logic |
+| **Switch** | Value → result table | State-based multiple matching |
+| **Numeric** | Constant number | For testing purposes |
+| **Text** | Constant text | Label, heading |
+| **Collection** | Multiple variables | For Chart, Datatable |
+| **Alarm** | Alarm reference | For AlarmIndication |
+| **Faceplate** | Faceplate reference | Faceplate placement |
+| **Animation** | Animation reference | Screen navigation (Open) |
+| **Animation Popup** | Popup reference | Open modal screen |
+| **Custom Menu** | Menu reference | Open menu |
+| **Url** | URL | Iframe embedding |
+| **Tetra Color** | 4-color alarm status | Alarm color codes |
+| **Button** | Button configuration | Button type |
+| **Html** | HTML content | Rich content |
+| **System Page** | System page | Platform internal page |
+| **InSCADA View** | Platform view | Internal view |
 
-#### Expression Örnekleri
+#### Expression Examples
 
-**Tag** — Değişken adı yazmak yeterli:
+**Tag** — Simply write the variable name:
 ```
 ActivePower_kW
 ```
 
-**Expression** — JavaScript ile serbest hesaplama:
+**Expression** — Free calculation with JavaScript:
 ```javascript
-// Formatlı değer
+// Formatted value
 var val = ins.getVariableValue("ActivePower_kW");
 return val.value.toFixed(1) + " kW";
 ```
 
 ```javascript
-// Koşullu renk
+// Conditional color
 var temp = ins.getVariableValue("Temperature_C").value;
 if (temp > 80) return "#ff0000";
 if (temp > 60) return "#ff8800";
@@ -134,97 +134,97 @@ return "#00cc00";
 ```
 
 ```javascript
-// İki değişkenden hesaplama
+// Calculation from two variables
 var power = ins.getVariableValue("ActivePower_kW").value;
 var voltage = ins.getVariableValue("Voltage_V").value;
 if (voltage > 0) return (power * 1000 / voltage).toFixed(1);
 return "0";
 ```
 
-**Switch** — Değer → sonuç eşleşme tablosu:
+**Switch** — Value → result matching table:
 ```
-0 → Durdu
-1 → Çalışıyor
-2 → Arıza
-3 → Bakım
+0 → Stopped
+1 → Running
+2 → Fault
+3 → Maintenance
 ```
 
-Renk switch:
+Color switch:
 ```
 true → #00cc00
 false → #ff0000
 ```
 
-### Adım 5: Kaydetme
+### Step 5: Saving
 
-| Buton | İşlev |
-|-------|-------|
-| **Save** | Animation element'i kaydeder. Objeye binding bağlanmış olur |
-| **Run & Save** | Önce expression'ı sunucuda test eder, sonuç başarılıysa kaydeder |
+| Button | Function |
+|--------|----------|
+| **Save** | Saves the animation element. The binding is attached to the object |
+| **Run & Save** | First tests the expression on the server, saves if the result is successful |
 
-**Run & Save** özellikle expression geliştirirken kullanışlıdır — kaydetmeden önce sonucu doğrularsınız.
+**Run & Save** is especially useful when developing expressions — you verify the result before saving.
 
-Kayıt sonrası, animation Visualization modunda çalıştırıldığında binding otomatik olarak aktif olur.
+After saving, the binding automatically becomes active when the animation is run in Visualization mode.
 
 ---
 
-## Çalışma Zamanı Mimarisi
+## Runtime Architecture
 
-Element Editor'de yapılandırılan binding'ler, Visualization ekranında şu şekilde çalışır:
+The bindings configured in the Element Editor work as follows in the Visualization screen:
 
-### WebSocket Tabanlı Gerçek Zamanlı Güncelleme
+### WebSocket-Based Real-Time Update
 
 ```
 ┌─────────────┐                    ┌──────────┐                  ┌─────────┐
-│  Tarayıcı   │──eval-animation──▶│  Sunucu  │◀── Değişken ───│  Cache  │
-│  (SVG DOM)  │◀─anim-results────│  (Engine) │    Değerleri    │         │
+│   Browser   │──eval-animation──▶│  Server  │◀── Variable ────│  Cache  │
+│  (SVG DOM)  │◀─anim-results────│  (Engine) │    Values       │         │
 └──────┬──────┘                    └──────────┘                  └─────────┘
        │
        ▼
-  Her element için
-  tipine uygun
-  DOM güncelleme
+  For each element
+  type-appropriate
+  DOM update
 ```
 
-### Akış
+### Flow
 
-1. **Visualization açılır** → Animation element'leri yüklenir, WebSocket abone olunur
-2. **Her `duration` ms'de** → Tarayıcı `eval-animation` mesajı gönderir
-3. **Sunucu** → Tüm element expression'larını çalıştırır, değişken değerlerini cache'ten okur
-4. **Sonuç döner** → Her element ID için hesaplanan değer
-5. **DOM güncellenir** → Her element tipine göre uygun DOM işlemi uygulanır
+1. **Visualization opens** → Animation elements are loaded, WebSocket subscription is established
+2. **Every `duration` ms** → Browser sends an `eval-animation` message
+3. **Server** → Runs all element expressions, reads variable values from cache
+4. **Result returns** → Calculated value for each element ID
+5. **DOM is updated** → Appropriate DOM operation is applied based on each element type
 
-### DOM Güncelleme Tablosu
+### DOM Update Table
 
-| Animation Tipi | DOM İşlemi |
-|---------------|-----------|
-| **Get** | `element.textContent = değer` |
-| **Color** | `element.style.fill = renk` |
-| **Opacity** | `element.style.opacity = değer` |
-| **Visibility** | `element.style.display = değer ? '' : 'none'` |
-| **Rotate** | `transform: rotate(açı)` |
+| Animation Type | DOM Operation |
+|---------------|--------------|
+| **Get** | `element.textContent = value` |
+| **Color** | `element.style.fill = color` |
+| **Opacity** | `element.style.opacity = value` |
+| **Visibility** | `element.style.display = value ? '' : 'none'` |
+| **Rotate** | `transform: rotate(angle)` |
 | **Move** | `transform: translate(x, y)` |
-| **Bar** | `element.height = değer` veya `element.width = değer` |
-| **Scale** | `transform: scale(değer)` |
-| **Blink** | SVG `<animate>` element ekleme/kaldırma |
-| **Pipe** | `stroke-dashoffset` animasyonu |
+| **Bar** | `element.height = value` or `element.width = value` |
+| **Scale** | `transform: scale(value)` |
+| **Blink** | SVG `<animate>` element add/remove |
+| **Pipe** | `stroke-dashoffset` animation |
 
-### Kontrol Element'leri (Set, Slider, Input, Click)
+### Control Elements (Set, Slider, Input, Click)
 
-Kontrol tipleri periyodik değerlendirmeye dahil **değildir**. Kullanıcı etkileşiminde tetiklenir:
+Control types are **not included** in periodic evaluation. They are triggered on user interaction:
 
 ```
-Kullanıcı Tıklama → Expression Çalıştır → ins.setVariableValue() → Cache → Saha Cihazı
+User Click → Run Expression → ins.setVariableValue() → Cache → Field Device
 ```
 
-### Performans
+### Performance
 
-- Tüm element'ler **tek bir WebSocket mesajında** toplu değerlendirilir
-- Değişken değerleri **cache'ten** okunur (veritabanına gidilmez, < 1ms)
-- Sadece **aktif** element'ler (`status: true`) değerlendirilir
-- Click, MouseDown gibi **olay bazlı** element'ler periyodik döngüden hariçtir
-- Timeout: yanıt `duration × 10` ms içinde gelmezse yeniden denenir
+- All elements are evaluated in bulk in a **single WebSocket message**
+- Variable values are read **from cache** (no database access, < 1ms)
+- Only **active** elements (`status: true`) are evaluated
+- **Event-based** elements like Click, MouseDown are excluded from the periodic cycle
+- Timeout: if no response arrives within `duration × 10` ms, a retry is attempted
 
 :::caution
-Kontrol element'leri sunucu tarafında `ins.setVariableValue()` çağırır. Kullanıcının `SET_VARIABLE_VALUE` yetkisi olmalıdır.
+Control elements call `ins.setVariableValue()` on the server side. The user must have `SET_VARIABLE_VALUE` permission.
 :::

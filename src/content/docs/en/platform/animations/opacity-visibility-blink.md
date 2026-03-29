@@ -1,91 +1,91 @@
 ---
 title: "Opacity, Visibility & Blink"
-description: "Saydamlık, göster/gizle ve yanıp sönme animasyonları"
+description: "Opacity, show/hide, and blinking animations"
 sidebar:
   order: 14
 ---
 
-## Opacity (Saydamlık)
+## Opacity
 
-**Opacity**, bir SVG öğesinin saydamlığını değere göre ayarlar. Haberleşme durumuna göre cihaz sembolünü soluklaştırma, güç durumuna göre bölge parlaklığı gibi efektler için kullanılır.
+**Opacity** adjusts the transparency of an SVG element based on a value. It is used for effects such as fading a device symbol based on communication status or zone brightness based on power state.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Opacity |
-| **Uygun SVG Öğeleri** | Tümü |
+| **Suitable SVG Elements** | All |
 | **Expression Type** | Tag, Expression |
 
-### Expression Örnekleri
+### Expression Examples
 
 ```javascript
-// Bağlantı durumuna göre: bağlı=opak, bağlı değil=soluk
+// Based on connection status: connected=opaque, disconnected=faded
 var status = ins.getConnectionStatus("MODBUS-PLC");
 return status === "Connected" ? 1.0 : 0.3;
 ```
 
 ```javascript
-// Değere orantılı saydamlık (0-100 → 0.2-1.0)
+// Proportional opacity based on value (0-100 → 0.2-1.0)
 var val = ins.getVariableValue("Signal_Strength").value;
 return 0.2 + (val / 100) * 0.8;
 ```
 
 ---
 
-## Visibility (Göster/Gizle)
+## Visibility (Show/Hide)
 
-**Visibility**, bir SVG öğesini koşula göre gösterir veya tamamen gizler (`display: none`). Opacity'den farkı: kademeli değil, ya tamamen görünür ya tamamen gizli.
+**Visibility** shows or completely hides an SVG element based on a condition (`display: none`). Unlike Opacity: it is not gradual — it is either fully visible or fully hidden.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Visibility |
-| **Uygun SVG Öğeleri** | Tümü (özellikle `<g>` grupları) |
+| **Suitable SVG Elements** | All (especially `<g>` groups) |
 | **Expression Type** | Tag (Boolean), Expression |
 
-### SVG Hazırlığı
+### SVG Preparation
 
 ```xml
-<!-- Alarm ikonu — normalde gizli -->
+<!-- Alarm icon — hidden by default -->
 <g id="alarm_warning" display="none">
   <polygon points="100,10 120,50 80,50" fill="#ff0000"/>
   <text x="100" y="43" text-anchor="middle" fill="white" font-size="20">!</text>
 </g>
 ```
 
-### Expression Örnekleri
+### Expression Examples
 
-**Boolean değişken — Tag:**
+**Boolean variable — Tag:**
 ```
 GridStatus
 ```
-`true` → görünür, `false` → gizli
+`true` → visible, `false` → hidden
 
-**Eşik koşulu — Expression:**
+**Threshold condition — Expression:**
 ```javascript
 var temp = ins.getVariableValue("Temperature_C").value;
-return temp > 70; // 70°C üzerinde uyarı ikonu görünsün
+return temp > 70; // Show warning icon above 70°C
 ```
 
-**Birden fazla koşul:**
+**Multiple conditions:**
 ```javascript
 var power = ins.getVariableValue("ActivePower_kW").value;
 var status = ins.getVariableValue("GridStatus").value;
-return power > 500 && status; // hem güç yüksek hem de bağlı
+return power > 500 && status; // both high power and connected
 ```
 
-### Kullanım Senaryosu — Alarm/Normal İkon Değişimi
+### Usage Scenario — Alarm/Normal Icon Switching
 
 ```xml
-<!-- Normal durum ikonu -->
+<!-- Normal state icon -->
 <g id="icon_normal">
   <circle r="15" fill="#00cc00"/>
   <text text-anchor="middle" y="5" fill="white">✓</text>
 </g>
 
-<!-- Alarm durum ikonu -->
+<!-- Alarm state icon -->
 <g id="icon_alarm" display="none">
   <circle r="15" fill="#ff0000"/>
   <text text-anchor="middle" y="5" fill="white">!</text>
@@ -97,46 +97,46 @@ return power > 500 && status; // hem güç yüksek hem de bağlı
 
 ---
 
-## Blink (Yanıp Sönme)
+## Blink (Blinking)
 
-**Blink**, koşul sağlandığında SVG öğesini yanıp söndürür. Dikkat gerektiren durumlarda (aktif alarm, kritik değer, haberleşme hatası) görsel uyarı sağlar.
+**Blink** causes an SVG element to blink when a condition is met. It provides a visual alert for situations that require attention (active alarm, critical value, communication error).
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Blink |
-| **Uygun SVG Öğeleri** | Tümü |
+| **Suitable SVG Elements** | All |
 | **Expression Type** | Tag (Boolean), Expression |
 
-### Çalışma Prensibi
+### How It Works
 
-`true` döndüğünde SVG `<animate>` elementi oluşturulur ve öğenin opacity'si 0↔1 arasında geçiş yapar. `false` döndüğünde animasyon kaldırılır.
+When `true` is returned, an SVG `<animate>` element is created and the element's opacity transitions between 0↔1. When `false` is returned, the animation is removed.
 
-### SVG Hazırlığı
+### SVG Preparation
 
 ```xml
 <circle id="critical_alarm" cx="50" cy="50" r="20" fill="#ff0000"/>
 ```
 
-### Expression Örnekleri
+### Expression Examples
 
 **Boolean — Tag:**
 ```
 AlarmActive
 ```
 
-**Eşik — Expression:**
+**Threshold — Expression:**
 ```javascript
 var temp = ins.getVariableValue("Temperature_C").value;
-return temp > 80; // 80°C üzerinde yanıp sön
+return temp > 80; // Blink above 80°C
 ```
 
-### Blink + Color Kombinasyonu
+### Blink + Color Combination
 
-Aynı öğeye hem Blink hem Color uygulanabilir:
+Both Blink and Color can be applied to the same element:
 
-1. **Color** element: sıcaklığa göre renk (yeşil → turuncu → kırmızı)
-2. **Blink** element: 80°C üzerinde yanıp sönme
+1. **Color** element: color based on temperature (green → orange → red)
+2. **Blink** element: blinking above 80°C
 
-Sonuç: Normal durumda yeşil sabit, 60°C'de turuncu sabit, 80°C üzerinde kırmızı yanıp söner.
+Result: Steady green in normal state, steady orange at 60°C, blinking red above 80°C.

@@ -1,217 +1,217 @@
 ---
 title: "SVG Animations"
-description: "SVG tabanlı interaktif SCADA ekranları — genel bakış, tasarım ve yapı"
+description: "SVG-based interactive SCADA screens — overview, design and structure"
 sidebar:
   order: 0
-  label: "Genel Bakış"
+  label: "Overview"
 ---
 
-SVG Animation, inSCADA'nın temel görselleştirme bileşenidir. Her animation bir SVG dosyasından oluşur ve değişken değerlerine bağlanarak gerçek zamanlı SCADA ekranları oluşturur.
+SVG Animation is the core visualization component of inSCADA. Each animation consists of an SVG file and creates real-time SCADA screens by binding to variable values.
 
 ![Energy Monitoring Dashboard](../../../../../assets/docs/variable-tracking.png)
 
-## Ekran Geliştirme Süreci
+## Screen Development Process
 
-Bir SCADA ekranı oluşturmak üç adımdan oluşur:
+Creating a SCADA screen consists of three steps:
 
-### 1. SVG Tasarımı (Harici Editör)
+### 1. SVG Design (External Editor)
 
-SVG ekranı, herhangi bir SVG editörü ile tasarlanır. **Inkscape** (ücretsiz, açık kaynak) önerilen editördür.
+The SVG screen is designed using any SVG editor. **Inkscape** (free, open source) is the recommended editor.
 
-![Inkscape ile SVG Tasarımı](../../../../../assets/docs/inkscape-editor.png)
+![SVG Design with Inkscape](../../../../../assets/docs/inkscape-editor.png)
 
-Tasarım sırasında:
-- Ekranın görsel düzenini serbest bir şekilde oluşturun — cihaz sembolleri, metin alanları, butonlar, göstergeler, grafikler
-- **SVG ID'leri ile ilgilenmenize gerek yok** — inSCADA tüm SVG ağacını otomatik tarar ve her objeyi seçilebilir hale getirir
-- Standart SVG öğeleri kullanın: `<rect>`, `<circle>`, `<text>`, `<path>`, `<g>`, `<image>`
-- İstediğiniz kadar karmaşık tasarım yapabilirsiniz — katmanlar, gruplar, gradyanlar, filtreler
+During design:
+- Freely create the visual layout of the screen — device symbols, text fields, buttons, indicators, charts
+- **You don't need to worry about SVG IDs** — inSCADA automatically scans the entire SVG tree and makes every object selectable
+- Use standard SVG elements: `<rect>`, `<circle>`, `<text>`, `<path>`, `<g>`, `<image>`
+- You can create designs as complex as you like — layers, groups, gradients, filters
 
-### Document Properties (Sayfa Ayarları)
+### Document Properties (Page Settings)
 
-Inkscape'te **File → Document Properties** (Dosya → Belge Özellikleri) bölümünde sayfa boyutunu ayarlayın:
+In Inkscape, set the page size under **File → Document Properties**:
 
-| Ayar | Önerilen Değer | Açıklama |
-|------|---------------|----------|
-| **Genişlik** | 1920 px | Full HD ekran genişliği |
-| **Yükseklik** | 1080 px | Full HD ekran yüksekliği |
-| **Birim** | px | Piksel birimi |
-| **Ölçek** | 1.0 | 1:1 ölçek |
-| **Yönlendirme** | Yatay (Landscape) | SCADA ekranları genellikle yatay |
+| Setting | Recommended Value | Description |
+|---------|-------------------|-------------|
+| **Width** | 1920 px | Full HD screen width |
+| **Height** | 1080 px | Full HD screen height |
+| **Unit** | px | Pixel unit |
+| **Scale** | 1.0 | 1:1 scale |
+| **Orientation** | Landscape | SCADA screens are typically landscape |
 
-:::caution[Arka Plan Rengi]
-Inkscape'te ayarlanan arka plan rengi inSCADA'ya **aktarılmaz**. Arka plan rengi, inSCADA'da animation'ın yapılandırma panelindeki **Color** alanından ayarlanır. Tasarım sırasında Inkscape arka planını yalnızca görsel referans olarak kullanın.
+:::caution[Background Color]
+The background color set in Inkscape is **not transferred** to inSCADA. The background color is set from the **Color** field in the animation's configuration panel in inSCADA. Use the Inkscape background only as a visual reference during design.
 :::
 
-### 2. SVG Yükleme (Animation Dev)
+### 2. SVG Upload (Animation Dev)
 
-Tasarlanan SVG dosyasını platforma yükleyin:
+Upload the designed SVG file to the platform:
 
-**Menü:** Development → Animations → Animation Dev
+**Menu:** Development → Animations → Animation Dev
 
 ![Animation Dev](../../../../../assets/docs/dev-animation-dev.png)
 
-Yeni animation oluşturun veya mevcut bir animation'ın SVG içeriğini güncelleyin. SVG dosyası upload edildikten sonra ekranda görselleşir.
+Create a new animation or update the SVG content of an existing animation. Once the SVG file is uploaded, it is visualized on the screen.
 
 ### 3. Animation Binding (Element Editor)
 
-SVG yüklendikten sonra, ekran üzerinde **mouse ile objelere tıklayarak** her objeye animation davranışı bağlarsınız:
+After the SVG is uploaded, you bind animation behaviors to each object by **clicking on objects with the mouse** on the screen:
 
-1. SVG üzerinde bir objeye **mouse ile tıklayın** — obje seçilir ve vurgulanır
-2. Sağ üstteki **Element Editor** (sihirli değnek ikonu) butonuna tıklayın
-3. Seçilen objenin tipine göre uygulanabilir animation tipleri otomatik listelenir
-4. İstediğiniz animation tipini seçip yapılandırın
-5. **Save** ile kaydedin
+1. **Click on an object** on the SVG with the mouse — the object is selected and highlighted
+2. Click the **Element Editor** (magic wand icon) button in the upper right
+3. The applicable animation types are automatically listed based on the selected object's type
+4. Select and configure the desired animation type
+5. **Save** to save
 
 ![Animation Element Editor](../../../../../assets/docs/animations.png)
 
-Bu üç adım sonucunda, Visualization ekranında çalıştırdığınızda SVG ekranı canlı SCADA verisiyle güncellenir.
+After these three steps, the SVG screen updates with live SCADA data when you run it in the Visualization screen.
 
-Detaylı bilgi: [Element Editor →](/docs/tr/platform/animations/element-editor/)
+Detailed information: [Element Editor →](/docs/tr/platform/animations/element-editor/)
 
-### Preview (Ön İzleme)
+### Preview
 
-Roket ikonuna tıklayarak animation'ı canlı olarak önizleyebilirsiniz:
+You can preview the animation live by clicking the rocket icon:
 
 ![Preview Animation](../../../../../assets/docs/editor-preview.png)
 
-### Animation Yapılandırma
+### Animation Configuration
 
-Kalem ikonuna tıklayarak animation'ın ayarlarını düzenleyebilirsiniz — Duration, Play Order, Main, Color, Alignment, erişim rolleri ve Pre/Post scripts:
+You can edit the animation's settings by clicking the pencil icon — Duration, Play Order, Main, Color, Alignment, access roles, and Pre/Post scripts:
 
-![Animation Yapılandırma](../../../../../assets/docs/editor-anim-config.png)
+![Animation Configuration](../../../../../assets/docs/editor-anim-config.png)
 
-Detaylı bilgi: [Animation Yapılandırma →](/docs/tr/platform/animations/configuration/)
+Detailed information: [Animation Configuration →](/docs/tr/platform/animations/configuration/)
 
-## Animation Yapısı
+## Animation Structure
 
-Her animation üç bileşenden oluşur:
+Each animation consists of three components:
 
 ```
 Animation
-├── SVG Content (upload edilen SVG dosyası)
-├── Animation Elements (mouse ile seçilen objelere bağlanan davranışlar)
-│   ├── Element 1: sıcaklık metni → Temperature_C (Get)
-│   ├── Element 2: motor göstergesi → MotorStatus (Color)
-│   └── Element 3: vana grubu → ValvePosition (Rotate)
-└── Animation Scripts (her döngüde çalışan kodlar)
+├── SVG Content (the uploaded SVG file)
+├── Animation Elements (behaviors bound to objects selected with the mouse)
+│   ├── Element 1: temperature text → Temperature_C (Get)
+│   ├── Element 2: motor indicator → MotorStatus (Color)
+│   └── Element 3: valve group → ValvePosition (Rotate)
+└── Animation Scripts (code that runs every scan cycle)
     ├── Pre-Animation Code
     └── Post-Animation Code
 ```
 
 ## Animation Elements
 
-Animation Element, SVG üzerinde mouse ile seçilen bir objeye bağlanan davranış tanımıdır. Objeye tıklayıp Element Editor'ü açtığınızda aşağıdaki alanlar otomatik doldurulur veya yapılandırılır:
+An Animation Element is a behavior definition bound to an object selected with the mouse on the SVG. When you click on an object and open the Element Editor, the following fields are automatically filled or configured:
 
-| Alan | Açıklama |
-|------|----------|
-| **DOM ID** | Seçilen SVG objesinin ID'si (otomatik alınır — elle girmenize gerek yok) |
-| **Type** | Animation tipi — obje tipine göre uygun tipler otomatik listelenir |
-| **Expression Type** | Değerin nasıl hesaplanacağı (Tag, Expression, Switch vb.) |
-| **Expression** | Değer ifadesi (değişken adı, formül veya yapılandırma) |
-| **Props** | Tipe özel ek ayarlar (her tip kendi görsel formunu sunar) |
-| **Status** | Aktif/pasif |
+| Field | Description |
+|-------|-------------|
+| **DOM ID** | The ID of the selected SVG object (automatically retrieved — no need to enter manually) |
+| **Type** | Animation type — appropriate types are automatically listed based on the object type |
+| **Expression Type** | How the value is calculated (Tag, Expression, Switch, etc.) |
+| **Expression** | Value expression (variable name, formula, or configuration) |
+| **Props** | Type-specific additional settings (each type presents its own visual form) |
+| **Status** | Active/inactive |
 
-### Animation Tipleri
+### Animation Types
 
-inSCADA **36 farklı animation tipi** destekler:
+inSCADA supports **36 different animation types**:
 
-#### Veri Gösterimi
+#### Data Display
 
-| Tip | Açıklama | Sayfa |
-|-----|----------|-------|
-| **Get** | Değişken değerini metin olarak göster | [Detay →](/docs/tr/platform/animations/get/) |
-| **Color** | Öğenin rengini değere göre değiştir | [Detay →](/docs/tr/platform/animations/color/) |
-| **Bar** | Değere göre çubuk yüksekliği/genişliği | [Detay →](/docs/tr/platform/animations/bar-scale/) |
-| **Opacity** | Değere göre saydamlık | [Detay →](/docs/tr/platform/animations/opacity-visibility-blink/) |
-| **Visibility** | Koşula göre göster/gizle | [Detay →](/docs/tr/platform/animations/opacity-visibility-blink/) |
-| **Rotate** | Değere göre döndürme | [Detay →](/docs/tr/platform/animations/rotate-move/) |
-| **Move** | Değere göre X/Y kaydırma | [Detay →](/docs/tr/platform/animations/rotate-move/) |
-| **Scale** | Değere göre ölçekleme | [Detay →](/docs/tr/platform/animations/bar-scale/) |
-| **Blink** | Koşula göre yanıp sönme | [Detay →](/docs/tr/platform/animations/opacity-visibility-blink/) |
-| **Pipe** | Boru/hat akış animasyonu | [Detay →](/docs/tr/platform/animations/pipe-tooltip-image/) |
-| **Tooltip** | Hover bilgi balonu | [Detay →](/docs/tr/platform/animations/pipe-tooltip-image/) |
-| **Image** | Değere göre resim değiştirme | [Detay →](/docs/tr/platform/animations/pipe-tooltip-image/) |
-| **AlarmIndication** | Alarm durumunu göster | [Detay →](/docs/tr/platform/animations/pipe-tooltip-image/) |
+| Type | Description | Page |
+|------|-------------|------|
+| **Get** | Display variable value as text | [Details →](/docs/tr/platform/animations/get/) |
+| **Color** | Change element color based on value | [Details →](/docs/tr/platform/animations/color/) |
+| **Bar** | Bar height/width based on value | [Details →](/docs/tr/platform/animations/bar-scale/) |
+| **Opacity** | Opacity based on value | [Details →](/docs/tr/platform/animations/opacity-visibility-blink/) |
+| **Visibility** | Show/hide based on condition | [Details →](/docs/tr/platform/animations/opacity-visibility-blink/) |
+| **Rotate** | Rotation based on value | [Details →](/docs/tr/platform/animations/rotate-move/) |
+| **Move** | X/Y translation based on value | [Details →](/docs/tr/platform/animations/rotate-move/) |
+| **Scale** | Scaling based on value | [Details →](/docs/tr/platform/animations/bar-scale/) |
+| **Blink** | Blinking based on condition | [Details →](/docs/tr/platform/animations/opacity-visibility-blink/) |
+| **Pipe** | Pipe/line flow animation | [Details →](/docs/tr/platform/animations/pipe-tooltip-image/) |
+| **Tooltip** | Hover information balloon | [Details →](/docs/tr/platform/animations/pipe-tooltip-image/) |
+| **Image** | Change image based on value | [Details →](/docs/tr/platform/animations/pipe-tooltip-image/) |
+| **AlarmIndication** | Display alarm status | [Details →](/docs/tr/platform/animations/pipe-tooltip-image/) |
 
-#### Grafik & Veri Tablosu
+#### Charts & Data Tables
 
-| Tip | Açıklama | Sayfa |
-|-----|----------|-------|
-| **Chart** | Grafik bileşeni | [Detay →](/docs/tr/platform/animations/chart-peity/) |
-| **Peity** | Inline sparkline mini grafik | [Detay →](/docs/tr/platform/animations/chart-peity/) |
-| **Datatable** | Tablo bileşeni | [Detay →](/docs/tr/platform/animations/chart-peity/) |
+| Type | Description | Page |
+|------|-------------|------|
+| **Chart** | Chart component | [Details →](/docs/tr/platform/animations/chart-peity/) |
+| **Peity** | Inline sparkline mini chart | [Details →](/docs/tr/platform/animations/chart-peity/) |
+| **Datatable** | Table component | [Details →](/docs/tr/platform/animations/chart-peity/) |
 
-#### Kontrol & Etkileşim
+#### Control & Interaction
 
-| Tip | Açıklama | Sayfa |
-|-----|----------|-------|
-| **Set** | Değişkene değer yaz (click ile) | [Detay →](/docs/tr/platform/animations/set-button-click/) |
-| **Slider** | Kaydırıcı ile değer ayarla | [Detay →](/docs/tr/platform/animations/slider-input/) |
-| **Input** | Metin/sayı girişi | [Detay →](/docs/tr/platform/animations/slider-input/) |
-| **Button** | Buton bileşeni | [Detay →](/docs/tr/platform/animations/set-button-click/) |
-| **Click** | Tıklama olayı | [Detay →](/docs/tr/platform/animations/set-button-click/) |
-| **MouseDown / MouseUp / MouseOver** | Fare olayları | [Detay →](/docs/tr/platform/animations/set-button-click/) |
+| Type | Description | Page |
+|------|-------------|------|
+| **Set** | Write value to variable (on click) | [Details →](/docs/tr/platform/animations/set-button-click/) |
+| **Slider** | Adjust value with slider | [Details →](/docs/tr/platform/animations/slider-input/) |
+| **Input** | Text/number input | [Details →](/docs/tr/platform/animations/slider-input/) |
+| **Button** | Button component | [Details →](/docs/tr/platform/animations/set-button-click/) |
+| **Click** | Click event | [Details →](/docs/tr/platform/animations/set-button-click/) |
+| **MouseDown / MouseUp / MouseOver** | Mouse events | [Details →](/docs/tr/platform/animations/set-button-click/) |
 
-#### Navigasyon & Gömme
+#### Navigation & Embedding
 
-| Tip | Açıklama | Sayfa |
-|-----|----------|-------|
-| **Open** | Başka bir animation'a geç | [Detay →](/docs/tr/platform/animations/open-iframe-faceplate/) |
-| **Iframe** | Harici URL gömme | [Detay →](/docs/tr/platform/animations/open-iframe-faceplate/) |
-| **Menu** | Menü açma | [Detay →](/docs/tr/platform/animations/open-iframe-faceplate/) |
-| **Faceplate** | Faceplate bileşeni yerleştir | [Detay →](/docs/tr/platform/animations/open-iframe-faceplate/) |
+| Type | Description | Page |
+|------|-------------|------|
+| **Open** | Navigate to another animation | [Details →](/docs/tr/platform/animations/open-iframe-faceplate/) |
+| **Iframe** | Embed external URL | [Details →](/docs/tr/platform/animations/open-iframe-faceplate/) |
+| **Menu** | Open menu | [Details →](/docs/tr/platform/animations/open-iframe-faceplate/) |
+| **Faceplate** | Place faceplate component | [Details →](/docs/tr/platform/animations/open-iframe-faceplate/) |
 
-#### Script & Gelişmiş
+#### Script & Advanced
 
-| Tip | Açıklama | Sayfa |
-|-----|----------|-------|
-| **Script** | Özel JavaScript çalıştır | [Detay →](/docs/tr/platform/animations/script-animate/) |
-| **FormScript** | Form tabanlı script | [Detay →](/docs/tr/platform/animations/script-animate/) |
-| **GetSymbol** | Symbol kütüphanesinden sembol yükle | [Detay →](/docs/tr/platform/animations/script-animate/) |
-| **Animate** | CSS/SVG animasyon tetikle | [Detay →](/docs/tr/platform/animations/script-animate/) |
-| **Access** | Yetki bazlı görünürlük | [Detay →](/docs/tr/platform/animations/script-animate/) |
-| **Three** | 3D görselleştirme | [Detay →](/docs/tr/platform/animations/script-animate/) |
-| **QRCodeGeneration** | QR kod oluşturma | [Detay →](/docs/tr/platform/animations/script-animate/) |
-| **QRCodeScan** | QR kod okuma | [Detay →](/docs/tr/platform/animations/script-animate/) |
+| Type | Description | Page |
+|------|-------------|------|
+| **Script** | Run custom JavaScript | [Details →](/docs/tr/platform/animations/script-animate/) |
+| **FormScript** | Form-based script | [Details →](/docs/tr/platform/animations/script-animate/) |
+| **GetSymbol** | Load symbol from Symbol library | [Details →](/docs/tr/platform/animations/script-animate/) |
+| **Animate** | Trigger CSS/SVG animation | [Details →](/docs/tr/platform/animations/script-animate/) |
+| **Access** | Permission-based visibility | [Details →](/docs/tr/platform/animations/script-animate/) |
+| **Three** | 3D visualization | [Details →](/docs/tr/platform/animations/script-animate/) |
+| **QRCodeGeneration** | QR code generation | [Details →](/docs/tr/platform/animations/script-animate/) |
+| **QRCodeScan** | QR code scanning | [Details →](/docs/tr/platform/animations/script-animate/) |
 
-### Expression Tipleri
+### Expression Types
 
-Her animation element'te değerin nasıl hesaplanacağını belirler:
+Determines how the value is calculated in each animation element:
 
-| Tip | Açıklama |
-|-----|----------|
-| **Tag** | Doğrudan değişken adı referansı |
-| **Expression** | JavaScript formülü |
-| **Numeric** | Sabit sayısal değer |
-| **Text** | Sabit metin değeri |
-| **Switch** | Değere göre koşullu seçim |
-| **Collection** | Birden fazla değişken koleksiyonu |
-| **Set** | Değer yazma ifadesi |
-| **Animation** | Başka bir animation referansı |
-| **Url** | URL referansı |
-| **Alarm** | Alarm durumu referansı |
-| **Faceplate** | Faceplate referansı |
-| **Animation Popup** | Popup animation açma |
-| **Button** | Buton yapılandırması |
-| **InSCADA View** | Platform görünüm referansı |
-| **System Page** | Sistem sayfası referansı |
-| **Html** | HTML içerik |
-| **Custom Menu** | Custom menu referansı |
-| **Tetra Color** | Dört renkli durum gösterimi (alarm renkleri) |
+| Type | Description |
+|------|-------------|
+| **Tag** | Direct variable name reference |
+| **Expression** | JavaScript formula |
+| **Numeric** | Constant numeric value |
+| **Text** | Constant text value |
+| **Switch** | Conditional selection based on value |
+| **Collection** | Multiple variable collection |
+| **Set** | Value write expression |
+| **Animation** | Another animation reference |
+| **Url** | URL reference |
+| **Alarm** | Alarm status reference |
+| **Faceplate** | Faceplate reference |
+| **Animation Popup** | Open popup animation |
+| **Button** | Button configuration |
+| **InSCADA View** | Platform view reference |
+| **System Page** | System page reference |
+| **Html** | HTML content |
+| **Custom Menu** | Custom menu reference |
+| **Tetra Color** | Four-color status display (alarm colors) |
 
-## Animation Scripts ve Tarama Döngüsü
+## Animation Scripts and Scan Cycle
 
-Her animation'a Pre ve Post script bağlanabilir. Tüm kodlar **her tarama döngüsünde tekrar çalışır**:
+Pre and Post scripts can be attached to each animation. All code **runs again every scan cycle**:
 
 ```
-Her döngüde:  Pre-Animation → Elements → Post-Animation → bekleme (duration ms) → tekrar
+Each cycle:  Pre-Animation → Elements → Post-Animation → wait (duration ms) → repeat
 ```
 
-İlk açılışta bir kez çalışması gereken kod için `__firstScan` değişkeni kullanılır:
+For code that should run only once on first load, the `__firstScan` variable is used:
 
 ```javascript
 if (__firstScan) {
-    // Sadece ilk döngüde çalışır
+    // Runs only in the first cycle
     var logs = ins.getLoggedVariableValuesByPage(
         ['ActivePower_kW'],
         ins.getDate(ins.now().getTime() - 3600000),
@@ -219,9 +219,9 @@ if (__firstScan) {
     );
 }
 
-// Her döngüde çalışır
+// Runs every cycle
 var power = ins.getVariableValue("ActivePower_kW").value;
 return power.toFixed(1);
 ```
 
-Detaylı bilgi: [Animation Yapılandırma → Pre/Post Scripts](/docs/tr/platform/animations/configuration/)
+Detailed information: [Animation Configuration → Pre/Post Scripts](/docs/tr/platform/animations/configuration/)

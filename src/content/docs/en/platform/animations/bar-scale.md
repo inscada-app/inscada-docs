@@ -1,65 +1,65 @@
 ---
 title: "Bar & Scale"
-description: "Çubuk gösterge ve ölçekleme animasyonları"
+description: "Bar gauge and scaling animations"
 sidebar:
   order: 12
 ---
 
-## Bar (Çubuk Gösterge)
+## Bar (Bar Gauge)
 
-**Bar**, bir SVG dikdörtgeninin yüksekliğini veya genişliğini değere orantılı olarak değiştirir. Tank seviyesi, ilerleme çubuğu, yük göstergesi gibi gösterimlerde kullanılır.
+**Bar** changes the height or width of an SVG rectangle proportionally to a value. It is used for displays such as tank level, progress bar, and load indicator.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Bar |
-| **Uygun SVG Öğeleri** | `<rect>` |
+| **Suitable SVG Elements** | `<rect>` |
 | **Expression Type** | Tag, Expression |
 
-### Yapılandırma (Props)
+### Configuration (Props)
 
-| Özellik | Açıklama |
-|---------|----------|
-| **direction** | Yön: `vertical` (aşağıdan yukarı) veya `horizontal` (soldan sağa) |
-| **min** | Minimum değer (bu değerde bar boş) |
-| **max** | Maksimum değer (bu değerde bar dolu) |
-| **fillColor** | Dolgu rengi |
+| Property | Description |
+|----------|-------------|
+| **direction** | Direction: `vertical` (bottom to top) or `horizontal` (left to right) |
+| **min** | Minimum value (bar is empty at this value) |
+| **max** | Maximum value (bar is full at this value) |
+| **fillColor** | Fill color |
 
-### SVG Hazırlığı — Dikey Bar
+### SVG Preparation — Vertical Bar
 
 ```xml
-<!-- Tank çerçevesi -->
+<!-- Tank frame -->
 <rect x="40" y="20" width="40" height="200" fill="none" stroke="#666" stroke-width="2"/>
-<!-- Seviye bar'ı (başlangıçta boş) -->
+<!-- Level bar (initially empty) -->
 <rect id="tank_level" x="42" y="220" width="36" height="0" fill="#3498db"/>
 ```
 
-### Expression Örnekleri
+### Expression Examples
 
 **Tag:**
 ```
 Temperature_C
 ```
 Props: `min=0, max=100, direction=vertical`
-→ 50°C'de bar %50 dolu
+→ At 50°C the bar is 50% full
 
-**Expression ile renk değişimi:**
+**Expression with color change:**
 ```javascript
 var val = ins.getVariableValue("Temperature_C").value;
-// Değeri döndür, renk ayrıca Color element ile ayarlanabilir
+// Return the value, color can be set separately with a Color element
 return val;
 ```
 
-### Tam Örnek — Yatay İlerleme Çubuğu
+### Full Example — Horizontal Progress Bar
 
 ```xml
 <svg viewBox="0 0 400 60">
-  <!-- Arka plan -->
+  <!-- Background -->
   <rect x="10" y="20" width="300" height="20" fill="#e0e0e0" rx="3"/>
-  <!-- İlerleme -->
+  <!-- Progress -->
   <rect id="progress_bar" x="10" y="20" width="0" height="20" fill="#2196F3" rx="3"/>
-  <!-- Yüzde metni -->
+  <!-- Percentage text -->
   <text id="progress_text" x="320" y="35" font-size="14">0%</text>
 </svg>
 ```
@@ -69,28 +69,28 @@ return val;
 
 ---
 
-## Scale (Ölçekleme)
+## Scale (Scaling)
 
-**Scale**, bir SVG öğesini veya grubunu değere göre büyütür veya küçültür. `transform: scale()` CSS özelliğini kullanır.
+**Scale** enlarges or shrinks an SVG element or group based on a value. It uses the `transform: scale()` CSS property.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Scale |
-| **Uygun SVG Öğeleri** | `<g>`, `<rect>`, `<circle>`, `<path>` |
+| **Suitable SVG Elements** | `<g>`, `<rect>`, `<circle>`, `<path>` |
 | **Expression Type** | Tag, Expression |
 
-### Expression Örnekleri
+### Expression Examples
 
 ```javascript
-// 0-1000 kW aralığını 0.5-2.0 scale'e dönüştür
+// Convert 0-1000 kW range to 0.5-2.0 scale
 var power = ins.getVariableValue("ActivePower_kW").value;
 return 0.5 + (power / 1000) * 1.5;
 ```
 
-### Kullanım Senaryoları
+### Usage Scenarios
 
-- Üretim miktarına göre büyüyen/küçülen sembol
-- Dinamik boyutlu gauge ibresi
-- Alarm durumunda büyüyen uyarı ikonu
+- Symbol that grows/shrinks based on production quantity
+- Dynamically sized gauge needle
+- Warning icon that enlarges in alarm state

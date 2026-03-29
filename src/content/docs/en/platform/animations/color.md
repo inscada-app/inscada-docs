@@ -1,38 +1,38 @@
 ---
 title: "Color"
-description: "Değere göre renk değiştirme"
+description: "Changing color based on value"
 sidebar:
   order: 11
 ---
 
-**Color**, bir SVG öğesinin dolgu (fill) veya çizgi (stroke) rengini değişken değerine göre dinamik olarak değiştirir. Durum göstergesi, alarm renklendirme, eşik bazlı görselleştirme için kullanılır.
+**Color** dynamically changes the fill or stroke color of an SVG element based on a variable value. It is used for status indicators, alarm coloring, and threshold-based visualization.
 
-## Kullanım
+## Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Color |
-| **Uygun SVG Öğeleri** | `<rect>`, `<circle>`, `<ellipse>`, `<polygon>`, `<path>`, `<text>` |
+| **Suitable SVG Elements** | `<rect>`, `<circle>`, `<ellipse>`, `<polygon>`, `<path>`, `<text>` |
 | **Expression Type** | Expression, Switch, Tetra Color |
 
-## SVG Hazırlığı
+## SVG Preparation
 
 ```xml
 <circle id="status_led" cx="50" cy="50" r="12" fill="#cccccc" stroke="#999"/>
 ```
 
-## Yapılandırma Örnekleri
+## Configuration Examples
 
-### Boolean Durum — Switch ile
+### Boolean Status — With Switch
 
 Expression Type: **Switch**
 ```
 true → #00cc00
 false → #ff0000
 ```
-Motor çalışıyorsa yeşil, durmuşsa kırmızı.
+Green if the motor is running, red if stopped.
 
-### Çoklu Durum — Switch ile
+### Multiple States — With Switch
 
 ```
 0 → #999999
@@ -40,48 +40,48 @@ Motor çalışıyorsa yeşil, durmuşsa kırmızı.
 2 → #ff0000
 3 → #ff8800
 ```
-0=Kapalı (gri), 1=Çalışıyor (yeşil), 2=Arıza (kırmızı), 3=Uyarı (turuncu)
+0=Off (gray), 1=Running (green), 2=Fault (red), 3=Warning (orange)
 
-### Eşik Bazlı — Expression ile
+### Threshold-Based — With Expression
 
 Expression Type: **Expression**
 ```javascript
 var temp = ins.getVariableValue("Temperature_C").value;
-if (temp > 80) return "#ff0000";      // kırmızı — kritik
-if (temp > 60) return "#ff8800";      // turuncu — uyarı
-if (temp > 40) return "#ffcc00";      // sarı — dikkat
-return "#00cc00";                     // yeşil — normal
+if (temp > 80) return "#ff0000";      // red — critical
+if (temp > 60) return "#ff8800";      // orange — warning
+if (temp > 40) return "#ffcc00";      // yellow — caution
+return "#00cc00";                     // green — normal
 ```
 
-### Gradient / Yanıp Sönme
+### Gradient / Blinking
 
-İki renk arasında yanıp sönme efekti:
+Blinking effect between two colors:
 ```javascript
-return "#ff0000/#ffffff";  // kırmızı ↔ beyaz yanıp sönme
+return "#ff0000/#ffffff";  // red ↔ white blinking
 ```
 
-`/` karakteri ile iki renk belirtildiğinde SVG `<animate>` elementi oluşturulur ve renk geçişi yapılır.
+When two colors are specified with the `/` character, an SVG `<animate>` element is created and a color transition is performed.
 
-### Tetra Color (Alarm 4 Renk)
+### Tetra Color (Alarm 4 Colors)
 
 Expression Type: **Tetra Color**
 
-Alarm grubunun dört durumuna göre otomatik renklendirme:
+Automatic coloring based on the four states of an alarm group:
 
-| Durum | Varsayılan Renk |
-|-------|----------------|
-| Fired + No Ack | Kırmızı yanıp söner |
-| Fired + Ack | Kırmızı sabit |
-| Off + No Ack | Sarı |
-| Off + Ack | Normal (gri/beyaz) |
+| State | Default Color |
+|-------|--------------|
+| Fired + No Ack | Red blinking |
+| Fired + Ack | Red solid |
+| Off + No Ack | Yellow |
+| Off + Ack | Normal (gray/white) |
 
-Alarm grubu tanımındaki renk ayarlarını otomatik uygular.
+Automatically applies the color settings from the alarm group definition.
 
-## Tam SVG Örneği
+## Full SVG Example
 
 ```xml
 <svg viewBox="0 0 300 100">
-  <!-- 3 motor durum göstergesi -->
+  <!-- 3 motor status indicators -->
   <g transform="translate(30,50)">
     <circle id="motor1_led" r="15" fill="#ccc"/>
     <text y="35" text-anchor="middle" font-size="11">Motor 1</text>
@@ -97,7 +97,7 @@ Alarm grubu tanımındaki renk ayarlarını otomatik uygular.
 </svg>
 ```
 
-Her `motor*_led` için Color element:
+For each `motor*_led`, a Color element:
 - Expression Type: Switch
 - Expression: `Motor1_Status` (Tag)
 - Switch: `true → #00cc00 | false → #ff0000`

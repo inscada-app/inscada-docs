@@ -1,33 +1,33 @@
 ---
 title: "Set, Button & Click"
-description: "Değer yazma, buton ve tıklama kontrol animasyonları"
+description: "Value writing, button, and click control animations"
 sidebar:
   order: 17
 ---
 
-Bu sayfadaki animation tipleri, operatörün SVG ekran üzerinden değişkenlere değer yazmasını sağlar.
+The animation types on this page allow the operator to write values to variables from the SVG screen.
 
 :::caution
-Kontrol tipleri saha cihazlarına komut gönderir. Kullanıcının `SET_VARIABLE_VALUE` yetkisi gereklidir.
+Control types send commands to field devices. The user must have `SET_VARIABLE_VALUE` permission.
 :::
 
-## Set (Değer Yazma)
+## Set (Value Writing)
 
-**Set**, SVG öğesine tıklandığında hedef değişkene önceden tanımlı bir değer yazar. Motor start/stop, vana aç/kapa gibi basit kontroller için kullanılır.
+**Set** writes a predefined value to the target variable when the SVG element is clicked. It is used for simple controls such as motor start/stop, valve open/close.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Set |
-| **Uygun SVG Öğeleri** | Tümü (tıklanabilir herhangi bir öğe) |
+| **Suitable SVG Elements** | All (any clickable element) |
 | **Expression Type** | Set |
 
-### SVG Hazırlığı
+### SVG Preparation
 
 ```xml
 <g cursor="pointer">
-  <!-- START butonu -->
+  <!-- START button -->
   <rect id="btn_start" x="10" y="10" width="100" height="40"
         rx="5" fill="#4CAF50"/>
   <text x="60" y="35" text-anchor="middle" fill="white"
@@ -35,7 +35,7 @@ Kontrol tipleri saha cihazlarına komut gönderir. Kullanıcının `SET_VARIABLE
 </g>
 
 <g cursor="pointer">
-  <!-- STOP butonu -->
+  <!-- STOP button -->
   <rect id="btn_stop" x="130" y="10" width="100" height="40"
         rx="5" fill="#f44336"/>
   <text x="180" y="35" text-anchor="middle" fill="white"
@@ -43,108 +43,108 @@ Kontrol tipleri saha cihazlarına komut gönderir. Kullanıcının `SET_VARIABLE
 </g>
 ```
 
-### Yapılandırma
+### Configuration
 
-- `btn_start` → **Set**, hedef: `Motor_Run`, değer: `{value: true}`
-- `btn_stop` → **Set**, hedef: `Motor_Run`, değer: `{value: false}`
+- `btn_start` → **Set**, target: `Motor_Run`, value: `{value: true}`
+- `btn_stop` → **Set**, target: `Motor_Run`, value: `{value: false}`
 
-Tıklandığında doğrudan `ins.setVariableValue()` çağrılır.
+When clicked, `ins.setVariableValue()` is called directly.
 
-### Onay Diyaloğu
+### Confirmation Dialog
 
-Props'ta `confirm: true` ayarı ile tıklama öncesi onay penceresi gösterilebilir:
+A confirmation window can be shown before clicking by setting `confirm: true` in Props:
 
 ```
-"Motor başlatılsın mı?" → Evet / Hayır
+"Start the motor?" → Yes / No
 ```
 
 ---
 
-## Button (Buton)
+## Button
 
-**Button**, Webix buton bileşeni olarak çalışır. Set'ten farkı: görsel olarak Webix buton stiline sahiptir ve daha karmaşık eylemler tetikleyebilir.
+**Button** operates as a Webix button component. Unlike Set: it has Webix button styling and can trigger more complex actions.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Button |
-| **Uygun SVG Öğeleri** | `<rect>` (foreignObject) |
+| **Suitable SVG Elements** | `<rect>` (foreignObject) |
 | **Expression Type** | Button |
 
-### Yapılandırma (Props)
+### Configuration (Props)
 
-| Özellik | Açıklama |
-|---------|----------|
-| **label** | Buton metni |
-| **css** | CSS sınıfı (renk/stil) |
-| **action** | Tıklama eylemi |
+| Property | Description |
+|----------|-------------|
+| **label** | Button text |
+| **css** | CSS class (color/style) |
+| **action** | Click action |
 
 ---
 
-## Click (Tıklama Olayı)
+## Click (Click Event)
 
-**Click**, SVG öğesine tıklandığında özel JavaScript kodu çalıştırır. Set'ten farkı: sabit değer yazmak yerine programatik işlem yapabilir — onay diyaloğu, hesaplama, birden fazla değişkene yazma gibi.
+**Click** runs custom JavaScript code when the SVG element is clicked. Unlike Set: instead of writing a fixed value, it can perform programmatic operations — confirmation dialog, calculation, writing to multiple variables.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Click |
-| **Uygun SVG Öğeleri** | Tümü |
+| **Suitable SVG Elements** | All |
 | **Expression Type** | Expression |
 
-### Expression Örnekleri
+### Expression Examples
 
-**Onaylı değer yazma:**
+**Confirmed value writing:**
 ```javascript
-if (confirm('Motor başlatılsın mı?')) {
+if (confirm('Start the motor?')) {
     ins.setVariableValue('Motor_Run', {value: true});
     ins.writeLog("INFO", "Control", "Motor started by operator");
 }
 ```
 
-**Toggle (aç/kapa):**
+**Toggle (on/off):**
 ```javascript
 var current = ins.getVariableValue("Pump_Running").value;
 ins.setVariableValue("Pump_Running", {value: !current});
 ```
 
-**Toplu komut:**
+**Batch command:**
 ```javascript
-if (confirm('Tüm pompalar durdurulsun mu?')) {
+if (confirm('Stop all pumps?')) {
     ins.setVariableValues({
         "Pump1_Run": {value: false},
         "Pump2_Run": {value: false},
         "Pump3_Run": {value: false}
     });
-    ins.notify("warning", "Kontrol", "Tüm pompalar durduruldu");
+    ins.notify("warning", "Control", "All pumps stopped");
 }
 ```
 
-**Başka animation'a geçiş:**
+**Navigate to another animation:**
 ```javascript
-// Tıklanan motora göre detay ekranı aç
+// Open detail screen based on clicked motor
 var motorId = 3;
-// Open animation tipi de kullanılabilir ama Click ile
-// parametre geçişi daha esnek
+// The Open animation type can also be used but Click
+// allows more flexible parameter passing
 ```
 
 ---
 
-## MouseDown / MouseUp (Basılı Tutma)
+## MouseDown / MouseUp (Press and Hold)
 
-**MouseDown** ve **MouseUp**, fare butonuna basıldığında ve bırakıldığında ayrı eylemler tetikler. **Jog** (anlık hareket) kontrolleri için idealdir.
+**MouseDown** and **MouseUp** trigger separate actions when the mouse button is pressed and released. Ideal for **jog** (momentary movement) controls.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | MouseDown / MouseUp |
-| **Uygun SVG Öğeleri** | Tümü |
+| **Suitable SVG Elements** | All |
 | **Expression Type** | Expression |
 
-### Jog Kontrolü Örneği
+### Jog Control Example
 
 ```xml
 <rect id="btn_jog_forward" width="80" height="40" fill="#2196F3" cursor="pointer"/>
@@ -154,20 +154,20 @@ var motorId = 3;
 - `btn_jog_forward` → **MouseDown**: `ins.setVariableValue("Jog_Forward", {value: true})`
 - `btn_jog_forward` → **MouseUp**: `ins.setVariableValue("Jog_Forward", {value: false})`
 
-Basılı tuttuğunuz sürece motor ileri hareket eder, bırakınca durur.
+The motor moves forward as long as you hold the button, and stops when you release it.
 
 ---
 
-## MouseOver (Fare Üzerine Gelme)
+## MouseOver (Mouse Hover)
 
-**MouseOver**, fare öğe üzerine geldiğinde eylem tetikler.
+**MouseOver** triggers an action when the mouse hovers over an element.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | MouseOver |
-| **Uygun SVG Öğeleri** | Tümü |
+| **Suitable SVG Elements** | All |
 | **Expression Type** | Expression |
 
-Tooltip'ten farkı: JavaScript kodu çalıştırabilir, değişken okuyabilir, başka öğeleri güncelleyebilir.
+Unlike Tooltip: it can run JavaScript code, read variables, and update other elements.

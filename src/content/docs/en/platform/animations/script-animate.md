@@ -1,39 +1,39 @@
 ---
 title: "Script & Animate"
-description: "Özel JavaScript, CSS animasyon, yetki kontrolü, 3D, QR kod"
+description: "Custom JavaScript, CSS animation, access control, 3D, QR code"
 sidebar:
   order: 20
 ---
 
 ## Script
 
-**Script**, SVG öğesiyle ilişkilendirilmiş özel JavaScript kodu çalıştırır. Her animation döngüsünde (duration) periyodik olarak çalışır. Diğer animation tipleriyle yapılamayan karmaşık mantık için kullanılır.
+**Script** runs custom JavaScript code associated with an SVG element. It runs periodically every animation cycle (duration). It is used for complex logic that cannot be achieved with other animation types.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Script |
-| **Uygun SVG Öğeleri** | Tümü |
+| **Suitable SVG Elements** | All |
 | **Expression Type** | Expression |
 
-### Expression Örnekleri
+### Expression Examples
 
-**Birden fazla DOM öğesini güncelleme:**
+**Updating multiple DOM elements:**
 ```javascript
 var power = ins.getVariableValue("ActivePower_kW").value;
 var voltage = ins.getVariableValue("Voltage_V").value;
 var current = voltage > 0 ? (power * 1000 / voltage) : 0;
 
-// Hesaplanan akımı göster
+// Display the calculated current
 var el = document.getElementById("calc_current");
 el.textContent = current.toFixed(1) + " A";
 
-// Rengini ayarla
+// Set its color
 el.setAttribute("fill", current > 50 ? "#ff0000" : "#00cc00");
 ```
 
-**Dinamik SVG oluşturma:**
+**Dynamic SVG creation:**
 ```javascript
 var values = ins.getVariableValues(["Temp1", "Temp2", "Temp3", "Temp4"]);
 var container = document.getElementById("temp_bars");
@@ -56,34 +56,34 @@ for (var i = 0; i < names.length; i++) {
 ```
 
 :::tip
-Basit binding'ler için Get, Color, Bar gibi hazır tipleri tercih edin. Script her döngüde çalışır ve DOM manipülasyonu performansı etkiler.
+For simple bindings, prefer ready-made types like Get, Color, Bar. Script runs every cycle and DOM manipulation affects performance.
 :::
 
 ### FormScript
 
-**FormScript**, form tabanlı script bileşenidir. Kullanıcıdan birden fazla girdi alarak toplu işlem yapar.
+**FormScript** is a form-based script component. It performs batch operations by collecting multiple inputs from the user.
 
-| Kullanım | Örnek |
-|----------|-------|
-| Tarif değiştirme | Birden fazla setpoint'i tek formda güncelle |
-| Rapor parametreleri | Tarih aralığı + değişken seçimi ile rapor oluştur |
-| Toplu parametre ayarı | PID parametrelerini (P, I, D) tek formda düzenle |
+| Usage | Example |
+|-------|---------|
+| Recipe change | Update multiple setpoints in a single form |
+| Report parameters | Generate report with date range + variable selection |
+| Batch parameter setting | Edit PID parameters (P, I, D) in a single form |
 
 ---
 
-## Animate (CSS/SVG Animasyon)
+## Animate (CSS/SVG Animation)
 
-**Animate**, koşula göre CSS animation veya SVG SMIL animasyonunu başlatır/durdurur. Dönme, titreşim, pulse, yanıp sönme gibi görsel efektler için kullanılır.
+**Animate** starts/stops a CSS animation or SVG SMIL animation based on a condition. It is used for visual effects such as rotation, vibration, pulse, and blinking.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Animate |
-| **Uygun SVG Öğeleri** | `<g>`, `<path>`, `<circle>` |
+| **Suitable SVG Elements** | `<g>`, `<path>`, `<circle>` |
 | **Expression Type** | Tag (Boolean), Expression |
 
-### SVG + CSS Örneği — Dönen Fan
+### SVG + CSS Example — Spinning Fan
 
 ```xml
 <style>
@@ -103,27 +103,27 @@ Basit binding'ler için Get, Color, Bar gibi hazır tipleri tercih edin. Script 
 ```
 
 Expression: `Fan_Running` (Tag, Boolean)
-- `true` → `fan_blades`'e `.spinning` class eklenir → fan döner
-- `false` → class kaldırılır → fan durur
+- `true` → `.spinning` class is added to `fan_blades` → fan spins
+- `false` → class is removed → fan stops
 
 ---
 
-## Access (Yetki Kontrolü)
+## Access (Permission Control)
 
-**Access**, kullanıcı yetkisine göre SVG öğesini gösterir veya gizler. Güvenlik gerektiren kontrol butonlarını yalnızca yetkili kullanıcılara göstermek için kullanılır.
+**Access** shows or hides an SVG element based on user permissions. It is used to show security-sensitive control buttons only to authorized users.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Access |
-| **Uygun SVG Öğeleri** | `<g>` (kontrol butonlarını grupla) |
-| **Expression** | Gerekli yetki adı |
+| **Suitable SVG Elements** | `<g>` (group control buttons) |
+| **Expression** | Required permission name |
 
-### Örnek
+### Example
 
 ```xml
-<!-- Yalnızca SET_VARIABLE_VALUE yetkisi olanlar görebilir -->
+<!-- Only visible to users with SET_VARIABLE_VALUE permission -->
 <g id="control_buttons">
   <rect id="btn_start" ... />
   <rect id="btn_stop" ... />
@@ -131,42 +131,42 @@ Expression: `Fan_Running` (Tag, Boolean)
 ```
 
 - `control_buttons` → **Access**, Expression: `SET_VARIABLE_VALUE`
-- Yetkisi olmayan kullanıcılar bu grubu hiç göremez
+- Users without the permission cannot see this group at all
 
 ---
 
-## Three (3D Görselleştirme)
+## Three (3D Visualization)
 
-**Three**, Three.js tabanlı 3D model gömme sağlar.
+**Three** provides Three.js-based 3D model embedding.
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Three |
-| **Uygun SVG Öğeleri** | `<rect>` (foreignObject) |
+| **Suitable SVG Elements** | `<rect>` (foreignObject) |
 
-Kullanım: 3D tesis modeli, ekipman görselleştirme, sanal tur.
+Usage: 3D facility model, equipment visualization, virtual tour.
 
 ---
 
-## QRCodeGeneration (QR Kod Oluşturma)
+## QRCodeGeneration (QR Code Generation)
 
-**QRCodeGeneration**, değişken değerinden veya metinden QR kod oluşturur.
+**QRCodeGeneration** generates a QR code from a variable value or text.
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | QRCodeGeneration |
 | **Expression Type** | Expression, Text |
 
 ```javascript
-// Cihaz bilgilerini QR koda çevir
+// Convert device information to QR code
 var sn = ins.getVariableValue("Serial_Number").value;
 return "https://inscada.com/device/" + sn;
 ```
 
-Kullanım: Cihaz kimlik kodu, bakım formu URL'si, envanter etiketi.
+Usage: Device identification code, maintenance form URL, inventory label.
 
-## QRCodeScan (QR Kod Okuma)
+## QRCodeScan (QR Code Scanning)
 
-**QRCodeScan**, kamera ile QR kod tarayıcı bileşeni açar. Taranan veriyi değişkene veya script'e aktarır.
+**QRCodeScan** opens a camera-based QR code scanner component. It passes the scanned data to a variable or script.
 
-Kullanım: Mobil cihazdan cihaz tanıma, bakım kaydı girişi, saha personeli kimlik doğrulama.
+Usage: Device recognition from mobile device, maintenance record entry, field personnel identity verification.

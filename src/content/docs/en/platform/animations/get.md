@@ -1,72 +1,72 @@
 ---
 title: "Get"
-description: "Değişken değerini metin olarak gösterme"
+description: "Displaying variable values as text"
 sidebar:
   order: 10
 ---
 
-**Get**, bir SVG text öğesinin içeriğini değişken değeriyle güncelleyen en temel animation tipidir. Sayısal gösterge, etiket, durum metni gibi tüm metin tabanlı gösterimler için kullanılır.
+**Get** is the most basic animation type that updates the content of an SVG text element with a variable value. It is used for all text-based displays such as numeric indicators, labels, and status text.
 
-## Kullanım
+## Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Get |
-| **Uygun SVG Öğeleri** | `<text>`, `<tspan>` |
+| **Suitable SVG Elements** | `<text>`, `<tspan>` |
 | **Expression Type** | Tag, Expression, Switch, Text |
 
-## SVG Hazırlığı
+## SVG Preparation
 
 ```xml
 <text id="power_display" x="100" y="50"
       font-size="24" fill="#333" text-anchor="middle">--</text>
 ```
 
-## Yapılandırma Örnekleri
+## Configuration Examples
 
-### Basit — Tag ile Doğrudan Bağlama
+### Simple — Direct Binding with Tag
 
 Expression Type: **Tag**
 ```
 ActivePower_kW
 ```
-Sonuç: `359.91` (değişkenin ham değeri)
+Result: `359.91` (raw value of the variable)
 
-### Formatlı — Expression ile
+### Formatted — With Expression
 
 Expression Type: **Expression**
 ```javascript
 var val = ins.getVariableValue("ActivePower_kW");
 return val.value.toFixed(1) + " kW";
 ```
-Sonuç: `359.9 kW`
+Result: `359.9 kW`
 
-### Birim ve Ondalık
+### Unit and Decimal
 
 ```javascript
 var val = ins.getVariableValue("Temperature_C");
 return val.value.toFixed(1) + " °C";
 ```
-Sonuç: `45.2 °C`
+Result: `45.2 °C`
 
-### Koşullu Metin — Switch ile
+### Conditional Text — With Switch
 
 Expression Type: **Switch**
 ```
-0 → Durdu
-1 → Çalışıyor
-2 → Arıza
-3 → Bakım
+0 → Stopped
+1 → Running
+2 → Fault
+3 → Maintenance
 ```
 
-### Boolean Durum Metni
+### Boolean Status Text
 
 ```javascript
 var status = ins.getVariableValue("GridStatus").value;
 return status ? "ONLINE" : "OFFLINE";
 ```
 
-### Zaman Damgası
+### Timestamp
 
 ```javascript
 var val = ins.getVariableValue("ActivePower_kW");
@@ -76,9 +76,9 @@ var m = ("0" + d.getMinutes()).slice(-2);
 var s = ("0" + d.getSeconds()).slice(-2);
 return h + ":" + m + ":" + s;
 ```
-Sonuç: `14:32:05`
+Result: `14:32:05`
 
-### Birden Fazla Değişken
+### Multiple Variables
 
 ```javascript
 var p = ins.getVariableValue("ActivePower_kW").value;
@@ -86,16 +86,16 @@ var v = ins.getVariableValue("Voltage_V").value;
 var i = ins.getVariableValue("Current_A").value;
 return p.toFixed(0) + " kW | " + v.toFixed(0) + " V | " + i.toFixed(1) + " A";
 ```
-Sonuç: `360 kW | 235 V | 36.2 A`
+Result: `360 kW | 235 V | 36.2 A`
 
 ## GetSymbol
 
-**GetSymbol** tipi, Space seviyesindeki Symbol kütüphanesinden SVG sembol yükler. Get'in metin yerine görsel sembol versiyonudur.
+The **GetSymbol** type loads an SVG symbol from the Space-level Symbol library. It is the visual symbol version of Get instead of text.
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | GetSymbol |
 | **Expression Type** | Expression |
-| **Expression** | Sembol adı |
+| **Expression** | Symbol name |
 
-Kullanım: Cihaz tipine göre dinamik ikon gösterme.
+Usage: Displaying dynamic icons based on device type.

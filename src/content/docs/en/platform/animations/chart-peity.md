@@ -1,48 +1,48 @@
 ---
 title: "Chart & Peity"
-description: "Grafik bileşenleri ve inline sparkline mini grafikler"
+description: "Chart components and inline sparkline mini charts"
 sidebar:
   order: 16
 ---
 
-## Chart (Grafik)
+## Chart
 
-**Chart**, SVG ekran içine interaktif grafik bileşeni yerleştirir. Tarihsel veri veya anlık değer serilerini görselleştirir.
+**Chart** places an interactive chart component inside the SVG screen. It visualizes historical data or real-time value series.
 
 ![Active & Reactive Power Chart](../../../../../assets/docs/editor-preview.png)
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Chart |
-| **Uygun SVG Öğeleri** | `<rect>` (foreignObject olarak dönüştürülür) |
+| **Suitable SVG Elements** | `<rect>` (converted to foreignObject) |
 | **Expression Type** | Collection, Expression |
 
-### Grafik Tipleri
+### Chart Types
 
-| Tip | Kullanım |
-|-----|----------|
-| **line** | Zaman serisi, trend takibi |
-| **bar** | Karşılaştırma, periyodik özet |
-| **area** | Kümülatif değerler, alan grafiği |
-| **pie** | Dağılım gösterimi |
+| Type | Usage |
+|------|-------|
+| **line** | Time series, trend tracking |
+| **bar** | Comparison, periodic summary |
+| **area** | Cumulative values, area chart |
+| **pie** | Distribution display |
 
-### Yapılandırma (Props)
+### Configuration (Props)
 
-| Özellik | Açıklama |
-|---------|----------|
-| **type** | Grafik tipi (line, bar, area, pie) |
-| **colors** | Seri renkleri |
-| **xAxis** | X ekseni ayarları |
-| **yAxis** | Y ekseni ayarları |
-| **legend** | Açıklama göster/gizle |
+| Property | Description |
+|----------|-------------|
+| **type** | Chart type (line, bar, area, pie) |
+| **colors** | Series colors |
+| **xAxis** | X axis settings |
+| **yAxis** | Y axis settings |
+| **legend** | Show/hide legend |
 
-### Expression Örneği — Tarihsel Veri Grafiği
+### Expression Example — Historical Data Chart
 
 ```javascript
 var endMs = ins.now().getTime();
-var startMs = endMs - (60 * 60 * 1000); // Son 1 saat
+var startMs = endMs - (60 * 60 * 1000); // Last 1 hour
 
 var logs = ins.getLoggedVariableValuesByPage(
     ['ActivePower_kW'],
@@ -87,9 +87,9 @@ return {
 };
 ```
 
-Bu örnek yukarıdaki Preview Animation screenshot'ındaki grafiği oluşturur.
+This example produces the chart shown in the Preview Animation screenshot above.
 
-### Expression Örneği — Anlık Dağılım (Pie)
+### Expression Example — Real-Time Distribution (Pie)
 
 ```javascript
 var power = ins.getVariableValue("ActivePower_kW").value;
@@ -98,38 +98,38 @@ var reactive = ins.getVariableValue("ReactivePower_kVAR").value;
 return {
     type: 'pie',
     dataset: {
-        0: { name: 'Aktif', data: [power], color: '#3498db' },
-        1: { name: 'Reaktif', data: [reactive], color: '#e74c3c' }
+        0: { name: 'Active', data: [power], color: '#3498db' },
+        1: { name: 'Reactive', data: [reactive], color: '#e74c3c' }
     }
 };
 ```
 
 ---
 
-## Peity (Sparkline Mini Grafik)
+## Peity (Sparkline Mini Chart)
 
-**Peity**, küçük inline sparkline grafik oluşturur. Metin yanında kompakt trend gösterimi — fazla yer kaplamadan değerin yönünü görselleştirir.
+**Peity** creates small inline sparkline charts. A compact trend display next to text — visualizes the direction of a value without taking up much space.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Peity |
-| **Uygun SVG Öğeleri** | `<rect>` (foreignObject) |
+| **Suitable SVG Elements** | `<rect>` (foreignObject) |
 | **Expression Type** | Collection |
 
-### Peity Tipleri
+### Peity Types
 
-| Tip | Görünüm |
-|-----|---------|
-| **line** | Çizgi sparkline |
-| **bar** | Mini çubuk grafik |
-| **pie** | Mini pasta grafik |
-| **donut** | Mini halka grafik |
+| Type | Appearance |
+|------|------------|
+| **line** | Line sparkline |
+| **bar** | Mini bar chart |
+| **pie** | Mini pie chart |
+| **donut** | Mini donut chart |
 
-### Kullanım Senaryosu
+### Usage Scenario
 
-Değişken değerinin yanına son 10 değerin mini trend grafiğini eklemek:
+Adding a mini trend chart of the last 10 values next to a variable value:
 
 ```xml
 <g transform="translate(200, 30)">
@@ -139,31 +139,31 @@ Değişken değerinin yanına son 10 değerin mini trend grafiğini eklemek:
 ```
 
 - `power_value` → Get, Tag: `ActivePower_kW`
-- `power_sparkline` → Peity, son 10 değer ile line sparkline
+- `power_sparkline` → Peity, line sparkline with last 10 values
 
 ---
 
-## Datatable (Tablo)
+## Datatable (Table)
 
-**Datatable**, SVG ekran içine interaktif tablo yerleştirir. Webix datatable bileşeni olarak çalışır.
+**Datatable** places an interactive table inside the SVG screen. It operates as a Webix datatable component.
 
-### Kullanım
+### Usage
 
-| Alan | Değer |
-|------|-------|
+| Field | Value |
+|-------|-------|
 | **Type** | Datatable |
-| **Uygun SVG Öğeleri** | `<rect>` (foreignObject) |
+| **Suitable SVG Elements** | `<rect>` (foreignObject) |
 | **Expression Type** | Collection, Expression |
 
-### Yapılandırma (Props)
+### Configuration (Props)
 
-| Özellik | Açıklama |
-|---------|----------|
-| **columns** | Kolon tanımları (başlık, genişlik, format) |
-| **autoheight** | Otomatik yükseklik |
-| **select** | Satır seçimi |
+| Property | Description |
+|----------|-------------|
+| **columns** | Column definitions (header, width, format) |
+| **autoheight** | Auto height |
+| **select** | Row selection |
 
-### Expression Örneği — Değişken İzleme Tablosu
+### Expression Example — Variable Monitoring Table
 
 ```javascript
 var names = ["ActivePower_kW", "Voltage_V", "Current_A", "Frequency_Hz"];
