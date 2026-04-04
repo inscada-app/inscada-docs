@@ -124,10 +124,42 @@ claude space, scriptlerde "getVariableValue" ara
 
 **Kilavuz GEREKLI.** SVG kurallari ve eleman tipleri kritiktir.
 
+MCP Server iki katmanli kilavuz sunar:
+- **`inscada_guide`** — Genel kurallar, element tipleri ozeti, API yapisi (her conversation'da yuklenir)
+- **`inscada_animation_guide`** — Detayli element kurallari, expression return tipleri, dinamik props (sadece animasyon islerinde yuklenir)
+
+AI, animasyon olusturacagi zaman her iki kilavuzu da otomatik olarak yukler.
+
+**Temel animasyon:**
 ```
 inscada guide oku. claude space, Energy Monitoring Demo icin
 ActivePower_kW, Voltage_V, Current_A gosteren SVG animation olustur
 ```
+
+**Dinamik props ile animasyon:**
+
+Bazi element tipleri, expression'dan obje dondurulen gorsel ozellikleri calisma zamaninda degistirmeyi destekler. Ornegin bir Pipe elementi:
+
+```
+inscada guide oku. claude space, Energy Monitoring Demo icin
+su sistemi animasyonu olustur. Boru animasyonu pompa durumuna gore
+renk ve hiz degistirsin (pompa acikken mavi/hizli, kapaliyken gri/durdur)
+```
+
+Bu durumda AI, Pipe elementinin expression'indan basit `return true/false` yerine dinamik bir obje dondurur:
+```javascript
+var running = ins.getVariableValue('PumpStatus') == 1;
+return {
+  value: running,
+  fillColor: running ? '#04B3FF' : '#999',
+  speed: 2000, strokeArray: 10
+};
+```
+
+**Dinamik props destekleyen elementler:** Bar, Pipe, Move, Iframe
+**Obje dondurmesi zorunlu elementler:** Image, Peity, Chart
+
+> **ipucu:** Detayli element kurallari icin AI'a "animation guide oku" demeniz yeterlidir. AI, `inscada_animation_guide` aracini cagirir ve ilgili kurallari yukler.
 
 ---
 

@@ -124,10 +124,42 @@ claude space, search "getVariableValue" in scripts
 
 **Guide REQUIRED.** SVG rules and element types are critical.
 
+MCP Server provides a two-layer guide system:
+- **`inscada_guide`** — General rules, element type summary, API structure (loaded every conversation)
+- **`inscada_animation_guide`** — Detailed element rules, expression return types, dynamic props (loaded only for animation tasks)
+
+The AI automatically loads both guides when creating animations.
+
+**Basic animation:**
 ```
 read inscada guide. claude space, Energy Monitoring Demo,
 create SVG animation showing ActivePower_kW, Voltage_V, Current_A
 ```
+
+**Animation with dynamic props:**
+
+Some element types support changing visual properties at runtime by returning an object from the expression. For example, a Pipe element:
+
+```
+read inscada guide. claude space, Energy Monitoring Demo,
+create water system animation. Pipe animation should change color
+and speed based on pump status (blue/fast when on, gray/stop when off)
+```
+
+In this case, the AI returns a dynamic object from the Pipe expression instead of a simple `return true/false`:
+```javascript
+var running = ins.getVariableValue('PumpStatus') == 1;
+return {
+  value: running,
+  fillColor: running ? '#04B3FF' : '#999',
+  speed: 2000, strokeArray: 10
+};
+```
+
+**Elements supporting dynamic props:** Bar, Pipe, Move, Iframe
+**Elements requiring object return:** Image, Peity, Chart
+
+> **Tip:** To load detailed element rules, just tell the AI "read animation guide". It will call the `inscada_animation_guide` tool and load the relevant rules.
 
 ---
 
