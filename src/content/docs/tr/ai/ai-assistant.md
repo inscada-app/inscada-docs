@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-inSCADA, yapay zeka asistanlarini dogrudan SCADA sisteminize baglayan iki farkli cozum sunar. Her iki cozum de ayni **38 arac** setini kullanarak canli deger okuma, alarm izleme, script yazma, tarihsel veri analizi, grafik olusturma ve daha fazlasini yapmanizi saglar.
+inSCADA, yapay zeka asistanlarini dogrudan SCADA sisteminize baglayan iki farkli cozum sunar. Her iki cozum de ayni **39 arac** setini kullanarak canli deger okuma, alarm izleme, script yazma, tarihsel veri analizi, grafik olusturma ve daha fazlasini yapmanizi saglar.
 
 > **Not:** Her iki cozum de **inSCADA JDK11** surumu gerektirir.
 
@@ -30,7 +30,7 @@ inSCADA, yapay zeka asistanlarini dogrudan SCADA sisteminize baglayan iki farkli
 - **Excel export** — Sorgu sonuclarini .xlsx olarak disa aktarin
 - **API kesfi** — 625+ inSCADA endpoint'ini kesfedip dogal dille cagriin
 
-## 38 Arac — 8 Kategori
+## 39 Arac — 8 Kategori
 
 | Kategori | Arac Sayisi | Aciklama |
 |----------|-------------|----------|
@@ -41,7 +41,7 @@ inSCADA, yapay zeka asistanlarini dogrudan SCADA sisteminize baglayan iki farkli
 | Custom Menu | 6 | Menu CRUD islemleri (sablonlu olusturma destegi) |
 | Genel API | 3 | 625+ endpoint kesfi ve cagrisi |
 | Disa Aktarma | 1 | Excel dosyasi olusturma |
-| Kilavuz | 1 | Script kurallari, animasyon tipleri, en iyi pratikler |
+| Kilavuz | 2 | Script kurallari, animasyon element detaylari, en iyi pratikler |
 
 ## AI Asistan — Masaustu Uygulama
 

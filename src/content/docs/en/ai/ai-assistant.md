@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-inSCADA offers two solutions that connect AI assistants directly to your SCADA system. Both solutions use the same **38 tools** to read live values, monitor alarms, write scripts, analyze historical data, generate charts, and more.
+inSCADA offers two solutions that connect AI assistants directly to your SCADA system. Both solutions use the same **39 tools** to read live values, monitor alarms, write scripts, analyze historical data, generate charts, and more.
 
 > **Note:** Both solutions require **inSCADA JDK11** edition.
 
@@ -30,7 +30,7 @@ inSCADA offers two solutions that connect AI assistants directly to your SCADA s
 - **Excel export** — Export query results as .xlsx files
 - **API discovery** — Discover and call 625+ inSCADA endpoints in natural language
 
-## 38 Tools — 8 Categories
+## 39 Tools — 8 Categories
 
 | Category | Count | Description |
 |----------|-------|-------------|
@@ -41,7 +41,7 @@ inSCADA offers two solutions that connect AI assistants directly to your SCADA s
 | Custom Menu | 6 | Menu CRUD operations (template-based creation supported) |
 | Generic API | 3 | Discover and call 625+ endpoints |
 | Export | 1 | Excel file generation |
-| Guide | 1 | Script rules, animation types, best practices |
+| Guide | 2 | Script rules, animation element details, best practices |
 
 ## AI Assistant — Desktop Application
 
