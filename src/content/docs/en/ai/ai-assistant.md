@@ -49,6 +49,8 @@ For detailed parameters and usage: [Tools Reference](/docs/en/ai/tools-reference
 
 Standalone Windows application. Choose your own AI provider, run fully local with Ollama — your data never leaves your computer.
 
+![AI Assistant — Main screen, quick actions and workspace selection](../../../../assets/docs/ai-assistant-main.png)
+
 ### Supported AI Providers
 
 | Provider | Description |
@@ -72,12 +74,17 @@ Configure the application from the settings page on first launch:
 **1. AI Provider Selection:**
 - **Claude:** Enter your Anthropic API key
 - **Ollama:** Enter Ollama server address (default: `http://localhost:11434`)
-- **OpenAI Compatible:** Enter API URL and key
+- **OpenAI Compatible:** Select provider, enter API URL and key
+
+![Settings — AI Provider selection (Claude, Ollama, OpenAI Compatible)](../../../../assets/docs/ai-assistant-settings-provider.png)
 
 **2. inSCADA Connection:**
 - **inSCADA URL:** Server address (e.g. `http://localhost:8081`)
 - **Username:** inSCADA login username
 - **Password:** inSCADA login password
+- **Test Connection:** Use the test button to verify connection settings
+
+![Settings — inSCADA REST API connection configuration](../../../../assets/docs/ai-assistant-settings-api.png)
 
 ### Features
 
@@ -87,6 +94,44 @@ Configure the application from the settings page on first launch:
 - **Forecast charts** — AI predictions visualized on the same chart with historical data
 - **Script development** — Write, test, and deploy scripts — all from a single chat
 - **Confirmation mechanism** — Approval dialog for dangerous operations
+
+![Variable list and tool call results](../../../../assets/docs/ai-assistant-variable-list.png)
+
+### Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│  Electron (Desktop Application)              │
+│  ├─ Window management (main, settings, about)│
+│  ├─ License validation                       │
+│  └─ IPC handlers                             │
+├──────────────────────────────────────────────┤
+│  Express Server (localhost:3000)             │
+│  ├─ POST /api/chat — Chat endpoint          │
+│  ├─ LLM Adapter (Claude/Ollama/Gemini)      │
+│  ├─ Tool call loop                           │
+│  └─ Dangerous tool confirmation mechanism    │
+├──────────────────────────────────────────────┤
+│  Tool Handlers (38 tools)                    │
+│  ├─ inSCADA REST API client                  │
+│  ├─ Chart engine (Chart.js)                  │
+│  ├─ Excel export (SheetJS)                   │
+│  └─ OpenAPI index (625+ endpoints)           │
+├──────────────────────────────────────────────┤
+│  Frontend (Chat UI)                          │
+│  ├─ Chat interface                           │
+│  ├─ Chart rendering (Chart.js)               │
+│  └─ File download & confirmation dialogs     │
+└──────────────────────────────────────────────┘
+         │
+         ▼
+┌──────────────────────────────────────────────┐
+│  inSCADA REST API (http://localhost:8081)     │
+│  └─ 625+ endpoints, Swagger documentation   │
+└──────────────────────────────────────────────┘
+```
+
+The application is packaged with Electron and binds to `127.0.0.1`. Frontend and backend run in the same process, with no network access from outside.
 
 ## Security
 

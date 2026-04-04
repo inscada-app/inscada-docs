@@ -49,6 +49,8 @@ Detayli parametre ve kullanim bilgileri icin: [Arac Referansi](/docs/tr/ai/tools
 
 Bagimsiz Windows uygulamasi. Kendi AI saglayicinizi secin, Ollama ile tamamen lokal calisin — verileriniz bilgisayarinizdan cikmaz.
 
+![AI Asistan — Ana ekran, hizli aksiyonlar ve workspace secimi](../../../../assets/docs/ai-assistant-main.png)
+
 ### Desteklenen AI Saglayicilari
 
 | Saglayici | Aciklama |
@@ -72,12 +74,17 @@ Uygulama ilk acildiginda ayarlar sayfasindan yapilandirma yapmaniz gerekir:
 **1. AI Saglayici Secimi:**
 - **Claude:** Anthropic API anahtarinizi girin
 - **Ollama:** Ollama sunucu adresini girin (varsayilan: `http://localhost:11434`)
-- **OpenAI Uyumlu:** API URL ve anahtarinizi girin
+- **OpenAI Uyumlu:** Saglayici secin, API URL ve anahtarinizi girin
+
+![Ayarlar — AI Saglayici secimi (Claude, Ollama, OpenAI Compatible)](../../../../assets/docs/ai-assistant-settings-provider.png)
 
 **2. inSCADA Baglantisi:**
 - **inSCADA URL:** Sunucu adresi (ornegin `http://localhost:8081`)
 - **Kullanici Adi:** inSCADA login kullanici adi
 - **Sifre:** inSCADA login sifresi
+- **Test Connection:** Baglanti ayarlarini dogrulamak icin test butonunu kullanin
+
+![Ayarlar — inSCADA REST API baglanti yapilandirmasi](../../../../assets/docs/ai-assistant-settings-api.png)
 
 ### Ozellikler
 
@@ -87,6 +94,44 @@ Uygulama ilk acildiginda ayarlar sayfasindan yapilandirma yapmaniz gerekir:
 - **Tahmin grafikleri** — Tarihsel veri uzerinden AI tahmini, ayni grafik uzerinde gorsellestirilir
 - **Script gelistirme** — Script yazma, test etme ve deploy etme — tek sohbetten
 - **Onay mekanizmasi** — Tehlikeli islemler icin UI uzerinden onay kutusu
+
+![Degisken listesi ve arac cagri sonuclari](../../../../assets/docs/ai-assistant-variable-list.png)
+
+### Mimari
+
+```
+┌──────────────────────────────────────────────┐
+│  Electron (Masaustu Uygulamasi)              │
+│  ├─ Pencere yonetimi (ana, ayarlar, hakkinda)│
+│  ├─ Lisans dogrulama                         │
+│  └─ IPC handler'lar                          │
+├──────────────────────────────────────────────┤
+│  Express Server (localhost:3000)             │
+│  ├─ POST /api/chat — Sohbet endpoint'i      │
+│  ├─ LLM Adapter (Claude/Ollama/Gemini)      │
+│  ├─ Tool cagri dongusu                       │
+│  └─ Tehlikeli tool onay mekanizmasi          │
+├──────────────────────────────────────────────┤
+│  Tool Handlers (38 arac)                     │
+│  ├─ inSCADA REST API istemcisi               │
+│  ├─ Grafik motoru (Chart.js)                 │
+│  ├─ Excel disa aktarma (SheetJS)             │
+│  └─ OpenAPI indeks (625+ endpoint)           │
+├──────────────────────────────────────────────┤
+│  Frontend (Chat UI)                          │
+│  ├─ Sohbet arayuzu                           │
+│  ├─ Grafik render (Chart.js)                 │
+│  └─ Dosya indirme & onay kutulari            │
+└──────────────────────────────────────────────┘
+         │
+         ▼
+┌──────────────────────────────────────────────┐
+│  inSCADA REST API (http://localhost:8081)     │
+│  └─ 625+ endpoint, Swagger dokumantasyonu    │
+└──────────────────────────────────────────────┘
+```
+
+Uygulama Electron ile paketlenir ve `127.0.0.1`'e bind olur. Frontend ile backend ayni surec icinde calisir, ag uzerinden erisim engellenir.
 
 ## Guvenlik
 
