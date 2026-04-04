@@ -46,6 +46,7 @@ export default defineConfig({
 						{ slug: 'platform/expressions' },
 						{ slug: 'platform/data-transfers' },
 						{ slug: 'platform/logs' },
+						{ slug: 'platform/settings' },
 						{
 							label: 'Script Engine',
 							collapsed: false,
