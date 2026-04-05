@@ -184,6 +184,20 @@ inscada guide oku. claude space, Energy Monitoring Demo icin
 ozel HTML dashboard — ustte 3 gauge, altta trend grafigi
 ```
 
+**CDN Lokalizasyon:**
+
+Dashboard'da CSP politikasinda izin verilmeyen harici kaynaklar (JS, CSS, font, resim) kullanmak istediginizde, bunlari inSCADA sunucusuna indirip lokal olarak kullanabilirsiniz:
+
+```
+inscada guide oku. claude space, Energy Monitoring Demo icin
+chart.js ile dashboard olustur, CDN yerine lokal dosya kullan
+```
+
+AI su adimlari uygular:
+1. Harici dosyayi `ins.exec` ile sunucuya indirir (`C:\Program Files\inSCADA\files\static\`)
+2. HTML'deki CDN adresini `/api/files/static/dosya.js` olarak degistirir
+3. Dashboard CSP kisitlamasi olmadan calisir
+
 ---
 
 ### 8. Excel'e Aktarma

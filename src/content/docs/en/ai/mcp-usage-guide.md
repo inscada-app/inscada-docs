@@ -184,6 +184,20 @@ read inscada guide. claude space, Energy Monitoring Demo,
 custom HTML dashboard — 3 gauges on top, trend chart below
 ```
 
+**CDN Localization:**
+
+When your dashboard uses external CDN resources not allowed by CSP policy (JS, CSS, fonts, images), you can download them to the inSCADA server and reference locally:
+
+```
+read inscada guide. claude space, Energy Monitoring Demo,
+create chart.js dashboard, use local files instead of CDN
+```
+
+The AI will:
+1. Download external files to the server using `ins.exec` (`C:\Program Files\inSCADA\files\static\`)
+2. Replace CDN URLs in HTML with `/api/files/static/filename.js`
+3. Dashboard works without CSP restrictions
+
 ---
 
 ### 8. Export to Excel
