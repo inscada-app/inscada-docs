@@ -2,6 +2,12 @@
 import { logos } from 'virtual:starlight/user-images';
 import config from 'virtual:starlight/user-config';
 const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
+
+const match = Astro.url.pathname.match(/\/(jdk\d+)(\/|$)/);
+const activeVersion = match ? match[1] : null;
+
+const badgeLabel = activeVersion === 'jdk21' ? 'JDK 21' : activeVersion === 'jdk11' ? 'JDK 11' : null;
+const badgeTone = activeVersion === 'jdk21' ? 'current' : 'legacy';
 ---
 
 <a href={siteTitleHref} class="site-title sl-flex">
@@ -19,7 +25,7 @@ const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
 	<span class:list={{ 'sr-only': config.logo?.replacesTitle }} translate="no">
 		{siteTitle}
 	</span>
-	<span class="edition-badge">JDK 11</span>
+	{badgeLabel && <span class:list={['edition-badge', badgeTone]}>{badgeLabel}</span>}
 </a>
 
 <style>
@@ -49,10 +55,16 @@ const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
 			font-weight: 700;
 			padding: 0.15rem 0.5rem;
 			border-radius: 9999px;
-			background: var(--sl-color-accent-low);
-			color: var(--sl-color-accent);
 			letter-spacing: 0.05em;
 			overflow: visible;
+		}
+		.edition-badge.legacy {
+			background: color-mix(in srgb, #f59e0b 18%, transparent);
+			color: #f59e0b;
+		}
+		.edition-badge.current {
+			background: color-mix(in srgb, #10b981 18%, transparent);
+			color: #10b981;
 		}
 	}
 </style>

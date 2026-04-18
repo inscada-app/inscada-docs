@@ -1,0 +1,35 @@
+---
+import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
+import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
+import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
+import VersionSwitcher from './VersionSwitcher.astro';
+
+const { sidebar } = Astro.locals.starlightRoute;
+
+const match = Astro.url.pathname.match(/\/(jdk\d+)(\/|$)/);
+const activeVersion = match ? match[1] : 'jdk11';
+
+function containsVersion(entry, v) {
+	if (entry.type === 'link') return entry.href.includes(`/${v}/`);
+	if (entry.type === 'group') return entry.entries.some((e) => containsVersion(e, v));
+	return false;
+}
+
+function filterTree(entries, v) {
+	return entries
+		.filter((e) => containsVersion(e, v))
+		.map((e) => (e.type === 'group' ? { ...e, entries: filterTree(e.entries, v) } : e));
+}
+
+const filtered = filterTree(sidebar, activeVersion);
+---
+
+<VersionSwitcher activeVersion={activeVersion} />
+
+<SidebarPersister>
+	<SidebarSublist sublist={filtered} />
+</SidebarPersister>
+
+<div class="md:sl-hidden">
+	<MobileMenuFooter />
+</div>

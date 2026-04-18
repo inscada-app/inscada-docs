@@ -1,0 +1,31 @@
+---
+title: inSCADA Dokümantasyon — JDK 21
+description: inSCADA JDK 21 sürümü için teknik dokümantasyon
+template: splash
+hero:
+  tagline: JDK 21 sürümü — modern JavaScript motoru, güncel özellikler.
+  actions:
+    - text: Başlangıç Kılavuzu
+      link: /docs/tr/jdk21/getting-started/what-is-inscada/
+      icon: right-arrow
+    - text: API Referansı
+      link: /docs/tr/jdk21/api/overview/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="Hızlı Başlangıç" icon="rocket">
+    Kurulum, sistem gereksinimleri ve ilk projenizi oluşturma adımları.
+  </Card>
+  <Card title="Platform Kılavuzu" icon="laptop">
+    Proje, bağlantı, değişken, alarm ve script yönetimi.
+  </Card>
+  <Card title="Protokoller" icon="setting">
+    Modbus, BACnet, KNX, OPC-UA, DNP3 ve daha fazlası.
+  </Card>
+  <Card title="REST API" icon="open-book">
+    1100+ endpoint ile inSCADA REST API referansı.
+  </Card>
+</CardGrid>

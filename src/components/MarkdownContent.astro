@@ -1,0 +1,13 @@
+---
+import '@astrojs/starlight/style/markdown.css';
+
+const match = Astro.url.pathname.match(/\/(jdk\d+)(\/|$)/);
+const version = match ? match[1] : null;
+---
+
+<div
+	class="sl-markdown-content"
+	data-pagefind-filter={version ? `version:${version}` : undefined}
+>
+	<slot />
+</div>

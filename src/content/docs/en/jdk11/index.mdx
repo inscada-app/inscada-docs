@@ -1,0 +1,31 @@
+---
+title: inSCADA Documentation — JDK 11
+description: Technical documentation for inSCADA JDK 11 edition
+template: splash
+hero:
+  tagline: JDK 11 edition — Nashorn JavaScript engine, ECMAScript 5.
+  actions:
+    - text: Getting Started
+      link: /docs/en/jdk11/getting-started/what-is-inscada/
+      icon: right-arrow
+    - text: API Reference
+      link: /docs/en/jdk11/api/overview/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="Quick Start" icon="rocket">
+    Installation, system requirements and creating your first project.
+  </Card>
+  <Card title="Platform Guide" icon="laptop">
+    Project, connection, variable, alarm and script management.
+  </Card>
+  <Card title="Protocols" icon="setting">
+    Modbus, BACnet, KNX, OPC-UA, DNP3 and more.
+  </Card>
+  <Card title="REST API" icon="open-book">
+    inSCADA REST API reference with 1100+ endpoints.
+  </Card>
+</CardGrid>
