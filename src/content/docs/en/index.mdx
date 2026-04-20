@@ -6,7 +6,7 @@ hero:
   tagline: Which inSCADA edition docs would you like to view?
 ---
 
-import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard, Card, Aside } from '@astrojs/starlight/components';
 
 <CardGrid>
   <LinkCard
@@ -20,3 +20,90 @@ import { CardGrid, LinkCard } from '@astrojs/starlight/components';
     href="/docs/en/jdk21/"
   />
 </CardGrid>
+
+## At a Glance
+
+inSCADA ships two active editions:
+
+- **JDK 11 (Classic edition)** — Java 11 based, field-proven, actively maintained platform.
+- **JDK 21 (Next-generation edition)** — Java 21 based, modern, modular and cloud-ready platform.
+
+Both editions support the same industrial protocols (Modbus, OPC-UA, S7, MQTT, IEC-61850, DNP3, etc.) and the same core SCADA capabilities (alarms, trends, animations, scripts, reports, chat). The difference lies in infrastructure quality, modularity, new UI capabilities and long-term sustainability.
+
+<Aside type="tip" title="In short">
+Starting a new project, or moving to cloud / multi-site scenarios? **JDK 21**. If your current installation is stable, **JDK 11** continues to be supported.
+</Aside>
+
+## Why JDK 21? — 6 Core Benefits
+
+<CardGrid>
+  <Card title="1. Long-term assurance" icon="seti:lock">
+    Java 21 is the next-generation LTS release supported by Oracle and the community through 2031. Starting a new project today gives you 6–7 years of guaranteed security patches and ecosystem updates.
+  </Card>
+  <Card title="2. Modern security layer" icon="approve-check-circle">
+    The next-generation edition brings the security best practices of recent years out-of-the-box: up-to-date security standards, modern authentication flows, current patches.
+  </Card>
+  <Card title="3. Higher performance" icon="rocket">
+    Thanks to Java 21's virtual threads (Project Loom), the same hardware can process many more concurrent data points. The difference is felt with high variable counts, heavy alarm traffic and many simultaneous users.
+  </Card>
+  <Card title="4. Modular architecture" icon="puzzle">
+    The JDK 21 edition was redesigned as 40+ independent modules (alarm, dashboard, chat, cluster, script, notification, map, …). A change in one module doesn't affect the others; new features ship faster, regression risk drops.
+  </Card>
+  <Card title="5. Extensible UI" icon="laptop">
+    Customer-specific panels, your own database views, HTML widgets, file system integration — all standard capabilities in JDK 21. White-label and customer-specific dashboard scenarios are far easier to set up.
+  </Card>
+  <Card title="6. Cloud-ready platform" icon="cloud-download">
+    inSCADA Cloud (inscada.cloud) runs directly on JDK 21. Modern operation modes such as SaaS deployment, multi-site (multi-space) isolation and central management come with the next-generation edition.
+  </Card>
+</CardGrid>
+
+## Feature Comparison
+
+The table below summarises the concrete differences between the two editions. Shared core SCADA capabilities are not listed (they exist in full in both editions).
+
+| Area | Classic (JDK 11) | Next-gen (JDK 21) |
+| --- | --- | --- |
+| Core platform | Java 11 based | Java 21 LTS based |
+| Official support horizon | Limited — long-term support winding down | LTS guarantee through 2031 |
+| Architecture | Single monolithic module | 40+ independent modules |
+| Performance model | Classic thread pool | Virtual threads — high concurrency |
+| Security framework | Classic security stack | Up-to-date security standards |
+| Dashboard system | Classic board view | Next-gen GridStack-based dashboard |
+| Custom HTML / Widgets | Limited | Full support — sandboxed iframe, safe JS API |
+| Custom database views | — | Yes — customer-specific data tables |
+| File system management | Basic | Advanced — manage uploaded SVG/image/HTML |
+| Cloud / SaaS deployment | On your own server | inscada.cloud SaaS + on-premise |
+| AI integration | — | MCP (Model Context Protocol) support |
+| Script engine | Nashorn — ECMAScript 5 | Modern JavaScript engine |
+| Industrial protocols | Full set | Full set (identical) |
+| Alarm / Trend / Animation | Full | Full (improved UX) |
+
+## Which Edition Should I Choose?
+
+| Your situation | Our recommendation |
+| --- | --- |
+| Starting a new project | **JDK 21** — future-proof, new capabilities, LTS assurance |
+| Considering cloud / SaaS deployment | **JDK 21** — direct fit with inscada.cloud |
+| Multi-site, customer-specific panel scenarios | **JDK 21** — Custom HTML/DB/Menu built-in |
+| Planning AI/LLM-driven automation | **JDK 21** — MCP integration is standard |
+| My JDK 11 installation runs stable | **JDK 11** — continues to be supported; planned migration ideal |
+| Critical processes, no immediate change window | **JDK 11** — add migration to a long-term roadmap |
+
+## Shared Across Both Editions
+
+The difference is only in infrastructure and new capabilities. inSCADA's classic value proposition is equally present in both editions:
+
+- Industrial communication protocols (Modbus, OPC-UA, S7, MQTT, IEC-61850, DNP3 and more)
+- Alarm management — conditional, timed, grouped alarms
+- Trends and historical data — high-resolution logging
+- SVG-based animation / HMI design
+- Script engine — business logic and automation
+- Reporting, notifications (mail / SMS / push)
+- Chat / operator communication
+- Clustering / high availability
+- Multi-space / multi-tenant
+- User, role and permission management
+
+<Aside title="Bottom line">
+JDK 11 remains a field-proven, reliable, actively maintained platform. JDK 21 builds a modern technology foundation, modular architecture and next-generation UI capabilities on top of the same core; it is the choice that carries today's investment into the next decade.
+</Aside>

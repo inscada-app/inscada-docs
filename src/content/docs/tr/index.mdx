@@ -6,7 +6,7 @@ hero:
   tagline: Hangi inSCADA sürümüne ait dokümantasyonu görmek istersiniz?
 ---
 
-import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard, Card, Aside } from '@astrojs/starlight/components';
 
 <CardGrid>
   <LinkCard
@@ -20,3 +20,90 @@ import { CardGrid, LinkCard } from '@astrojs/starlight/components';
     href="/docs/tr/jdk21/"
   />
 </CardGrid>
+
+## Bir Bakışta
+
+inSCADA'nın iki aktif sürümü vardır:
+
+- **JDK 11 (Klasik sürüm)** — Java 11 tabanlı, saha kanıtlı, sürümü korunan platform.
+- **JDK 21 (Yeni nesil sürüm)** — Java 21 tabanlı, modern, modüler ve bulut-hazır platform.
+
+Her iki sürüm de aynı endüstriyel protokolleri (Modbus, OPC-UA, S7, MQTT, IEC-61850, DNP3 vb.) ve aynı temel SCADA yeteneklerini (alarm, trend, animasyon, script, rapor, chat) destekler. Fark; altyapı kalitesinde, modülerlikte, yeni UI yeteneklerinde ve uzun vadeli sürdürülebilirliktedir.
+
+<Aside type="tip" title="Kısaca">
+Yeni iş başlatıyorsanız veya bulut / çok-tesis senaryosuna geçmeyi düşünüyorsanız **JDK 21**. Mevcut kurulumunuz stabilse **JDK 11** desteklenmeye devam eder.
+</Aside>
+
+## Neden JDK 21? — 6 Temel Fayda
+
+<CardGrid>
+  <Card title="1. Uzun vadeli güvence" icon="seti:lock">
+    Java 21, Oracle ve topluluk tarafından 2031'e kadar destek alan yeni nesil LTS sürümüdür. Yeni projelerinizi bugün kurduğunuzda önümüzdeki 6-7 yıl güvenlik yamaları ve ekosistem güncellemesi garantilidir.
+  </Card>
+  <Card title="2. Modern güvenlik katmanı" icon="approve-check-circle">
+    Yeni nesil sürüm, son yılların güvenlik en iyi uygulamalarını doğrudan beraberinde getirir. Güncel güvenlik standartları, modern kimlik-doğrulama akışları, güncel yamalar.
+  </Card>
+  <Card title="3. Daha yüksek performans" icon="rocket">
+    Java 21'in virtual thread'leri (Project Loom) sayesinde aynı donanımda çok daha fazla eşzamanlı veri noktası işlenebilir. Yüksek variable sayısı, yoğun alarm trafiği ve aynı anda çok sayıda kullanıcıda fark hissedilir.
+  </Card>
+  <Card title="4. Modüler mimari" icon="puzzle">
+    JDK 21 sürümü 40+ bağımsız modül olarak yeniden tasarlandı (alarm, dashboard, chat, cluster, script, notification, harita…). Bir modüldeki değişiklik diğerlerini etkilemez; yeni özellikler daha hızlı çıkar, regresyon riski düşer.
+  </Card>
+  <Card title="5. Genişletilebilir arayüz" icon="laptop">
+    Müşteriye özel paneller, kendi veritabanı görünümleriniz, HTML widget'lar, dosya sistemi entegrasyonu — JDK 21'de standart yetenek olarak gelir. "Beyaz etiket" ve "müşteri-özel dashboard" senaryoları çok daha kolay kurulur.
+  </Card>
+  <Card title="6. Bulut-hazır platform" icon="cloud-download">
+    inSCADA Cloud (inscada.cloud) doğrudan JDK 21 sürümü üzerinde çalışır. SaaS dağıtımı, çok-tesisli (multi-space) izolasyon, merkezi yönetim gibi modern operasyon biçimleri yeni nesil sürümle birlikte gelir.
+  </Card>
+</CardGrid>
+
+## Özellik Karşılaştırması
+
+Aşağıdaki tablo iki sürümün somut farklarını özetler. Ortak çekirdek SCADA yetenekleri ayrıca listelenmemiştir (her iki sürümde de tam olarak mevcuttur).
+
+| Alan | Klasik (JDK 11) | Yeni Nesil (JDK 21) |
+| --- | --- | --- |
+| Temel platform | Java 11 tabanlı | Java 21 LTS tabanlı |
+| Resmi destek ufku | Sınırlı — uzun vadeli destek azalıyor | 2031'e kadar LTS güvencesi |
+| Mimari yapı | Tek bloklu (monolitik) modül | 40+ bağımsız modül |
+| Performans modeli | Klasik iş parçacığı havuzu | Virtual threads — yüksek eşzamanlılık |
+| Güvenlik çerçevesi | Klasik güvenlik yığını | Güncel güvenlik standartları |
+| Dashboard sistemi | Klasik board görünümü | Yeni nesil GridStack tabanlı dashboard |
+| Özel HTML / Widget | Sınırlı | Tam destek — sandbox'lı iframe, güvenli JS API |
+| Özel veritabanı görünümleri | — | Var — müşteri-özel data tabloları |
+| Dosya sistemi yönetimi | Temel | Gelişmiş — yüklenen SVG/resim/HTML yönetimi |
+| Bulut / SaaS dağıtım | Kendi sunucunuzda | inscada.cloud hazır SaaS + kendi sunucunuzda |
+| Yapay zeka entegrasyonu | — | MCP (Model Context Protocol) desteği |
+| Script motoru | Nashorn — ECMAScript 5 | Modern JavaScript motoru |
+| Endüstriyel protokoller | Tam set | Tam set (özdeş) |
+| Alarm / Trend / Animasyon | Tam | Tam (iyileştirilmiş UX) |
+
+## Hangi Sürümü Seçmeliyim?
+
+| Durumunuz | Önerimiz |
+| --- | --- |
+| Yeni bir proje başlatıyorum | **JDK 21** — geleceğe yatırım, yeni yetenekler, LTS güvencesi |
+| Bulut / SaaS dağıtım düşünüyorum | **JDK 21** — inscada.cloud ile doğrudan uyum |
+| Çok-tesisli, müşteri-özel panel senaryosu var | **JDK 21** — Custom HTML/DB/Menu yerleşik |
+| AI/LLM destekli otomasyon planlıyorum | **JDK 21** — MCP entegrasyonu standart |
+| Mevcut JDK 11 kurulumum stabil çalışıyor | **JDK 11** — desteklenmeye devam eder, planlı migrasyon ideal |
+| Kritik süreçler, değişime hemen giremem | **JDK 11** — geçişi uzun vadeli yol haritasına alın |
+
+## Her İki Sürümde Ortak Olan
+
+Aradaki fark yalnızca altyapı ve yeni yeteneklerdedir. inSCADA'nın klasik değer önermesi her iki sürümde de eşit şekilde mevcuttur:
+
+- Endüstriyel haberleşme protokolleri (Modbus, OPC-UA, S7, MQTT, IEC-61850, DNP3 ve dahası)
+- Alarm yönetimi — koşullu, süreli, gruplu alarmlar
+- Trend ve tarihsel veri — yüksek çözünürlüklü loglama
+- SVG tabanlı animasyon / HMI tasarımı
+- Script motoru — iş mantığı ve otomasyon
+- Raporlama, bildirim (mail / SMS / push)
+- Chat / operatör iletişimi
+- Kümeleme / yüksek erişilebilirlik (cluster)
+- Çok-alan / çok-kiracı (space)
+- Kullanıcı, rol ve yetki yönetimi
+
+<Aside title="Sonuç">
+JDK 11 sürümü saha-kanıtlı, güvenilir ve sürdürülmeye devam eden bir platform olarak kalır. JDK 21 sürümü ise aynı çekirdeğin üzerine modern teknoloji temeli, modüler yapı ve yeni nesil UI yetenekleri inşa eder; bugünkü yatırımı önümüzdeki on yıla taşıyan tercih budur.
+</Aside>
