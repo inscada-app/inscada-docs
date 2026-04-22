@@ -1,303 +1,296 @@
 ---
 title: "Variable API"
-description: "ins.getVariableValue, ins.setVariableValue ve diğer değişken fonksiyonları"
+description: "Live and historical variable values, bulk read/write, statistics and variable metadata"
 sidebar:
   order: 1
 ---
 
-Variable API, script'ler içinden inSCADA değişkenlerinin anlık ve tarihsel değerlerine erişim sağlar.
+Variable API reads **live** and **historical** values of inSCADA variables from a script, supports bulk read/write, statistics queries and variable metadata management.
 
-## Değer Okuma
+## Reading Live Values
 
-### ins.getVariableValue(name)
+### `ins.getVariableValue(name)` / `ins.getVariableValue(projectName, name)`
 
-Bir değişkenin anlık değerini okur. Cache'ten (In-Memory) alır, < 1ms erişim süresi.
-
-```javascript
-var result = ins.getVariableValue("ActivePower_kW");
-var power = result.value;
-var time = result.dateInMs;
-```
-
-Yanıt:
-```json
-{
-  "flags": { "scaled": true },
-  "date": 1774686685945,
-  "value": 359.91,
-  "extras": { "raw_value": 606.56 },
-  "variableShortInfo": {
-    "dsc": "Total active power",
-    "frame": "Energy-Frame",
-    "project": "Energy Monitoring Demo",
-    "device": "Energy-Device",
-    "name": "ActivePower_kW",
-    "connection": "LOCAL-Energy"
-  },
-  "dateInMs": 1774686685945
-}
-```
-
-| Alan | Açıklama |
-|------|----------|
-| **value** | Ölçeklenmiş (engineering) değer |
-| **extras.raw_value** | Ham (raw) değer |
-| **dateInMs** | Zaman damgası (milisaniye, epoch) |
-| **flags.scaled** | Ölçekleme uygulandı mı |
-| **variableShortInfo** | Değişken meta bilgisi (proje, cihaz, bağlantı vb.) |
-
-**Farklı projeden okuma:**
-```javascript
-var val = ins.getVariableValue("other_project", "pressure");
-```
-
-**Dizi değişken okuma (index ile):**
-```javascript
-var val = ins.getVariableValue("array_var", 3);  // 4. eleman
-```
-
-### ins.getVariableValues(names[])
-
-Birden fazla değişkeni toplu okur. Tek tek okumaktan daha performanslıdır.
+Returns the current value of a variable as a `VariableValueDto`. Data is served from an in-memory cache (< 1 ms).
 
 ```javascript
-var values = ins.getVariableValues(["ActivePower_kW", "Voltage_V", "Current_A"]);
-var power = values.ActivePower_kW.value;
-var voltage = values.Voltage_V.value;
+var v = ins.getVariableValue("ActivePower_kW");
+var power = v.value;          // or v.getValue()
+var ts = v.dateInMs;          // epoch ms
 ```
 
-Yanıt:
-```json
-{
-  "ActivePower_kW": {
-    "flags": { "scaled": true },
-    "value": 351.78,
-    "extras": { "raw_value": 606.56 },
-    "variableShortInfo": { "name": "ActivePower_kW", "dsc": "Total active power" },
-    "dateInMs": 1774686691951
-  },
-  "Voltage_V": {
-    "flags": { "scaled": true },
-    "value": 236.1,
-    "extras": { "raw_value": 229.7 },
-    "variableShortInfo": { "name": "Voltage_V", "dsc": "Line voltage" },
-    "dateInMs": 1774686691951
-  },
-  "Current_A": {
-    "flags": { "scaled": true },
-    "value": 34.33,
-    "extras": { "raw_value": 58.92 },
-    "variableShortInfo": { "name": "Current_A", "dsc": "Line current" },
-    "dateInMs": 1774686691951
-  }
-}
+Read from another project:
+
+```javascript
+var v = ins.getVariableValue("other_project", "pressure");
 ```
 
-### ins.getProjectVariableValues()
+### `ins.getVariableValue(name, index)` / `ins.getVariableValue(projectName, name, index)`
 
-Projedeki tüm değişkenlerin anlık değerlerini toplu okur.
+Returns the element at the given index of an array variable.
+
+```javascript
+var el3 = ins.getVariableValue("measurements_array", 3);   // 4th element
+```
+
+### `ins.getVariableValues(name, fromIndex, toIndex)` / `(projectName, name, fromIndex, toIndex)`
+
+Returns a range of array-variable elements (inclusive) — `Collection<VariableValueDto>`.
+
+```javascript
+var range = ins.getVariableValues("measurements_array", 0, 9);   // first 10 elements
+```
+
+### `ins.getVariableValues(names[])` / `(projectName, names[])`
+
+Reads multiple variables in a single call — returns `Map<String, VariableValueDto>`. Much faster than reading them one by one.
+
+```javascript
+var vals = ins.getVariableValues(["ActivePower_kW", "Voltage_V", "Current_A"]);
+var p = vals.ActivePower_kW.value;
+var u = vals.Voltage_V.value;
+var i = vals.Current_A.value;
+```
+
+### `ins.getProjectVariableValues()` / `(projectName)`
+
+Returns live values for **every** variable in the project — `Map<String, VariableValueDto>`.
 
 ```javascript
 var all = ins.getProjectVariableValues();
-// tüm variable name → value map
+Object.keys(all).forEach(function(name) {
+    ins.consoleLog(name + " = " + all[name].value);
+});
 ```
 
-## Değer Yazma
+### `VariableValueDto` Fields
 
-### ins.setVariableValue(name, details)
+| Field / Method | Type | Description |
+| --- | --- | --- |
+| `getValue()` / `.value` | `Object` | Scaled (engineering) value |
+| `getDate()` / `.date` | `Date` | Value timestamp |
+| `getDateInMs()` / `.dateInMs` | `Long` | Same timestamp — epoch ms |
+| `getDttm()` / `.dttm` | `Date` | Server reception time |
+| `getTime()` / `.time` | `Long` | Server reception time — epoch ms |
+| `getVariableShortInfo()` / `.variableShortInfo` | `VariableShortInfoDto` | Variable metadata: `name`, `dsc`, `connection`, `device`, `frame`, `project` |
 
-Bir değişkene değer yazar. `details` parametresi `{value: X}` formatında bir Map'tir.
+:::note
+The `flags` (e.g. `scaled`) and `extras` (e.g. `raw_value`) fields are not exposed to scripts (no `@HostAccess.Export`) — `v.flags` / `v.extras` are not directly accessible; they only appear in JSON serialization (`ins.toJSONStr(v)` or in REST responses).
+:::
+
+## Writing Values
+
+### `ins.setVariableValue(name, details)` / `(projectName, name, details)`
+
+Writes to a variable. `details` is a `Map<String, Object>` that must contain at least a `value` key.
 
 ```javascript
-ins.setVariableValue("Temperature_C", {value: 55.0});
-ins.setVariableValue("GridStatus", {value: true});
+ins.setVariableValue("Temperature_C", { value: 55.0 });
+ins.setVariableValue("GridStatus", { value: true });
+ins.setVariableValue("other_project", "target_temp", { value: 80.0 });
 ```
 
-**Farklı projeye yazma:**
-```javascript
-ins.setVariableValue("other_project", "target_temp", {value: 80.0});
-```
+### `ins.setVariableValues(map)` / `(projectName, map)`
 
-### ins.setVariableValues(map)
-
-Birden fazla değişkene toplu değer yazar.
+Bulk write — `Map<String, Map<String, Object>>`.
 
 ```javascript
 ins.setVariableValues({
-    "Temperature_C": {value: 42.5},
-    "Voltage_V": {value: 228.0}
+    "Temperature_C": { value: 42.5 },
+    "Voltage_V": { value: 228.0 },
+    "PumpRun": { value: true }
 });
-
-// Doğrulama
-var vals = ins.getVariableValues(["Temperature_C", "Voltage_V"]);
-// → {Temperature_C: 52.9, Voltage_V: 226.6}
 ```
 
-### ins.mapVariableValue(src, dest)
+### `ins.mapVariableValue(src, dest)` / `(src, dest, defaultValue)` / projectName variants
 
-Bir değişkenin değerini başka bir değişkene kopyalar.
+Copies the live value of `src` into `dest`. If `src` is `null` / unread, the optional `defaultValue` is used.
 
 ```javascript
-// temperature değerini display_temp'e kopyala
 ins.mapVariableValue("Temperature_C", "display_temp");
-
-// Varsayılan değer ile (kaynak null ise)
 ins.mapVariableValue("Temperature_C", "display_temp", 0);
 ```
 
-### ins.toggleVariableValue(name)
+### `ins.toggleVariableValue(name)` / `(projectName, name)`
 
-Boolean bir değişkenin değerini tersine çevirir (true → false, false → true).
+Flips a boolean variable (`true` ↔ `false`).
 
 ```javascript
 ins.toggleVariableValue("GridStatus");
 ```
 
-## Tarihsel Veri Sorgulama
+## Historical Data (Logged Values)
 
-### ins.getLoggedVariableValuesByPage(names, startDate, endDate, page, pageSize)
+### `ins.getLoggedVariableValuesByPage(names[], startDate, endDate, page, pageSize)`
 
-Queries historical data records with pagination.
+Returns paged log records for the given interval — `Collection<LoggedVariableValueDto>`. Results are sorted **newest-to-oldest** (DESC).
 
 ```javascript
 var end = ins.now();
-var start = ins.getDate(end.getTime() - 300000); // 5 dakika önce
+var start = ins.getDate(end.getTime() - 300000);   // last 5 minutes
 
 var logs = ins.getLoggedVariableValuesByPage(
     ["ActivePower_kW"],
     start, end,
-    0,   // sayfa numarası
-    5    // sayfa boyutu
+    0,    // page number
+    100   // page size
 );
+
+logs.forEach(function(r) {
+    ins.consoleLog(r.getDttm() + " → " + r.getValue());
+});
 ```
 
-Yanıt:
-```json
-[
-  {
-    "value": 616.41,
-    "dttm": 1774687311955,
-    "flags": { "scaled": true },
-    "project": "Energy Monitoring Demo",
-    "variableId": 23227,
-    "extras": { "raw_value": 606.56 },
-    "name": "ActivePower_kW",
-    "projectId": 153
-  },
-  {
-    "value": 609.38,
-    "dttm": 1774687291956,
-    "flags": { "scaled": true },
-    "name": "ActivePower_kW"
-  },
-  {
-    "value": 602.68,
-    "dttm": 1774687271952
-  }
-]
+### `ins.getLoggedVariableValuesByPageAsc(names[], startDate, endDate, page, pageSize)`
+
+Same as above but sorted **oldest-to-newest** (ASC).
+
+### `LoggedVariableValueDto` Fields
+
+| Field / Method | Type | Description |
+| --- | --- | --- |
+| `getName()` / `.name` | `String` | Variable name |
+| `getValue()` / `.value` | `Double` | Numeric value |
+| `getTextValue()` / `.textValue` | `String` | Text value (if the variable is a string) |
+| `getDttm()` / `.dttm` | `Date` | Record timestamp |
+| `getTime()` / `.time` | `Long` | Epoch ms |
+| `getVariableId()` / `.variableId` | `String` | Variable ID |
+| `getProject()` / `.project` | `String` | Project name |
+| `getProjectId()` / `.projectId` | `String` | Project ID |
+
+### `ins.getLoggedVariableNames()` / `(projectName)`
+
+List of variables that are being logged — useful to discover what's recorded.
+
+```javascript
+var loggedOnes = ins.getLoggedVariableNames();
+ins.consoleLog(loggedOnes.size() + " variables are being logged");
 ```
 
-:::note
-Sonuçlar **en yeniden eskiye** sıralıdır. Eskiden yeniye sıralı sonuçlar için `getLoggedVariableValuesByPageAsc()` kullanın.
-:::
+## Historical Statistics
 
-### ins.getLoggedVariableValueStats(names, startDate, endDate)
+All share the same shape: `(variableNames[], startDate, endDate)` with an optional `projectName` prefix.
 
-Belirli aralıktaki istatistikleri hesaplar (ortalama, min, max, toplam, medyan).
+### `ins.getLoggedVariableValueStats(names[], startDate, endDate)`
+
+One stats set across the whole interval — `Map<String, LoggedVariableValueStatsDto>`.
 
 ```javascript
 var end = ins.now();
-var start = ins.getDate(end.getTime() - 3600000); // 1 saat önce
+var start = ins.getDate(end.getTime() - 3600000);   // last hour
 
-var stats = ins.getLoggedVariableValueStats(
-    ["ActivePower_kW"],
-    start, end
+var stats = ins.getLoggedVariableValueStats(["ActivePower_kW"], start, end);
+var s = stats.ActivePower_kW;
+ins.consoleLog("avg=" + s.getAvgValue() + " min=" + s.getMinValue() + " max=" + s.getMaxValue());
+```
+
+### `ins.getLoggedHourlyVariableValueStats(names[], startDate, endDate)`
+
+**Hourly** groups — `Map<String, List<LoggedVariableValueStatsDto>>`. One list per variable with an entry per hour.
+
+```javascript
+var hourly = ins.getLoggedHourlyVariableValueStats(["ActivePower_kW"], start, end);
+hourly.ActivePower_kW.forEach(function(s) {
+    ins.consoleLog(s.getDttm() + " avg=" + s.getAvgValue());
+});
+```
+
+### `ins.getLoggedDailyVariableValueStats(names[], startDate, endDate)`
+
+**Daily** groups — same shape.
+
+### `ins.getLoggedVariableValueStatsByInterval(names[], startDate, endDate, interval)`
+
+Arbitrary bucket size — `interval` in milliseconds. Returns `Collection<LoggedVariableValueStatsDto>`.
+
+```javascript
+// 5-minute buckets
+var bucket5min = ins.getLoggedVariableValueStatsByInterval(
+    ["ActivePower_kW"], start, end, 5 * 60 * 1000
 );
 ```
 
-Yanıt:
-```json
-{
-  "ActivePower_kW": {
-    "maxValue": 624.76,
-    "minValue": 305.11,
-    "avgValue": 470.95,
-    "sumValue": 74881.16,
-    "countValue": 159,
-    "medianValue": 482.58,
-    "firstValue": 464.04,
-    "lastValue": 543.08,
-    "maxDiffValue": 319.65,
-    "lastFirstDiffValue": 79.04,
-    "variableId": 23227,
-    "name": "ActivePower_kW"
-  }
-}
-```
+### `LoggedVariableValueStatsDto` Fields
 
-| Alan | Açıklama |
-|------|----------|
-| **avgValue** | Ortalama |
-| **minValue / maxValue** | Minimum / Maksimum |
-| **sumValue** | Toplam |
-| **countValue** | Kayıt sayısı |
-| **medianValue** | Medyan |
-| **firstValue / lastValue** | İlk / Son değer |
-| **maxDiffValue** | Max-Min farkı |
-| **lastFirstDiffValue** | Son-İlk farkı |
+| Field / Method | Type | Description |
+| --- | --- | --- |
+| `getName()` / `.name` | `String` | Variable name |
+| `getVariableId()` / `.variableId` | `String` | Variable ID |
+| `getDttm()` / `.dttm` | `Date` | Bucket start time |
+| `getMinValue()` | `Double` | Minimum |
+| `getMaxValue()` | `Double` | Maximum |
+| `getAvgValue()` | `Double` | Average |
+| `getSumValue()` | `Double` | Sum |
+| `getCountValue()` | `Double` | Record count |
+| `getMedianValue()` | `Double` | Median |
+| `getMiddleValue()` | `Double` | Midpoint (min+max)/2 |
+| `getFirstValue()` | `Double` | First value |
+| `getLastValue()` | `Double` | Last value |
+| `getMaxDiffValue()` | `Double` | Max − Min |
+| `getLastFirstDiffValue()` | `Double` | Last − First |
 
-### ins.getLoggedHourlyVariableValueStats / getLoggedDailyVariableValueStats
+## Variable Metadata
 
-Saatlik veya günlük gruplanmış istatistikler.
+### `ins.getVariables()` / `(projectName)`
+
+Every variable definition in the project — `Collection<VariableResponseDto>`.
 
 ```javascript
-var hourly = ins.getLoggedHourlyVariableValueStats(
-    ["ActivePower_kW"],
-    startDate, endDate
-);
+var list = ins.getVariables();
+ins.consoleLog("Total " + list.size() + " variables");
 ```
 
-## Değişken Bilgileri
+### `ins.getVariablesByConnectionName(connectionName)`
 
-### ins.getVariables()
+Variables that belong to a specific connection.
 
-Projedeki tüm değişken tanımlarını listeler.
+### `ins.getVariablesByDeviceName(connectionName, deviceName)`
+
+Variables that belong to a specific device.
+
+### `ins.getVariablesByFrameName(connectionName, deviceName, frameName)`
+
+Variables that belong to a specific frame.
 
 ```javascript
-var variables = ins.getVariables();
-// variable listesi (name, type, connection, device, frame bilgileriyle)
+var pLoc = ins.getVariablesByFrameName("MODBUS-PLC", "Device1", "HoldingRegs_0_100");
+pLoc.forEach(function(v) {
+    ins.consoleLog(v.getName() + " — " + v.getDsc());
+});
 ```
 
-### ins.getVariable(name)
+### `ins.getVariable(name)`
 
-Tek bir değişkenin tanım bilgilerini getirir.
+Metadata for one variable — `VariableResponseDto`.
 
 ```javascript
 var v = ins.getVariable("ActivePower_kW");
+ins.consoleLog(v.getName() + " — " + v.getDsc());
 ```
 
-Yanıt:
-```json
-{
-  "name": "ActivePower_kW",
-  "unit": "kW",
-  "type": "Float",
-  "dsc": "Total active power",
-  "logType": "Periodically",
-  "logPeriod": 10,
-  "engZeroScale": 0,
-  "engFullScale": 1000,
-  "fractionalDigitCount": 2
-}
-```
+### `ins.updateVariable(name, dto)`
 
-### ins.updateVariable(name, map)
-
-Bir değişkenin yapılandırmasını günceller.
+Updates a variable's configuration — requires a **full DTO**. Typical pattern: read with `getVariable`, mutate a field, write back with `updateVariable`.
 
 ```javascript
-ins.updateVariable("temperature", {
-    "active_flag": true,
-    "log_type": "PERIODICALLY"
-});
+var v = ins.getVariable("ActivePower_kW");
+v.setDsc("Total active power — updated");
+// Other setters: v.setActiveFlag(true), v.setLogType(...), etc.
+ins.updateVariable("ActivePower_kW", v);
+```
+
+## Example: Write the Last-hour Average Power
+
+```javascript
+function main() {
+    var end = ins.now();
+    var start = ins.getDate(end.getTime() - 3600000);
+
+    var stats = ins.getLoggedVariableValueStats(["ActivePower_kW"], start, end);
+    var avg = stats.ActivePower_kW.getAvgValue();
+
+    ins.setVariableValue("ActivePower_1h_Avg", { value: avg });
+    ins.writeLog("INFO", "PowerStats", "1h avg = " + avg.toFixed(2) + " kW");
+}
+main();
 ```
