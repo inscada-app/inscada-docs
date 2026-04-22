@@ -1,96 +1,129 @@
 ---
 title: "System API"
-description: "Sistem seviyesi fonksiyonlar — yeniden başlatma, OS komutu, giriş denemeleri"
+description: "Shutdown / restart, OS komutu çalıştırma, sistem tarihi ayarlama ve sistem istek kuyruğu"
 sidebar:
-  order: 11
+  order: 12
 ---
 
-:::caution
-Sistem seviyesinde işlemler yapar. Yalnızca yetkili kullanıcılar tarafından dikkatli kullanılmalıdır.
-:::
-
-## Fonksiyonlar
-
-| Fonksiyon | Açıklama |
-|-----------|----------|
-| **ins.restart()** | Platformu yeniden başlat |
-| **ins.shutdown()** | Platformu kapat |
-| **ins.setDateTime(ms, format)** | Sistem saatini ayarla |
-| **ins.exec(command)** | OS komutu çalıştır |
-| **ins.getLastAuthAttempts()** | Son giriş denemelerini listele |
-
-### ins.getLastAuthAttempts()
-
-Son kullanıcı giriş denemelerini listeler. Başarılı ve başarısız girişleri içerir.
-
-```javascript
-var attempts = ins.getLastAuthAttempts();
-```
-
-Yanıt:
-```json
-[
-  {
-    "msg": "inscada logged in successfully",
-    "ip": "0:0:0:0:0:0:0:1",
-    "username": "inscada",
-    "date": { "epochSecond": 1774689046 },
-    "isSuccessful": true
-  },
-  {
-    "msg": "admin login failed",
-    "ip": "192.168.1.50",
-    "username": "admin",
-    "date": { "epochSecond": 1774688900 },
-    "isSuccessful": false
-  }
-]
-```
-
-```javascript
-// Başarısız giriş denemelerini kontrol et
-var attempts = ins.getLastAuthAttempts();
-var failedCount = 0;
-for (var i = 0; i < attempts.size(); i++) {
-    if (!attempts.get(i).isSuccessful) {
-        failedCount++;
-    }
-}
-if (failedCount > 5) {
-    ins.notify("error", "Güvenlik Uyarısı",
-        failedCount + " başarısız giriş denemesi tespit edildi!");
-}
-```
-
-### ins.exec(command)
-
-İşletim sistemi komutu çalıştırır.
-
-```javascript
-// Disk kullanımını kontrol et
-var result = ins.exec("df -h /");
-ins.consoleLog(result);
-```
+System API, platformun çalıştığı sunucu üzerinde OS seviyesinde işlem yapar: platformu kapatıp yeniden başlatır, sistem saatini ayarlar, keyfi bir komut çalıştırır ve bekleyen sistem isteklerini yönetir.
 
 :::caution
-`ins.exec()` OS düzeyinde komut çalıştırır. Güvenlik riskleri nedeniyle yalnızca güvenilir script'lerde kullanılmalıdır. Kullanıcı girdisi doğrudan komut parametresi olarak geçirilmemelidir.
+Bu API çağrılarının hepsi **`EXEC_SYSTEM_COMMAND`** yetkisi gerektirir. Yanlış kullanım sunucuyu durdurur / saati bozar / arbitrary code execution'a dönüşebilir. Her çağrı proje log'una audit olarak düşer.
 :::
 
-### ins.restart() / ins.shutdown()
+## `ins.shutdown()`
+
+Platform sürecini kapatır.
 
 ```javascript
-// Bakım penceresi kontrolü ile yeniden başlatma
-var hour = ins.now().getHours();
-if (hour >= 2 && hour <= 4) {
-    ins.writeLog("WARNING", "System", "Planlı yeniden başlatma");
+ins.shutdown();
+```
+
+## `ins.restart()`
+
+Platformu yeniden başlatır.
+
+```javascript
+var h = ins.now().getHours();
+if (h >= 2 && h <= 4) {
+    ins.writeLog("warn", "System", "Planlı yeniden başlatma");
     ins.restart();
 }
 ```
 
-### ins.setDateTime(ms, format)
+## `ins.setDateTime(ms, dateCmdFormat)`
 
-Sistem saatini ayarlar. Genellikle NTP olmayan ortamlarda kullanılır.
+Sunucu sistem saatini `ms` (epoch) değerine ayarlar.
+
+| Parametre | Açıklama |
+| --- | --- |
+| `ms` | Hedef zaman (epoch milisaniye) |
+| `dateCmdFormat` | **Yalnızca Windows'ta** kullanılan Java `SimpleDateFormat` pattern'i (örn. `"MM-dd-yyyy"`) — pattern `cmd /c date <değer>`'e geçirilir, saat ayrıca `HH:mm:ss` ile `time` komutuna iletilir. **Linux'ta bu parametre yok sayılır** — dahili olarak sabit `yyyy-MM-dd HH:mm:ss` biçimi + `date -s` kullanılır |
 
 ```javascript
-ins.setDateTime(Date.now(), "epoch");
+// Windows
+ins.setDateTime(Date.now(), "MM-dd-yyyy");
+
+// Linux — format görmezden gelinir, boş bırakabilirsin
+ins.setDateTime(Date.now(), "");
+```
+
+## `ins.exec(command)` — İki Overload
+
+Sunucuda OS komutu çalıştırır. Dönüş değeri komut çıktısı DEĞİL, **exit code** (int) — `0` başarı.
+
+### `ins.exec(String[] command)` *(önerilen)*
+
+Argüman dizisi olarak verilir — shell parse etmesi yoktur, injection riski düşük.
+
+```javascript
+var rc = ins.exec(["df", "-h", "/"]);
+if (rc != 0) {
+    ins.writeLog("error", "System", "df komutu başarısız — exit " + rc);
+}
+```
+
+### `ins.exec(String commandLine)`
+
+Tek string olarak verilir, içsel olarak boşluklara göre parse edilir (yalın yaklaşım, tırnak içi argümanlara duyarlı değil).
+
+```javascript
+ins.exec("df -h /");
+```
+
+:::caution
+Komut çıktısını almak ISTIYORSAN `exec` yetmez. Komutu `> /opt/inscada/tmp/out.txt` şeklinde dosyaya yönlendir, sonra `ins.readFile("tmp/out.txt")` ile oku. `exec` sadece exit code döner.
+:::
+
+:::caution
+Kullanıcı girdisini **asla** doğrudan `exec`'e geçirme. İnjekte edilirse attacker OS komutu çalıştırabilir. Önceden doğrula / whitelist uygula.
+:::
+
+## Sistem İstek Kuyruğu
+
+Platform içinde "sistem isteği" (kullanıcıdan onay bekleyen shutdown / restart gibi) kuyruklanabilir. API bu kuyruğa script'ten erişim sağlar.
+
+### `ins.getSystemRequests()`
+
+Bekleyen sistem isteklerini döner — `Collection<SystemRequestDto>`.
+
+```javascript
+var reqs = ins.getSystemRequests();
+reqs.forEach(function(r) {
+    ins.consoleLog(r.getType() + " — " + r.getRequestDate());
+});
+```
+
+### `ins.deleteSystemRequest(systemRequest)`
+
+Bir isteği kuyruktan siler.
+
+```javascript
+var reqs = ins.getSystemRequests();
+reqs.forEach(function(r) {
+    if (r.getType() == "RESTART") ins.deleteSystemRequest(r);
+});
+```
+
+### `SystemRequestDto` Alanları
+
+| Metod | Tür | Açıklama |
+| --- | --- | --- |
+| `getType()` | `String` | İstek tipi (örn. `"SHUTDOWN"`, `"RESTART"`) |
+| `getRequester()` | `Map<String, Object>` | İsteği yapan kullanıcı bilgileri |
+| `getRequestDate()` | `Date` | Oluşturulma zamanı |
+
+## Örnek: Düşük Disk Alanında Planlı Restart
+
+```javascript
+function main() {
+    var rc = ins.exec(["sh", "-c", "df -h / | awk 'NR==2 {print $5}' | tr -d '%' > /opt/inscada/tmp/disk.txt"]);
+    if (rc != 0) return;
+
+    var used = parseInt(ins.readFile("tmp/disk.txt").trim(), 10);
+    if (used > 95) {
+        ins.sendMail(["ops"], "Disk %" + used, "Kritik disk doluluk — bakım penceresinde restart planlanıyor");
+    }
+}
+main();
 ```
