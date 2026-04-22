@@ -1,81 +1,151 @@
 ---
 title: "Report API"
-description: "Jasper rapor üretme, dışa aktarma ve e-posta gönderme"
+description: "Klasik ve Jasper raporları zamanlama, dosyaya export ve e-posta ile dağıtma"
 sidebar:
   order: 8
 ---
 
-Report API, Jasper Reports tabanlı rapor üretme ve dağıtım sağlar. Raporlar PDF ve Excel formatında dışa aktarılabilir, dosyaya kaydedilebilir veya e-posta ile gönderilebilir.
+Report API; platformdaki rapor tanımlarını (klasik + Jasper) script'ten zamanlamak, iptal etmek, PDF/Excel dosyasına export etmek veya e-posta ile ulaştırmak için kullanılır.
 
-## Fonksiyonlar
+## Rapor Durumu
 
-| Fonksiyon | Açıklama |
-|-----------|----------|
-| **ins.scheduleReport(name)** | Rapor zamanla |
-| **ins.cancelReport(name)** | Rapor iptal et |
-| **ins.mailReport(name, start, end)** | Rapor üret ve e-posta gönder |
-| **ins.mailJasperReport(name, params, users, subject, content)** | Parametreli PDF rapor gönder |
-| **ins.exportJasperPdfToFile(name, path)** | PDF dosyası kaydet |
-| **ins.exportJasperExcelToFile(name, path)** | Excel dosyası kaydet |
+### `ins.getReportStatus(reportName)`
 
-### Örnekler
+`ReportStatus` enum döner — iki değer:
+
+| Değer | Anlam |
+| --- | --- |
+| `"Scheduled"` | Zamanlayıcıya bağlı |
+| `"Not Scheduled"` | Bağlı değil |
 
 ```javascript
-// Raporu zamanla (tanımlı zamanlama tipine göre çalıştırır)
+if (ins.getReportStatus("daily_energy_report") == "Not Scheduled") {
+    ins.scheduleReport("daily_energy_report");
+}
+```
+
+## Zamanlama / İptal
+
+### `ins.scheduleReport(reportName)`
+
+Tek bir raporu zamanlayıcıya ekler — rapor tanımındaki periyoda göre çalışır.
+
+```javascript
 ins.scheduleReport("daily_energy_report");
 ```
 
+### `ins.cancelReport(reportName)`
+
+Raporu zamanlayıcıdan çıkarır — kalan tetiklemeler iptal; o anda üretilmekte olan bir rapor doğal olarak tamamlanır.
+
 ```javascript
-// Rapor üret ve e-posta gönder
+ins.cancelReport("daily_energy_report");
+```
+
+### `ins.scheduleReports()` / `ins.cancelReports()`
+
+Projedeki **tüm** rapor tanımlarını bir seferde zamanla ya da iptal et.
+
+```javascript
+ins.scheduleReports();
+// ...
+ins.cancelReports();
+```
+
+## E-posta ile Dağıtım
+
+### `ins.mailReport(reportName, startDate, endDate)`
+
+**Klasik** (Jasper olmayan) raporu verilen tarih aralığı için üretir ve rapor tanımındaki alıcılara e-posta ile gönderir.
+
+```javascript
 var end = ins.now();
-var start = ins.getDate(end.getTime() - 86400000); // 24 saat önce
+var start = ins.getDate(end.getTime() - 86400000);   // son 24 saat
 ins.mailReport("daily_energy_report", start, end);
 ```
 
+### `ins.mailJasperReport(reportName, params, usernames, subject, content)`
+
+Jasper raporunu **PDF** ek olarak verilen kullanıcılara e-postalar.
+
+| Parametre | Tür | Açıklama |
+| --- | --- | --- |
+| `reportName` | `String` | Jasper rapor tanım adı |
+| `params` | `Map<String, Object>` | Rapora geçirilecek parametreler |
+| `usernames` | `String[]` | Alıcı kullanıcı adları (e-posta profilden) |
+| `subject` | `String` | E-posta konusu |
+| `content` | `String` | E-posta gövdesi |
+
 ```javascript
-// Parametreli Jasper rapor — PDF olarak e-posta gönder
 var params = {
     "START_DATE": ins.getDate(ins.now().getTime() - 86400000),
-    "END_DATE": ins.now(),
+    "END_DATE":   ins.now(),
     "PROJECT_ID": 153
 };
 
 ins.mailJasperReport(
-    "energy_report",        // rapor adı
-    params,                 // rapor parametreleri
-    ["manager", "operator"],// alıcılar
-    "Günlük Enerji Raporu", // e-posta konusu
-    "Ekteki rapor otomatik oluşturulmuştur." // e-posta içeriği
+    "energy_report",
+    params,
+    ["manager", "operator"],
+    "Günlük Enerji Raporu",
+    "Ekteki PDF rapor otomatik oluşturulmuştur."
 );
 ```
 
-```javascript
-// PDF dosyası olarak kaydet
-ins.exportJasperPdfToFile("energy_report", "/reports/daily_report.pdf");
+### `ins.mailJasperExcelReport(reportName, params, usernames, subject, content)`
 
-// Excel dosyası olarak kaydet
-ins.exportJasperExcelToFile("energy_report", "/reports/daily_report.xlsx");
-```
+Aynı imza — ama PDF yerine **Excel** ek olarak gönderir.
 
 ```javascript
-// Rapor iptal et
-ins.cancelReport("daily_energy_report");
+ins.mailJasperExcelReport(
+    "energy_report",
+    params,
+    ["manager"],
+    "Günlük Enerji Raporu (Excel)",
+    "Ekteki Excel rapor otomatik oluşturulmuştur."
+);
 ```
 
-### Zamanlanmış Rapor Senaryosu
+## Dosyaya Export
 
-Her gün 08:00'de önceki günün raporunu PDF olarak kaydedip e-posta gönderen script:
+### `ins.exportJasperPdfToFile(reportName, filePath)`
+
+Jasper raporunu **PDF** olarak platformun dosya sistemine yazar.
+
+```javascript
+ins.exportJasperPdfToFile("energy_report", "reports/daily_report.pdf");
+```
+
+### `ins.exportJasperExcelToFile(reportName, filePath)`
+
+Jasper raporunu **Excel** olarak yazar.
+
+```javascript
+ins.exportJasperExcelToFile("energy_report", "reports/daily_report.xlsx");
+```
+
+:::note
+`filePath`, platformun yönetilen dosya sistemine görelidir (aynı `ins.readFile` / `ins.writeToFile` ile kullandığın ağaç). Export edilen dosyayı sonra `ins.readFileAsBytes()` ile okuyup başka bir kanala taşıyabilirsin.
+:::
+
+## Örnek: Günlük Otomatik Rapor
+
+Her gün 08:00'de önceki günün raporunu PDF dosyasına yazar + e-postalar.
 
 ```javascript
 // Schedule Type: Daily, Time: 08:00
-var now = ins.now();
-var yesterday = ins.getDate(now.getTime() - 86400000);
-var year = 1900 + yesterday.getYear();
-var month = ins.leftPad("" + (yesterday.getMonth() + 1), 2, "0");
-var day = ins.leftPad("" + yesterday.getDate(), 2, "0");
-var fileName = "/reports/energy_" + year + month + day + ".pdf";
+function main() {
+    var now = ins.now();
+    var y   = ins.getDate(now.getTime() - 86400000);
 
-ins.exportJasperPdfToFile("energy_report", fileName);
-ins.mailReport("energy_report", yesterday, now);
-ins.writeLog("INFO", "Report", "Günlük rapor oluşturuldu: " + fileName);
+    var yyyy = 1900 + y.getYear();
+    var mm   = ins.leftPad(String(y.getMonth() + 1), 2, "0");
+    var dd   = ins.leftPad(String(y.getDate()),     2, "0");
+    var file = "reports/energy_" + yyyy + mm + dd + ".pdf";
+
+    ins.exportJasperPdfToFile("energy_report", file);
+    ins.mailReport("energy_report", y, now);
+    ins.writeLog("info", "Report", "Günlük rapor oluşturuldu: " + file);
+}
+main();
 ```
