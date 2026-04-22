@@ -1,92 +1,107 @@
 ---
 title: "Log API"
-description: "Denetim logu yazma ve sorgulama"
+description: "Proje audit log'una kayıt yazma ve sorgulama"
 sidebar:
   order: 10
 ---
 
-Log API, denetim (audit) loglarına kayıt ekleme ve sorgulama sağlar. Script'ler tarafından yazılan loglar, platform log ekranında görüntülenebilir.
+Log API; script'in proje audit log'una seviyeli (info / warn / error) kayıt yazmasını ve kayıtları tarih / severity / activity filtresiyle sorgulamasını sağlar. Yazılan loglar platformun Log ekranında ve REST endpoint'lerinde görünür.
 
-## Fonksiyonlar
+## `ins.writeLog(type, activity, msg)` / `(projectName, type, activity, msg)`
 
-| Fonksiyon | Açıklama |
-|-----------|----------|
-| **ins.writeLog(type, activity, msg)** | Denetim loguna kayıt ekle |
-| **ins.getLogsByPage(start, end, page, size)** | Logları sayfalı sorgula |
+Proje audit log'una yeni bir kayıt ekler. `projectName` verilmezse mevcut proje varsayılır.
 
-### ins.writeLog(type, activity, msg)
+| Parametre | Tür | Açıklama |
+| --- | --- | --- |
+| `type` | `String` | Log seviyesi — aşağıya bak |
+| `activity` | `String` | İşlem/aktivite etiketi (serbest biçim) |
+| `msg` | `String` | Log mesajı |
 
-Denetim loguna yeni kayıt ekler.
+### Geçerli `type` Değerleri
 
-| Parametre | Tip | Açıklama |
-|-----------|-----|----------|
-| **type** | String | Log seviyesi: `"INFO"`, `"WARNING"`, `"ERROR"` |
-| **activity** | String | İşlem/aktivite adı |
-| **msg** | String | Log mesajı |
+`type` **küçük harfli** şu üç değerden biri olmalıdır:
 
-```javascript
-ins.writeLog("INFO", "Script Test", "Documentation test log entry");
-// → OK
-```
+| `type` | Severity |
+| --- | --- |
+| `"error"` | Error |
+| `"warn"` | Warning |
+| herhangi bir başka değer (örn. `"info"`, boş, `null`) | Information (default) |
 
 ```javascript
-// Otomasyon senaryosu: değer yazma işlemini logla
-var oldVal = ins.getVariableValue("Temperature_C").value;
-ins.setVariableValue("Temperature_C", {value: 55.0});
-ins.writeLog("INFO", "Setpoint Change",
-    "Temperature_C: " + oldVal + " → 55.0");
+ins.writeLog("info", "Setpoint Change", "Temperature_C: 48.0 → 55.0");
+ins.writeLog("warn", "Network", "Modbus timeout — retry scheduled");
+ins.writeLog("error", "BatchProcess", "Checksum mismatch at record 42");
 ```
 
-### ins.getLogsByPage(start, end, page, size)
+:::caution
+Büyük harfli `"INFO"` / `"WARNING"` / `"ERROR"` eşleşmez — default'a (INFO) düşer. `"warn"` (4 karakter) doğrudur, `"warning"` değil.
+:::
 
-Belirli tarih aralığındaki logları sayfalı olarak sorgular.
+## `ins.getLogsByPage(...)`
+
+Log kayıtlarını sayfalı döner — `Collection<LogEntryDto>`. Üç overload mevcuttur.
+
+### `ins.getLogsByPage(startDate, endDate, page, pageSize)`
+
+En sade hali — mevcut proje, filtre yok.
 
 ```javascript
 var end = ins.now();
-var start = ins.getDate(end.getTime() - 3600000); // 1 saat önce
+var start = ins.getDate(end.getTime() - 3600000);   // son 1 saat
 
-var logs = ins.getLogsByPage(start, end, 0, 3);
+var logs = ins.getLogsByPage(start, end, 0, 50);
 ```
 
-Yanıt:
-```json
-[
-  {
-    "activity": "Script Test",
-    "dttm": 1774688982859,
-    "msg": "Documentation test log entry",
-    "projectId": 153,
-    "logSeverity": "Information"
-  },
-  {
-    "activity": "test",
-    "dttm": 1774688964302,
-    "msg": "Script test failed. Cause: TypeError: ...",
-    "projectId": 153,
-    "logSeverity": "Error"
-  }
-]
-```
+### `ins.getLogsByPage(activity, logSeverity, startDate, endDate, page, pageSize)`
 
-| Alan | Açıklama |
-|------|----------|
-| **activity** | İşlem adı |
-| **dttm** | Zaman damgası (epoch ms) |
-| **msg** | Log mesajı |
-| **projectId** | Proje ID'si |
-| **logSeverity** | Seviye: Information, Warning, Error |
+Activity ve severity filtresi ekler.
 
 ```javascript
-// Hatalı giriş denemelerini kontrol et
-var end = ins.now();
-var start = ins.getDate(end.getTime() - 86400000);
-var logs = ins.getLogsByPage(start, end, 0, 100);
+var errors = ins.getLogsByPage("BatchProcess", "Error", start, end, 0, 100);
+errors.forEach(function(e) {
+    ins.consoleLog(e.getDttm() + " [" + e.getLogSeverity() + "] " + e.getMsg());
+});
+```
 
-var errorCount = 0;
-for (var i = 0; i < logs.length; i++) {
-    if (logs[i].logSeverity === "Error") {
-        errorCount++;
+### `ins.getLogsByPage(projectName, activity, logSeverity, startDate, endDate, page, pageSize)`
+
+Belirli bir projedeki log'lar için.
+
+```javascript
+var logs = ins.getLogsByPage("other_project", null, null, start, end, 0, 20);
+```
+
+### Filtre Parametreleri
+
+| Parametre | Açıklama |
+| --- | --- |
+| `activity` | Tam eşleşme; tüm activity'ler için `null` ver |
+| `logSeverity` | `"Information"`, `"Warning"`, `"Error"` — **tam değer** (writeLog'dan farklı); tümü için `null` |
+
+### `LogEntryDto` Alanları
+
+| Metod | Tür | Açıklama |
+| --- | --- | --- |
+| `getActivity()` | `String` | Activity etiketi |
+| `getMsg()` | `String` | Log mesajı |
+| `getLogSeverity()` | `LogSeverity` | `"Information"` / `"Warning"` / `"Error"` |
+| `getDttm()` | `Date` | Log zamanı |
+| `getTime()` | `Long` | Epoch ms |
+| `getProject()` / `getProjectId()` | `String` | Proje adı / ID |
+
+## Örnek: Son 24 Saatteki Error Sayısını Raporla
+
+```javascript
+function main() {
+    var end = ins.now();
+    var start = ins.getDate(end.getTime() - 86400000);
+
+    var errors = ins.getLogsByPage(null, "Error", start, end, 0, 1000);
+    ins.setVariableValue("ErrorCount_24h", { value: errors.size() });
+
+    if (errors.size() > 50) {
+        ins.notify("error", "Log alarmı", "Son 24 saatte " + errors.size() + " hata");
     }
 }
-ins.consoleLog("Son 24 saatte " + errorCount + " hata kaydı");
+main();
 ```
