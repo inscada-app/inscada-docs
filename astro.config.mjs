@@ -87,6 +87,9 @@ function versionSidebar(v) {
 export default defineConfig({
 	site: 'https://inscada.com',
 	base: '/docs',
+	redirects: {
+		'/': '/docs/tr/',
+	},
 	integrations: [
 		starlight({
 			title: 'inSCADA Docs',
