@@ -1,18 +1,24 @@
 ---
 title: "Keyword API"
-description: "Record metadata / keywords from a script"
+description: "Record metadata (keywords) from a script"
 sidebar:
   order: 15
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+Keyword API lets a running script persist free-form metadata (keywords). Typical use: persisting the outcome of a batch, shift, or calibration cycle as key-value data and surfacing it later in reports or search.
 
-<Aside type="caution" title="Work in progress">
-This page will be written against the JDK21 source. Placeholder only for now.
-</Aside>
+## `ins.saveKeyword(objectMap)`
 
-Keyword API lets a running script persist free-form metadata (keywords).
+Writes a key-value map to the platform's keyword store (`Map<String, Object>`).
 
-## Scope
+```javascript
+ins.saveKeyword({
+    "batch_id": "B-240423-A",
+    "operator": user.name,
+    "end_temperature": 85.4,
+    "duration_sec": 1245,
+    "status": "ok"
+});
+```
 
-- `ins.saveKeyword(objectMap)` — key/value metadata record (`Map<String, Object>`)
+Values may be primitives (number, string, boolean) or nested objects/arrays.

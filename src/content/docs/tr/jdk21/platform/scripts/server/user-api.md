@@ -1,20 +1,41 @@
 ---
 title: "User API"
-description: "Kullanıcı listesi, aktif oturumlar, kimlik doğrulama denemeleri"
+description: "Kullanıcı listesi, aktif oturumlar ve kimlik doğrulama denemeleri"
 sidebar:
   order: 10
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+User API, platformdaki kullanıcıları ve oturum durumunu sorgular. Aktif kullanıcı **kendisinin** bilgisine `ins.*` ile değil, script context'indeki `user` global'i üzerinden erişir.
 
-<Aside type="caution" title="Hazırlanıyor">
-Bu sayfa JDK21 kaynak koduna göre yazılacak. Şimdilik yer tutucu.
-</Aside>
+## `ins.getAllUsernames()`
 
-User API, platformdaki kullanıcıları ve oturum durumlarını sorgulamak için kullanılır.
+Sistemdeki tüm kullanıcı adlarının koleksiyonunu döner (`Collection<String>`).
 
-## Kapsam
+```javascript
+var users = ins.getAllUsernames();
+users.forEach(function(u) {
+    ins.consoleLog(u);
+});
+```
 
-- `ins.getAllUsernames()` — sistemdeki tüm kullanıcı adları (`Collection<String>`)
-- `ins.getLoggedInUsers()` — aktif oturum açmış kullanıcılar
-- `ins.getLastAuthAttempts()` — son kimlik doğrulama denemeleri (`Collection<AuthAttemptDto>`)
+## `ins.getLoggedInUsers()`
+
+Şu anda oturum açmış olan kullanıcıların koleksiyonunu döner.
+
+```javascript
+var online = ins.getLoggedInUsers();
+ins.consoleLog("Aktif kullanıcı sayısı: " + online.size());
+```
+
+## `ins.getLastAuthAttempts()`
+
+Son kimlik doğrulama denemelerini (`AuthAttemptDto`) döner — başarılı ve başarısız dahil.
+
+```javascript
+var attempts = ins.getLastAuthAttempts();
+attempts.forEach(function(a) {
+    ins.consoleLog(a.username + " @ " + a.remoteAddress + " → " + (a.success ? "OK" : "FAIL"));
+});
+```
+
+`AuthAttemptDto` tipik alanları: `username`, `remoteAddress`, `success`, `createdAt`.

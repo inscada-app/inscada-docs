@@ -1,18 +1,27 @@
 ---
 title: "Language API"
-description: "Fetch localized strings by key"
+description: "Fetch translated text from the platform's localization catalog"
 sidebar:
   order: 14
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+Language API fetches a translation from the platform's localization catalog — useful when notifications / reports / log messages produced by a script should match the active user's language.
 
-<Aside type="caution" title="Work in progress">
-This page will be written against the JDK21 source. Placeholder only for now.
-</Aside>
+## `ins.loc(lang, key)`
 
-Language API lets scripts fetch translated text from the platform's localization catalog.
+Returns the translation for `key` in the given language code (`tr`, `en`, …). If no match is found, the key is returned verbatim.
 
-## Scope
+```javascript
+var title = ins.loc("tr", "alarm.active");   // → "Aktif alarm"
+var titleEn = ins.loc("en", "alarm.active"); // → "Active alarm"
+```
 
-- `ins.loc(lang, key)` — returns the translation for `key` in the given language code (`tr`, `en`, …)
+Example — notification in the session user's language:
+
+```javascript
+var lang = user.activeSpace && user.activeSpace.language
+    ? user.activeSpace.language
+    : "en";
+var msg = ins.loc(lang, "shift.end.summary");
+ins.sendMail([user.name], ins.loc(lang, "shift.end.title"), msg);
+```

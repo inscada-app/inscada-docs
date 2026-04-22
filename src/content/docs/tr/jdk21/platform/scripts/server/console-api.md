@@ -5,14 +5,18 @@ sidebar:
   order: 18
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+Console API, script çalışırken debug çıktısı veya log üretir. Çıktı platformun script console'una ve proje log'una düşer.
 
-<Aside type="caution" title="Hazırlanıyor">
-Bu sayfa JDK21 kaynak koduna göre yazılacak. Şimdilik yer tutucu.
-</Aside>
+## `ins.consoleLog(obj)`
 
-Console API, script çalışma sırasında debug çıktısı veya log üretmek için kullanılır. Çıktı platformun script console'una ve proje loglarına düşer.
+Verilen objeyi (string, sayı, objeler, JS primitive'leri) konsola yazar.
 
-## Kapsam
+```javascript
+ins.consoleLog("Debug: başladı");
+ins.consoleLog({ phase: "warm-up", count: 12 });
+ins.consoleLog(42);
+```
 
-- `ins.consoleLog(obj)` — obje / string / sayı — script console'a yazar
+:::tip
+Script'ten browser-style `console.log` **YOK** — server tarafında stdout yok. Debug çıktısı için her zaman `ins.consoleLog()` kullan.
+:::

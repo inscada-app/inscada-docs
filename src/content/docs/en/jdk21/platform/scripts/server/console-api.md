@@ -5,14 +5,18 @@ sidebar:
   order: 18
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+Console API emits debug or log output while a script runs. Output lands in the platform's script console and the project log.
 
-<Aside type="caution" title="Work in progress">
-This page will be written against the JDK21 source. Placeholder only for now.
-</Aside>
+## `ins.consoleLog(obj)`
 
-Console API lets a script emit debug or log output during execution. Output lands in the script console and project logs.
+Writes the given object (string, number, plain objects, JS primitives) to the console.
 
-## Scope
+```javascript
+ins.consoleLog("Debug: started");
+ins.consoleLog({ phase: "warm-up", count: 12 });
+ins.consoleLog(42);
+```
 
-- `ins.consoleLog(obj)` — object / string / number — writes to the script console
+:::tip
+There is **no** browser-style `console.log` on the server — there is no stdout. Always use `ins.consoleLog()` for debug output.
+:::

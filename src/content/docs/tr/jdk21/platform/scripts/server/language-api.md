@@ -1,18 +1,27 @@
 ---
 title: "Language API"
-description: "Lokalizasyon anahtarlarından metin elde etme"
+description: "Lokalizasyon anahtarlarından çevrilmiş metin elde etme"
 sidebar:
   order: 14
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+Language API, platformun lokalizasyon sözlüğünden bir anahtar üzerinden çevrilmiş metin çekmek için kullanılır — script'in ürettiği bildirim / rapor / log metinlerinin aktif kullanıcının diline göre üretilmesini sağlar.
 
-<Aside type="caution" title="Hazırlanıyor">
-Bu sayfa JDK21 kaynak koduna göre yazılacak. Şimdilik yer tutucu.
-</Aside>
+## `ins.loc(lang, key)`
 
-Language API, platformun lokalizasyon sözlüğünden anahtar üzerinden metin çekmek için kullanılır.
+Belirtilen dil kodunda (`tr`, `en`, …) anahtara karşılık gelen metni döner. Eşleşme yoksa anahtar olduğu gibi döner.
 
-## Kapsam
+```javascript
+var title = ins.loc("tr", "alarm.active");   // → "Aktif alarm"
+var titleEn = ins.loc("en", "alarm.active"); // → "Active alarm"
+```
 
-- `ins.loc(lang, key)` — belirtilen dil kodunda (`tr`, `en` …) anahtara karşılık gelen çevirir
+Örnek — oturumdaki kullanıcının diline göre bildirim:
+
+```javascript
+var lang = user.activeSpace && user.activeSpace.language
+    ? user.activeSpace.language
+    : "tr";
+var msg = ins.loc(lang, "shift.end.summary");
+ins.sendMail([user.name], ins.loc(lang, "shift.end.title"), msg);
+```
