@@ -45,8 +45,6 @@ InscadaApi.prototype
   └── VariableApi methods
 ```
 
-Kod konumu: `ui/sources/models/api/bootstrapApi.js`
-
 ## İki Tip Metod
 
 **1. Mirror metodlar** — server-side `ins.*` metodlarının async karşılıkları. İç yapıda `/scripts/call-api` endpoint'ine POST atar, sonuç Promise olarak döner. Sunucuda tam olarak aynı Java metodu çalışır, aynı kısıtlar ve güvenlik geçerlidir.
@@ -88,8 +86,6 @@ Custom HTML widget'lar **sandboxed iframe** içinde render edilir (HTML5 `sandbo
    { type: "INSCADA_API_RESPONSE", requestId, payload | error }
    ```
 5. Widget'ın proxy'si Promise'ı resolve/reject eder.
-
-Kod konumu: `ui/sources/models/inscadaBridge.js`
 
 ### Güvenlik
 

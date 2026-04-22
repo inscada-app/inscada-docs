@@ -7,8 +7,6 @@ sidebar:
 
 Client UI API, `Inscada.*` üzerinde **yalnızca tarayıcıda** anlamlı olan metodları toplar: popup diyaloglar, değer giriş kontrolleri, animasyon / sayfa navigasyonu, SVG zoom, ses. Bu metodların server-side `ins.*` üzerinde karşılığı **yoktur**.
 
-Kod konumu: `ui/sources/models/api/uiApi.js`
-
 ## Değer Giriş Diyalogları
 
 ### `numpad(data)`

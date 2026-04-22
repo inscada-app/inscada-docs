@@ -45,8 +45,6 @@ InscadaApi.prototype
   └── VariableApi methods
 ```
 
-Source: `ui/sources/models/api/bootstrapApi.js`
-
 ## Two Kinds of Methods
 
 **1. Mirror methods** — async counterparts of server-side `ins.*` methods. Under the hood they POST to `/scripts/call-api` and return a Promise. The exact same Java method runs on the server, with the same constraints and security.
@@ -88,8 +86,6 @@ Custom HTML widgets are rendered inside a **sandboxed iframe** (HTML5 `sandbox="
    { type: "INSCADA_API_RESPONSE", requestId, payload | error }
    ```
 5. The widget's proxy resolves or rejects the Promise.
-
-Source: `ui/sources/models/inscadaBridge.js`
 
 ### Security
 

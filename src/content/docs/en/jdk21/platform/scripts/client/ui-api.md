@@ -7,8 +7,6 @@ sidebar:
 
 Client UI API groups every `Inscada.*` method that is only meaningful **in the browser**: popup dialogs, value-input widgets, animation / page navigation, SVG zoom, audio. None of these methods exist on server-side `ins.*`.
 
-Source: `ui/sources/models/api/uiApi.js`
-
 ## Value-input Dialogs
 
 ### `numpad(data)`
