@@ -66,6 +66,7 @@ function versionSidebar(v) {
 			? {
 				label: 'REST API',
 				translations: { en: 'REST API' },
+				collapsed: true,
 				items: [
 					{ slug: `${v}/api/overview` },
 					...openAPISidebarGroups,
@@ -74,6 +75,7 @@ function versionSidebar(v) {
 			: {
 				label: 'REST API',
 				translations: { en: 'REST API' },
+				collapsed: true,
 				autogenerate: { directory: `${v}/api` },
 			},
 		{
