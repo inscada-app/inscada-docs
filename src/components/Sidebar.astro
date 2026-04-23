@@ -1,5 +1,4 @@
 ---
-import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
 import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
 import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
 import VersionSwitcher from './VersionSwitcher.astro';
@@ -26,9 +25,7 @@ const filtered = filterTree(sidebar, activeVersion);
 
 <VersionSwitcher activeVersion={activeVersion} />
 
-<SidebarPersister>
-	<SidebarSublist sublist={filtered} />
-</SidebarPersister>
+<SidebarSublist sublist={filtered} />
 
 <div class="md:sl-hidden">
 	<MobileMenuFooter />
