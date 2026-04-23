@@ -5,42 +5,42 @@ sidebar:
   order: 7
 ---
 
-An Expression is a shared JavaScript formula defined at the space level. It can be referenced by multiple variables or alarms. This enables centralized management of recurring formulas.
+An Expression is a **space-level** shared JavaScript formula. Many variables or alarms can reference the same Expression — repeated formulas can be managed centrally.
 
 ![Expressions](../../../../../assets/docs/dev-expressions.png)
 
-## Creating an Expression
+## Expression Fields
 
-**Menu:** Development → Expressions → New Expression
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| **name** | String (≤100) | Yes | Formula name — unique within the space |
+| **dsc** | String (≤255) | No | Description |
+| **code** | String (≤32 767) | Yes | JavaScript code (ES5 — GraalJS Nashorn-compat mode) |
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| **Name** | Yes | Formula name (unique within the space) |
-| **Code** | Yes | JavaScript code |
-| **Description** | No | Description |
+Expressions are not scoped to a project — every project in the same space can reference them.
 
-## Use Cases
+## Where They Are Used
 
-Expressions are used for two different purposes:
+A variable definition can reference an Expression in two ways:
 
-### Value Expression
+### 1. Value Expression (compute the value)
 
-Used to calculate a variable's value. Runs on every read cycle.
+Runs on every read cycle to produce the variable value. The variable's `valueExpressionType` (the `ExpressionType` enum) has three values:
 
-| Type | Description |
-|------|-------------|
-| **NONE** | No expression, raw value is used |
-| **CUSTOM** | Inline JavaScript specific to the variable |
-| **REFERENCE** | Reference to a shared Expression |
+| Type | Meaning |
+|-----|---------|
+| **NONE** | No expression — the raw (scaled) value is used |
+| **CUSTOM** | Variable-specific inline JavaScript (`valueExpressionCode`) |
+| **EXPRESSION** | Reference to a shared Expression (`valueExpressionId`) |
 
-When REFERENCE is selected, the Expression name is specified in the variable definition. This allows the same formula to be used across dozens of variables.
+With `EXPRESSION`, the variable stores the Expression id. The same formula is then reused across many variables — changing the Expression updates every referencing variable at once.
 
-### Log Expression
+### 2. Log Expression (logging decision)
 
-A custom condition that determines when a variable is logged. If it returns `true`, the value is logged; if `false`, it is skipped.
+Decides whether a sample is logged — used when the variable's `logType = Expression` or `logType = Custom`. Truthy → log, falsy → skip.
 
 ```javascript
-// Only log if value is within a specific range
+// Only log when value is in range
 if (value > 100 && value < 900) {
     return true;
 }
@@ -52,28 +52,46 @@ return false;
 ### Unit Conversion
 
 ```javascript
-// Fahrenheit → Celsius (used across multiple temperature sensors)
+// Fahrenheit → Celsius (reused across many sensors)
 return ((value - 32) * 5 / 9).toFixed(1) * 1;
 ```
 
 ### Scale Normalization
 
 ```javascript
-// Convert 0-65535 raw value to 0-100 percentage
+// 0-65535 raw → 0-100 percent
 return (value / 65535 * 100).toFixed(1) * 1;
 ```
 
 ### Status Text
 
 ```javascript
-// Convert numeric status code to text
-var states = {0: "Stopped", 1: "Running", 2: "Fault", 3: "Maintenance"};
+// Numeric status → text
+var states = { 0: "Stopped", 1: "Running", 2: "Fault", 3: "Maintenance" };
 return states[value] || "Unknown";
 ```
 
-## Space-Level Advantage
+### Multi-Variable Calculation
 
-Since Expressions are defined at the space level:
-- When you modify a formula, **all variables** using it are automatically updated
-- Variables in different projects can share the same formula
-- You can create a formula library to define standard conversions
+```javascript
+// Live efficiency percentage
+var input = ins.getVariableValue("Input_kW").value;
+var output = ins.getVariableValue("Output_kW").value;
+if (input > 0) {
+    return ((output / input) * 100).toFixed(1) * 1;
+}
+return 0;
+```
+
+## Expression Runtime
+
+Expressions execute on GraalJS inside the variable / alarm engine:
+- `value` — the raw (pre-scaling) value of the variable (for value expressions, the previously computed value)
+- `ins.*` — full access to the server-side API (e.g. `ins.getVariableValue()` to read other variables)
+- ES5 syntax is recommended (Nashorn compatibility) — `var`, `function`, `for`, `if/else`, `try/catch`. `let`, `const`, arrow `=>`, template strings and `class` also work, but keep ES5 if you need JDK11 portability.
+
+## The Space-Level Advantage
+
+- Updating an Expression updates every variable that references it as `EXPRESSION`
+- Variables in different projects (same space) can share the same formula
+- Common conversions (unit, scale, status code) can be kept as a central formula library

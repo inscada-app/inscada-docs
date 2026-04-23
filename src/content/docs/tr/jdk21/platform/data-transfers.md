@@ -5,84 +5,117 @@ sidebar:
   order: 8
 ---
 
-Data Transfer, bir projedeki değişken değerlerini başka bir projedeki değişkenlere periyodik olarak aktarır. Kaynak değişkenden istatistiksel hesaplama yaparak hedef değişkene yazmayı sağlar.
+Data Transfer, bir projedeki değişken değerlerini başka bir projedeki değişkenlere periyodik olarak aktarır. Kaynak değişkenden istatistiksel hesaplama yaparak hedef değişkene yazmayı sağlar — sayaç diferansları, saatlik ortalamalar, çoklu saha toplama vb.
 
 ![Data Transfers](../../../../../assets/docs/dev-data-transfers.png)
 
-## Data Transfer Oluşturma
+## Data Transfer Alanları
 
-**Menü:** Development → Data Transfers → Yeni Transfer
+| Alan | Tip | Zorunlu | Açıklama |
+|------|-----|---------|----------|
+| **name** | String (≤100) | Evet | Transfer adı |
+| **dsc** | String (≤255) | Hayır | Açıklama |
+| **period** | Integer (ms, ≥100) | Evet | Çalışma periyodu |
+| **projectId** | String | Evet | Bağlı proje |
 
-| Alan | Zorunlu | Açıklama |
-|------|---------|----------|
-| **Name** | Evet | Transfer adı |
-| **Project** | Evet | Bağlı proje |
-| **Period** | Evet | Çalışma periyodu (ms, min: 1000) |
-| **Description** | Hayır | Açıklama |
+`period` ne kadar sıklıkla tetikleneceğini belirler — örneğin saatlik transfer için 3 600 000 ms.
 
-## Transfer Detayları
+## Transfer Detayları (DataTransferDetail)
 
-Her Data Transfer birden fazla **transfer detayı** (satır) içerir. Her satır bir kaynak-hedef eşleşmesidir:
+Her Data Transfer bir veya daha fazla **detay satırı** içerir. Her detay bir kaynak-hedef eşleşmesidir:
 
 | Alan | Açıklama |
 |------|----------|
-| **Source Variable** | Kaynak değişken |
-| **Target Variable** | Hedef değişken |
-| **Calculation Type** | İstatistik hesaplama tipi |
-| **Range Type** | Zaman aralığı tipi |
-| **Threshold** | Eşik değeri (opsiyonel) |
+| **sourceVariableId** | Kaynak değişken |
+| **targetVariableId** | Hedef değişken |
+| **calcType** | İstatistiksel hesaplama tipi (`VariableStatCalculationType`) |
+| **rangeType** | Zaman aralığı (`VariableStatRangeType`) |
+| **threshold** | İstatistikler için opsiyonel filtre değeri |
 
-### Hesaplama Tipleri
+Kaynak ve hedef farklı projelerde olabilir — bir projeden diğerine veri aktarmak için kullanılır.
 
-| Tip | Açıklama |
-|-----|----------|
-| **LAST** | Son değer |
-| **AVG** | Ortalama |
-| **MIN** | Minimum |
-| **MAX** | Maksimum |
-| **SUM** | Toplam |
-| **COUNT** | Kayıt sayısı |
-| **DIFF** | İlk ve son değer farkı |
+## Hesaplama Tipleri
 
-### Zaman Aralığı Tipleri
+`VariableStatCalculationType` enum — 11 değer:
 
 | Tip | Açıklama |
 |-----|----------|
-| **CURRENT** | Son periyot aralığındaki veriler |
-| **PREVIOUS** | Bir önceki periyot aralığı |
+| **Min** | Aralıktaki minimum değer |
+| **Max** | Aralıktaki maksimum değer |
+| **Avg** | Aritmetik ortalama |
+| **Sum** | Toplam |
+| **Count** | Kayıt sayısı |
+| **First Value** | Aralıktaki ilk kayıt |
+| **Last Value** | Aralıktaki son kayıt |
+| **Max Difference** | Aralıktaki en büyük ardışık fark |
+| **Last First Difference** | Son değer − İlk değer (kümülatif sayaç farkı için ideal) |
+| **Middle Value** | Aralığın ortasındaki değer (zamansal orta nokta) |
+| **Median Value** | Medyan (sıralı ortanca) |
+
+## Zaman Aralığı Tipleri
+
+`VariableStatRangeType` enum — 10 değer (Current / Previous × 5 zaman ölçeği):
+
+| Tip | Aralık |
+|-----|--------|
+| **Current Hour** | Saat başından şimdiye |
+| **Previous Hour** | Bir önceki tam saat |
+| **Current Day** | Gün başından şimdiye |
+| **Previous Day** | Bir önceki tam gün |
+| **Current Week** | Haftanın başından şimdiye |
+| **Previous Week** | Bir önceki tam hafta |
+| **Current Month** | Ay başından şimdiye |
+| **Previous Month** | Bir önceki tam ay |
+| **Current Year** | Yıl başından şimdiye |
+| **Previous Year** | Bir önceki tam yıl |
+
+`Previous ...` tipleri, aralık tamamlandığında tek seferlik hesaplama için idealdir — örneğin her sabah "önceki günün ortalaması" raporu.
 
 ## Kullanım Senaryoları
 
 ### Saatlik Enerji Tüketimi
 
-Bir enerji sayacından saatlik tüketim hesaplayıp başka bir değişkene yazma:
-- Kaynak: `Energy_kWh` (kümülatif sayaç)
+Kümülatif sayaçtan saatlik tüketim:
+- Kaynak: `Energy_kWh` (kümülatif)
 - Hedef: `Hourly_Consumption`
-- Hesaplama: DIFF (son - ilk = saatlik tüketim)
-- Periyot: 3600000 ms (1 saat)
+- calcType: **Last First Difference** (son − ilk = saatlik tüketim)
+- rangeType: **Previous Hour**
+- period: 3 600 000 ms (saat başında tetiklenir)
 
 ### Günlük Ortalama Sıcaklık
 
 - Kaynak: `Temperature_C`
 - Hedef: `DailyAvg_Temperature`
-- Hesaplama: AVG
-- Periyot: 86400000 ms (24 saat)
+- calcType: **Avg**
+- rangeType: **Previous Day**
+- period: 86 400 000 ms
 
-### Projeler Arası Veri Toplama
+### Projeler Arası Anlık Veri Kopyası
 
-Birden fazla sahadaki güç değerlerini merkezi bir projeye toplama:
-- Kaynak (Proje A): `Site1_Power_kW`
-- Hedef (Merkez Proje): `Total_Power`
-- Hesaplama: LAST
+Birden fazla sahadaki güç değerlerini merkezi bir projeye aktarma:
+- Kaynak (saha projesi): `Site1_Power_kW`
+- Hedef (merkez proje): `Site1_Power_kW_Mirror`
+- calcType: **Last Value**
+- rangeType: **Current Hour** (canlı değer için kısa aralık)
+- period: 10 000 ms
 
 ## Script ile Yönetim
 
 ```javascript
-// Transfer görevini başlat
+// Transfer'i zamanlayıcıya ekle
 ins.scheduleDataTransfer("hourly_energy_calc");
 
-// Transfer görevini iptal et
+// Projedeki tüm data transfer'leri zamanlayıcıya ekle
+ins.scheduleDataTransfers();
+
+// İptal et
 ins.cancelDataTransfer("hourly_energy_calc");
+ins.cancelDataTransfers();
+
+// Durumu sorgula — "Scheduled" veya "Not Scheduled"
+var status = ins.getDataTransferStatus("hourly_energy_calc");
 ```
 
-Detaylı API: [Data Transfer API →](/docs/tr/platform/scripts/datatransfer-api/)
+`Scheduled` durumu "zamanlayıcıya bağlı" anlamına gelir — o anda çalıştığını değil.
+
+Detaylı API: [Data Transfer API →](/docs/tr/jdk21/platform/scripts/server/datatransfer-api/) | [REST API Reference →](/docs/tr/jdk21/api/reference/) (Data Transfer Controller grubu)
