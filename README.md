@@ -62,13 +62,9 @@ npm run preview     # build çıktısını lokal önizle
 
 ## Deploy
 
-Sunucuda deploy scripti çalıştırılır (master'a push sonrası):
+`master` branch'ine push sonrası, dağıtım sunucusunda bir deploy scripti çalıştırılır. Script şu adımları yapar: `git pull` → `npm ci` → `npm run build` → Nginx'in serve ettiği statik dosya dizinini günceller.
 
-```bash
-ssh root@89.167.87.65 "bash /opt/deploy-docs.sh"
-```
-
-Script: `git pull` → `npm ci` → `npm run build` → Nginx'in serve ettiği `/opt/inscada-docs/dist/` yolunu günceller.
+Deploy erişimi ve script konumu iç dokümantasyonda tutulur.
 
 ## Katkı
 
